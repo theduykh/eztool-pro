@@ -115,3 +115,10 @@ KHI VIẾT CODE, BẠN PHẢI TUÂN THỦ NGHIÊM NGẶT CÁC QUY TẮC SAU:
 5. BẢO VỆ CHẤT LƯỢNG (QA MINDSET):
 - Bất cứ khi nào bạn tạo ra một file logic mới trong thư mục `/lib`, BẠN PHẢI TẠO RA một file `.test.ts` tương ứng kèm theo các test case bao phủ cả trường hợp Happy Path và Edge Cases (Trường hợp dị biệt).
 ```
+
+## 7. Chiến lược Prompt (Micro-prompting)
+Với nền tảng là một QA Automation, bạn hãy áp dụng mindset viết test vào việc prompt AI. Đừng bảo AI "Làm cho tôi cái trang JSON Formatter". Hãy chia nhỏ ra:
+
+1. Bước 1 (Logic): "Tạo file lib/formatters/json.ts. Viết hàm formatJson và minifyJson. Sau đó viết Unit test cho 2 hàm này bằng Vitest."
+2. Bước 2 (Giao diện): "Bây giờ tạo app/(tools)/json-formatter/page.tsx. Thiết kế UI gồm 2 cột Input và Output sử dụng Shadcn UI."
+3. Bước 3 (Ghép nối): "Sử dụng hàm trong file lib để gắn vào sự kiện onClick của nút Format trên UI."

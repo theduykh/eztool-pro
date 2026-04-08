@@ -1,65 +1,64 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Code, QrCode, ArrowRight } from "lucide-react";
 
 export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    return (
+        <div className="flex flex-1 flex-col items-center justify-center py-16">
+            {/* Hero */}
+            <div className="mb-12 text-center">
+                <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                    eztool<span className="text-blue-600 dark:text-blue-400">.pro</span>
+                </h1>
+                <p className="mx-auto mt-3 max-w-md text-muted-foreground">
+                    Bộ công cụ tiện ích siêu tốc dành cho lập trình viên và người dùng
+                    hàng ngày. Nhanh chóng, chính xác, không quảng cáo.
+                </p>
+            </div>
+
+            {/* Featured tools */}
+            <div className="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
+                <Link
+                    href="/dev/json-formatter"
+                    className="group flex flex-col gap-3 rounded-xl border border-border bg-card p-6 shadow-sm transition-all hover:border-blue-500/40 hover:shadow-md"
+                >
+                    <div className="flex size-10 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                        <Code className="size-5" />
+                    </div>
+                    <div>
+                        <h2 className="font-semibold text-foreground">
+                            JSON Formatter
+                        </h2>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                            Làm đẹp, xác thực và nén dữ liệu JSON ngay lập tức.
+                        </p>
+                    </div>
+                    <span className="mt-auto inline-flex items-center text-sm font-medium text-blue-600 dark:text-blue-400">
+                        Mở công cụ
+                        <ArrowRight className="ml-1 size-4 transition-transform group-hover:translate-x-1" />
+                    </span>
+                </Link>
+
+                <Link
+                    href="/image/qr-generator"
+                    className="group flex flex-col gap-3 rounded-xl border border-border bg-card p-6 shadow-sm transition-all hover:border-blue-500/40 hover:shadow-md"
+                >
+                    <div className="flex size-10 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                        <QrCode className="size-5" />
+                    </div>
+                    <div>
+                        <h2 className="font-semibold text-foreground">
+                            Tạo mã QR Code
+                        </h2>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                            Tạo mã QR cho link, văn bản, wifi — tùy chỉnh màu sắc.
+                        </p>
+                    </div>
+                    <span className="mt-auto inline-flex items-center text-sm font-medium text-blue-600 dark:text-blue-400">
+                        Mở công cụ
+                        <ArrowRight className="ml-1 size-4 transition-transform group-hover:translate-x-1" />
+                    </span>
+                </Link>
+            </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+    );
 }
