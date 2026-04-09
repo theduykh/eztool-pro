@@ -1,9 +1,20 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
-import { Shuffle, PartyPopper, Trophy, Zap, Timer, Flame } from "lucide-react";
+import {
+    Maximize,
+    Minimize,
+    X,
+    Shuffle,
+    PartyPopper,
+    Trophy,
+    Zap,
+    Timer,
+    Flame,
+} from "lucide-react";
 import confetti from "canvas-confetti";
 
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -58,9 +69,16 @@ interface WheelSVGProps {
     rotation: number;
     isSpinning: boolean;
     spinDurationMs: number;
+    className?: string;
 }
 
-function WheelSVG({ slices, rotation, isSpinning, spinDurationMs }: WheelSVGProps) {
+function WheelSVG({
+    slices,
+    rotation,
+    isSpinning,
+    spinDurationMs,
+    className,
+}: WheelSVGProps) {
     const size = 400;
     const center = size / 2;
     const radius = 180;
@@ -103,7 +121,7 @@ function WheelSVG({ slices, rotation, isSpinning, spinDurationMs }: WheelSVGProp
     const sliceAngle = slices.length > 0 ? 360 / slices.length : 360;
 
     return (
-        <div className="relative inline-block select-none">
+        <div className={cn("relative inline-block select-none", className)}>
             {/* Pointer triangle at top-center */}
             <div className="absolute top-0 left-1/2 z-20 -translate-x-1/2 -translate-y-1">
                 <svg width="28" height="32" viewBox="0 0 28 32">
@@ -118,17 +136,16 @@ function WheelSVG({ slices, rotation, isSpinning, spinDurationMs }: WheelSVGProp
 
             {/* Outer glow ring */}
             <div
-                className={`rounded-full p-1.5 transition-shadow duration-300 ${
+                className={cn(
+                    "rounded-full p-1.5 transition-shadow duration-300",
                     isSpinning
                         ? "shadow-[0_0_40px_8px_rgba(234,179,8,0.4)]"
-                        : "shadow-[0_0_20px_4px_rgba(100,100,255,0.15)]"
-                }`}
+                        : "shadow-[0_0_20px_4px_rgba(100,100,255,0.15)]",
+                )}
             >
                 <svg
-                    width={size}
-                    height={size}
                     viewBox={`0 0 ${size} ${size}`}
-                    className="block max-w-full"
+                    className="block h-full w-full max-w-full"
                     style={{
                         transform: `rotate(${rotation}deg)`,
                         transition: isSpinning
@@ -280,6 +297,7 @@ export function LuckyWheelClient() {
         WHEEL_TEMPLATES[0].id,
     );
     const [speedId, setSpeedId] = useState<string>("medium");
+    const [isFullscreen, setIsFullscreen] = useState(false);
 
     // Track current rotation without triggering transition on each set
     const currentRotationRef = useRef(0);
@@ -392,6 +410,34 @@ export function LuckyWheelClient() {
         }
     }, [itemsText]); // eslint-disable-line react-hooks/exhaustive-deps
 
+    // Toggle fullscreen using the component's state (fake fullscreen for better compatibility and dialog support)
+    const toggleFullscreen = useCallback(() => {
+        setIsFullscreen((prev) => !prev);
+    }, []);
+
+    // Handle escape key to exit fullscreen
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape" && isFullscreen) {
+                setIsFullscreen(false);
+            }
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [isFullscreen]);
+
+    // Prevent scrolling when in fullscreen
+    useEffect(() => {
+        if (isFullscreen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [isFullscreen]);
+
     return (
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
             {/* ── Left Panel: Controls ─────────────────────────────── */}
@@ -467,14 +513,60 @@ export function LuckyWheelClient() {
             </div>
 
             {/* ── Right Panel: Wheel ──────────────────────────────── */}
-            <div className="flex flex-1 flex-col items-center gap-5">
-                <div className="rounded-2xl border border-border bg-card p-5 shadow-lg">
+            <div
+                className={cn(
+                    "flex flex-1 flex-col items-center gap-5 transition-all duration-300",
+                    isFullscreen &&
+                        "fixed inset-0 z-40 flex h-screen w-screen animate-in fade-in zoom-in-95 items-center justify-center bg-background/98 p-6 backdrop-blur-md lg:p-10",
+                )}
+            >
+                {isFullscreen && (
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-4 top-4 z-50 text-muted-foreground hover:text-foreground"
+                        onClick={() => setIsFullscreen(false)}
+                    >
+                        <X className="size-6" />
+                    </Button>
+                )}
+
+                <div
+                    className={cn(
+                        "relative rounded-2xl border border-border bg-card p-5 shadow-lg",
+                        isFullscreen && "shadow-2xl",
+                    )}
+                >
                     <WheelSVG
                         slices={slices}
                         rotation={rotation}
                         isSpinning={isSpinning}
                         spinDurationMs={activeDurationRef.current}
+                        className={cn(
+                            "h-[300px] w-[300px] sm:h-[400px] sm:w-[400px]",
+                            isFullscreen &&
+                                "h-[60vh] w-[60vh] min-h-[300px] min-w-[300px] max-h-[80vh] max-w-[80vh]",
+                        )}
                     />
+
+                    {/* Maximize/Minimize button inside the wheel container */}
+                    <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={toggleFullscreen}
+                        className="absolute right-2 top-2 z-30 text-muted-foreground hover:text-foreground"
+                        title={
+                            isFullscreen
+                                ? "Thoát toàn màn hình"
+                                : "Xem toàn màn hình"
+                        }
+                    >
+                        {isFullscreen ? (
+                            <Minimize className="size-4" />
+                        ) : (
+                            <Maximize className="size-4" />
+                        )}
+                    </Button>
                 </div>
 
                 {/* Spin button */}
@@ -484,7 +576,10 @@ export function LuckyWheelClient() {
                     disabled={!canSpin}
                     size="lg"
                     id="spin-btn"
-                    className="relative gap-2 px-10 text-lg font-bold shadow-lg transition-all hover:scale-105 active:scale-95 disabled:hover:scale-100"
+                    className={cn(
+                        "relative gap-2 px-10 text-lg font-bold shadow-lg transition-all hover:scale-105 active:scale-95 disabled:hover:scale-100",
+                        isFullscreen && "h-16 px-16 text-2xl shadow-2xl",
+                    )}
                 >
                     {isSpinning ? (
                         <>
@@ -493,14 +588,21 @@ export function LuckyWheelClient() {
                         </>
                     ) : (
                         <>
-                            <PartyPopper className="size-5" />
+                            <PartyPopper
+                                className={cn("size-5", isFullscreen && "size-7")}
+                            />
                             QUAY
                         </>
                     )}
                 </Button>
 
                 {/* Speed selector */}
-                <div className="flex items-center gap-1 rounded-xl border border-border bg-card p-1 shadow-sm">
+                <div
+                    className={cn(
+                        "flex items-center gap-1 rounded-xl border border-border bg-card p-1 shadow-sm",
+                        isFullscreen && "scale-125 shadow-lg",
+                    )}
+                >
                     {SPEED_PRESETS.map((preset) => {
                         const Icon = preset.icon;
                         const isActive = speedId === preset.id;
@@ -509,20 +611,32 @@ export function LuckyWheelClient() {
                                 key={preset.id}
                                 onClick={() => setSpeedId(preset.id)}
                                 disabled={isSpinning}
-                                className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all disabled:opacity-50 ${
+                                className={cn(
+                                    "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all disabled:opacity-50",
                                     isActive
                                         ? "bg-primary text-primary-foreground shadow-sm"
-                                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                                }`}
+                                        : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                                    isFullscreen && "px-4 py-2 text-sm",
+                                )}
                             >
-                                <Icon className="size-3.5" />
+                                <Icon
+                                    className={cn(
+                                        "size-3.5",
+                                        isFullscreen && "size-4",
+                                    )}
+                                />
                                 {preset.label}
                             </button>
                         );
                     })}
                 </div>
 
-                <p className="text-xs text-muted-foreground">
+                <p
+                    className={cn(
+                        "text-xs text-muted-foreground",
+                        isFullscreen && "mt-4 text-sm",
+                    )}
+                >
                     Mũi tên đỏ ở trên chỉ vào mục được chọn
                 </p>
             </div>
