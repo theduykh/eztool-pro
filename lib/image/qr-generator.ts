@@ -37,18 +37,25 @@ export function buildQRData(
     email: EmailContent,
     sms: SmsContent,
 ): string {
+    let rawData = "";
+
     switch (type) {
         case "url":
-            return url.trim() || "https://eztool.pro";
+            rawData = url.trim() || "https://eztool.pro";
+            break;
 
         case "text":
-            return text;
+            rawData = text;
+            break;
 
         case "wifi": {
             const enc =
                 wifi.encryption === "nopass" ? "nopass" : wifi.encryption;
             const hiddenPart = wifi.hidden ? "H:true;" : "";
-            return `WIFI:T:${enc};S:${escapeWifi(wifi.ssid)};P:${escapeWifi(wifi.password)};${hiddenPart};`;
+            rawData = `WIFI:T:${enc};S:${escapeWifi(wifi.ssid)};P:${escapeWifi(
+                wifi.password,
+            )};${hiddenPart};`;
+            break;
         }
 
         case "email": {
@@ -58,11 +65,40 @@ export function buildQRData(
             if (email.body.trim())
                 params.push(`body=${encodeURIComponent(email.body)}`);
             const query = params.length > 0 ? `?${params.join("&")}` : "";
-            return `mailto:${email.to}${query}`;
+            rawData = `mailto:${email.to}${query}`;
+            break;
         }
 
         case "sms":
-            return `smsto:${sms.phone}:${sms.message}`;
+            rawData = `smsto:${sms.phone}:${sms.message}`;
+            break;
+    }
+
+    return ensureUtf8(rawData);
+}
+
+/**
+ * Ensures the string is correctly encoded for QR codes by converting it to UTF-8 bytes.
+ * This is crucial for supporting non-ASCII characters like Vietnamese diacritics,
+ * which qr-code-styling doesn't always handle natively.
+ */
+function ensureUtf8(str: string): string {
+    // 1. Normalize to NFC for consistent character representation
+    const normalized = str.normalize("NFC");
+
+    // 2. Encode to UTF-8 bytes and convert back to a 'latin1' string.
+    // This forces the QR generator to treat the input as a specific byte sequence.
+    if (typeof TextEncoder !== "undefined") {
+        const encoder = new TextEncoder();
+        const bytes = encoder.encode(normalized);
+        let result = "";
+        for (let i = 0; i < bytes.length; i++) {
+            result += String.fromCharCode(bytes[i]);
+        }
+        return result;
+    } else {
+        // Fallback for environments where TextEncoder is not available
+        return unescape(encodeURIComponent(normalized));
     }
 }
 

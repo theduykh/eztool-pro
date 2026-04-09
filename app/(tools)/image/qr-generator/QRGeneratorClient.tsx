@@ -79,11 +79,10 @@ function TabStrip<T extends string>({
                 <button
                     key={opt.value}
                     onClick={() => onChange(opt.value)}
-                    className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
-                        value === opt.value
-                            ? "bg-primary text-primary-foreground shadow-sm"
-                            : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
-                    }`}
+                    className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${value === opt.value
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                        }`}
                 >
                     {opt.label}
                 </button>
@@ -203,25 +202,17 @@ export function QRGeneratorClient() {
                 email,
                 sms,
             );
-            return {
+
+            const options: any = {
                 width: overrides?.width ?? 300,
                 height: overrides?.height ?? 300,
                 type: (overrides?.type ?? "canvas") as "canvas" | "svg",
                 shape: qrShape,
                 data,
-                image: logoDataURL ?? undefined,
                 margin,
                 qrOptions: {
                     errorCorrectionLevel: errorCorrection,
                 },
-                imageOptions: logoDataURL
-                    ? {
-                          hideBackgroundDots: true,
-                          imageSize: logoSize,
-                          margin: 4,
-                          crossOrigin: "anonymous",
-                      }
-                    : undefined,
                 dotsOptions: {
                     type: dotStyle,
                     color: dotColor,
@@ -238,6 +229,18 @@ export function QRGeneratorClient() {
                     color: dotColor,
                 },
             };
+
+            if (logoDataURL) {
+                options.image = logoDataURL;
+                options.imageOptions = {
+                    hideBackgroundDots: true,
+                    imageSize: logoSize,
+                    margin: 4,
+                    crossOrigin: "anonymous",
+                };
+            }
+
+            return options;
         },
         [
             contentType,
@@ -389,11 +392,10 @@ export function QRGeneratorClient() {
                             <button
                                 key={tab.value}
                                 onClick={() => setContentType(tab.value)}
-                                className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
-                                    contentType === tab.value
-                                        ? "bg-primary text-primary-foreground shadow-sm"
-                                        : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
-                                }`}
+                                className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${contentType === tab.value
+                                    ? "bg-primary text-primary-foreground shadow-sm"
+                                    : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                                    }`}
                             >
                                 {CONTENT_ICONS[tab.value]}
                                 {tab.label}
@@ -589,11 +591,10 @@ export function QRGeneratorClient() {
                                 <button
                                     key={s.value}
                                     onClick={() => setDotStyle(s.value)}
-                                    className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors ${
-                                        dotStyle === s.value
-                                            ? "bg-primary text-primary-foreground"
-                                            : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
-                                    }`}
+                                    className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors ${dotStyle === s.value
+                                        ? "bg-primary text-primary-foreground"
+                                        : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                                        }`}
                                 >
                                     {s.label}
                                 </button>
@@ -613,11 +614,10 @@ export function QRGeneratorClient() {
                                     onClick={() =>
                                         setCornerSquareStyle(s.value)
                                     }
-                                    className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors ${
-                                        cornerSquareStyle === s.value
-                                            ? "bg-primary text-primary-foreground"
-                                            : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
-                                    }`}
+                                    className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors ${cornerSquareStyle === s.value
+                                        ? "bg-primary text-primary-foreground"
+                                        : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                                        }`}
                                 >
                                     {s.label}
                                 </button>
@@ -635,11 +635,10 @@ export function QRGeneratorClient() {
                                 <button
                                     key={s.value}
                                     onClick={() => setCornerDotStyle(s.value)}
-                                    className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors ${
-                                        cornerDotStyle === s.value
-                                            ? "bg-primary text-primary-foreground"
-                                            : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
-                                    }`}
+                                    className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors ${cornerDotStyle === s.value
+                                        ? "bg-primary text-primary-foreground"
+                                        : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                                        }`}
                                 >
                                     {s.label}
                                 </button>
@@ -665,11 +664,10 @@ export function QRGeneratorClient() {
                                     disabled={
                                         !!logoDataURL && s.value !== "H"
                                     }
-                                    className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
-                                        errorCorrection === s.value
-                                            ? "bg-primary text-primary-foreground"
-                                            : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
-                                    }`}
+                                    className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${errorCorrection === s.value
+                                        ? "bg-primary text-primary-foreground"
+                                        : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                                        }`}
                                 >
                                     {s.label}
                                 </button>
@@ -780,11 +778,10 @@ export function QRGeneratorClient() {
                                     key={f.value}
                                     onClick={() => setDownloadFormat(f.value)}
                                     title={f.hint}
-                                    className={`flex flex-col items-center rounded-lg py-2 text-xs font-semibold transition-colors ${
-                                        downloadFormat === f.value
-                                            ? "bg-primary text-primary-foreground shadow-sm"
-                                            : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
-                                    }`}
+                                    className={`flex flex-col items-center rounded-lg py-2 text-xs font-semibold transition-colors ${downloadFormat === f.value
+                                        ? "bg-primary text-primary-foreground shadow-sm"
+                                        : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                                        }`}
                                 >
                                     <span>{f.label}</span>
                                     <span className="mt-0.5 text-[10px] opacity-70">
@@ -811,12 +808,11 @@ export function QRGeneratorClient() {
                                     key={s.value}
                                     onClick={() => setDownloadSize(s.value)}
                                     disabled={downloadFormat === "svg"}
-                                    className={`rounded-lg py-2 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
-                                        downloadSize === s.value &&
+                                    className={`rounded-lg py-2 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${downloadSize === s.value &&
                                         downloadFormat !== "svg"
-                                            ? "bg-primary text-primary-foreground shadow-sm"
-                                            : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
-                                    }`}
+                                        ? "bg-primary text-primary-foreground shadow-sm"
+                                        : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                                        }`}
                                 >
                                     {s.label}
                                 </button>
