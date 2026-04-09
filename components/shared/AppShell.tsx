@@ -16,7 +16,7 @@ export function AppShell({ children }: AppShellProps) {
     const closeSidebar = useCallback(() => setSidebarOpen(false), []);
 
     return (
-        <div className="flex h-screen overflow-hidden bg-background font-sans antialiased">
+        <div className="flex h-[100dvh] overflow-hidden bg-background font-sans antialiased">
             {/* Sidebar */}
             <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
 
@@ -27,7 +27,7 @@ export function AppShell({ children }: AppShellProps) {
                 {/* Tool workspace */}
                 <div className="flex-1 overflow-y-auto">
                     <div className="flex flex-col min-h-full">
-                        <div className="flex-1 p-4 lg:p-8">
+                        <div className="flex-1 p-4 md:p-6 lg:p-8">
                             <div className="mx-auto max-w-7xl">
                                 {children}
                             </div>

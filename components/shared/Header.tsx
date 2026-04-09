@@ -60,6 +60,16 @@ export function Header({ onMenuClick }: HeaderProps) {
 
             {/* Right: search + theme toggle */}
             <div className="flex items-center gap-2">
+                {/* Search icon button (mobile only) */}
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-muted-foreground hover:text-foreground sm:hidden"
+                    aria-label="Tìm kiếm công cụ"
+                >
+                    <Search className="size-5" />
+                </Button>
+
                 {/* Search bar (mockup, can be wired to Shadcn Command later) */}
                 <button
                     className="hidden items-center justify-between rounded-md border border-border bg-accent/50 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent sm:flex sm:w-56 lg:w-64"

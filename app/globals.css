@@ -136,7 +136,14 @@
   }
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar — hidden on touch devices */
+@media (pointer: coarse) {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (pointer: fine) {
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -162,6 +169,7 @@
 .dark ::-webkit-scrollbar-thumb:hover {
   background: oklch(0.45 0 0);
 }
+} /* end @media (pointer: fine) */
 
 /* Toast slide-in animation */
 .toast-enter {

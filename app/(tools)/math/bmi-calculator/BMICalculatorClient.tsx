@@ -42,7 +42,7 @@ export function BMICalculatorClient() {
             <div className="flex flex-col gap-6">
                 {/* Standard Toggle */}
                 <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
-                    <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Chọn tiêu chuẩn</p>
+                    <p className="mb-3 text-[11px] font-bold uppercase tracking-widest text-muted-foreground sm:text-xs">Chọn tiêu chuẩn</p>
                     <div className="flex gap-2">
                         <Button
                             variant={standard === "global" ? "default" : "outline"}
@@ -100,7 +100,7 @@ export function BMICalculatorClient() {
                 {/* BMI Gauge / Scale visual */}
                 <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
                     <p className="mb-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">Thang đo chỉ số BMI</p>
-                    <div className="relative h-4 w-full overflow-hidden rounded-full bg-muted flex">
+                    <div className="relative h-6 w-full overflow-hidden rounded-full bg-muted flex">
                         {categories.map((cat) => (
                             <div 
                                 key={cat.label} 
@@ -119,7 +119,7 @@ export function BMICalculatorClient() {
                             />
                         )}
                     </div>
-                    <div className="relative mt-2 h-4 w-full text-[10px] text-muted-foreground font-medium">
+                    <div className="relative mt-2 h-4 w-full text-[11px] text-muted-foreground font-medium sm:text-xs">
                         <span className="absolute left-0">15</span>
                         <span className="absolute" style={{ left: `${(18.5 - MIN_BMI) / TOTAL_SCOPE * 100}%`, transform: 'translateX(-50%)' }}>18.5</span>
                         {standard === "global" ? (
@@ -167,7 +167,7 @@ export function BMICalculatorClient() {
                         <Activity className="absolute -bottom-10 -right-10 size-48 text-muted-foreground/5 rotate-12" />
                         
                         <p className="mb-2 text-sm font-semibold text-muted-foreground">Chỉ số BMI của bạn</p>
-                        <h2 className={cn("text-7xl font-black tracking-tighter mb-4", result.color)}>
+                        <h2 className={cn("text-5xl font-black tracking-tighter mb-4 sm:text-7xl", result.color)}>
                             {result.bmi}
                         </h2>
                         

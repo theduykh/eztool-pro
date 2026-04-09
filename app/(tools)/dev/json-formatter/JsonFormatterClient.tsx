@@ -136,7 +136,7 @@ export function JsonFormatterClient() {
             </div>
 
             {/* Editor grid */}
-            <div className="grid min-h-[400px] flex-1 grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="grid min-h-[200px] flex-1 grid-cols-1 gap-4 md:min-h-[400px] lg:grid-cols-2">
                 {/* Input panel */}
                 <div className="flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm">
                     <div className="flex h-10 flex-shrink-0 items-center justify-between border-b border-border bg-muted/50 px-3">

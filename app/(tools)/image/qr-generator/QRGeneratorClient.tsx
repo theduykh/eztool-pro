@@ -54,7 +54,7 @@ function Section({
 }) {
     return (
         <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
-            <p className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">
+            <p className="mb-3 text-sm font-bold uppercase tracking-widest text-muted-foreground">
                 {title}
             </p>
             {children}
@@ -112,7 +112,7 @@ function ColorInput({
                     type="color"
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    className="h-6 w-8 cursor-pointer rounded border-0 bg-transparent p-0"
+                    className="h-9 w-12 cursor-pointer rounded border-0 bg-transparent p-0"
                 />
                 <input
                     type="text"
@@ -382,6 +382,59 @@ export function QRGeneratorClient() {
 
     return (
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
+            {/* ─── RIGHT: Preview panel (first in DOM for mobile) ───── */}
+            <div className="flex flex-1 flex-col items-center gap-4 lg:order-last">
+                <div className="w-full rounded-2xl border border-border bg-card p-6 shadow-sm">
+                    <p className="mb-4 text-center text-sm font-bold uppercase tracking-widest text-muted-foreground">
+                        Xem trước
+                    </p>
+
+                    {/* QR preview — qr-code-styling appends a <canvas> here */}
+                    <div className="flex justify-center">
+                        <div
+                            ref={containerRef}
+                            className="overflow-hidden rounded-xl"
+                            style={{ lineHeight: 0 }}
+                        />
+                    </div>
+                </div>
+
+                {/* Action buttons */}
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                    <Button
+                        variant="outline"
+                        onClick={handleCopy}
+                        className="gap-2"
+                    >
+                        {copied ? (
+                            <>
+                                <Check className="size-4 text-green-500" />
+                                Đã sao chép!
+                            </>
+                        ) : (
+                            <>
+                                <Copy className="size-4" />
+                                Sao chép ảnh
+                            </>
+                        )}
+                    </Button>
+
+                    <Button
+                        variant="outline"
+                        onClick={handleReset}
+                        className="gap-2"
+                    >
+                        <RefreshCw className="size-4" />
+                        Đặt lại
+                    </Button>
+                </div>
+
+                <p className="max-w-xs text-center text-xs text-muted-foreground">
+                    Thay đổi cài đặt bên dưới để tạo QR code tùy chỉnh. Kiểm
+                    tra bằng cách quét thử trước khi in.
+                </p>
+            </div>
+
             {/* ─── LEFT: Settings panel ──────────────────────────────── */}
             <div className="flex w-full flex-col gap-4 lg:w-[400px] lg:flex-shrink-0">
                 {/* ── 1. Content type ─────────────────────────────────── */}
@@ -772,7 +825,7 @@ export function QRGeneratorClient() {
                         <p className="mb-1.5 text-xs font-medium text-muted-foreground">
                             Định dạng
                         </p>
-                        <div className="grid grid-cols-4 gap-1.5">
+                        <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
                             {DOWNLOAD_FORMATS.map((f) => (
                                 <button
                                     key={f.value}
@@ -802,7 +855,7 @@ export function QRGeneratorClient() {
                                 </span>
                             )}
                         </p>
-                        <div className="grid grid-cols-4 gap-1.5">
+                        <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
                             {DOWNLOAD_SIZES.map((s) => (
                                 <button
                                     key={s.value}
@@ -834,58 +887,6 @@ export function QRGeneratorClient() {
                 </Section>
             </div>
 
-            {/* ─── RIGHT: Preview panel ──────────────────────────────── */}
-            <div className="flex flex-1 flex-col items-center gap-4">
-                <div className="w-full rounded-2xl border border-border bg-card p-6 shadow-sm">
-                    <p className="mb-4 text-center text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                        Xem trước
-                    </p>
-
-                    {/* QR preview — qr-code-styling appends a <canvas> here */}
-                    <div className="flex justify-center">
-                        <div
-                            ref={containerRef}
-                            className="overflow-hidden rounded-xl"
-                            style={{ lineHeight: 0 }}
-                        />
-                    </div>
-                </div>
-
-                {/* Action buttons */}
-                <div className="flex flex-wrap items-center justify-center gap-3">
-                    <Button
-                        variant="outline"
-                        onClick={handleCopy}
-                        className="gap-2"
-                    >
-                        {copied ? (
-                            <>
-                                <Check className="size-4 text-green-500" />
-                                Đã sao chép!
-                            </>
-                        ) : (
-                            <>
-                                <Copy className="size-4" />
-                                Sao chép ảnh
-                            </>
-                        )}
-                    </Button>
-
-                    <Button
-                        variant="outline"
-                        onClick={handleReset}
-                        className="gap-2"
-                    >
-                        <RefreshCw className="size-4" />
-                        Đặt lại
-                    </Button>
-                </div>
-
-                <p className="max-w-xs text-center text-xs text-muted-foreground">
-                    Thay đổi cài đặt bên trái để tạo QR code tùy chỉnh. Kiểm
-                    tra bằng cách quét thử trước khi in.
-                </p>
-            </div>
         </div>
     );
 }
