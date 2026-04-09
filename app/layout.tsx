@@ -7,12 +7,12 @@ import { AppShell } from "@/components/shared/AppShell";
 
 const inter = Inter({
     variable: "--font-sans",
-    subsets: ["latin", "vietnamese"],
+    subsets: ["latin", "latin-ext"],
 });
 
 const firaCode = Fira_Code({
     variable: "--font-mono",
-    subsets: ["latin"],
+    subsets: ["latin", "latin-ext"],
 });
 
 export const metadata: Metadata = {

@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { Sidebar } from "@/components/shared/Sidebar";
 import { Header } from "@/components/shared/Header";
+import { Footer } from "@/components/shared/Footer";
 
 interface AppShellProps {
     children: React.ReactNode;
@@ -24,9 +25,14 @@ export function AppShell({ children }: AppShellProps) {
                 <Header onMenuClick={openSidebar} />
 
                 {/* Tool workspace */}
-                <div className="flex-1 overflow-y-auto p-4 lg:p-8">
-                    <div className="mx-auto h-full max-w-7xl">
-                        {children}
+                <div className="flex-1 overflow-y-auto">
+                    <div className="flex flex-col min-h-full">
+                        <div className="flex-1 p-4 lg:p-8">
+                            <div className="mx-auto max-w-7xl">
+                                {children}
+                            </div>
+                        </div>
+                        <Footer />
                     </div>
                 </div>
             </main>

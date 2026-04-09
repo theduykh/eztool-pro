@@ -127,6 +127,14 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         path: "/math/rule-of-three",
         category: "math",
     },
+    {
+        id: "lucky-wheel",
+        name: "Vòng quay may mắn",
+        description: "Tạo vòng quay ngẫu nhiên với hiệu ứng đẹp mắt. Chọn người, phân việc, quyết định nhanh.",
+        path: "/math/lucky-wheel",
+        category: "math",
+        isNew: true,
+    },
 
     // ==========================================
     // 🖼️ IMAGE TOOLS (Công cụ Hình ảnh/Màu sắc)
