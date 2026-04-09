@@ -89,6 +89,46 @@ describe("buildQRData – text", () => {
     });
 });
 
+describe("buildQRData – Vietnamese & UTF-8", () => {
+    it("encodes Vietnamese characters as UTF-8 bytes", () => {
+        const input = "Xin chào"; // 'à' is 2 bytes in UTF-8
+        const result = buildQRData(
+            "text",
+            "",
+            input,
+            emptyWifi,
+            emptyEmail,
+            emptySms,
+        );
+
+        // 'à' (U+00E0) in UTF-8 is 0xC3 0xA0
+        // Total expected bytes: X(1) i(1) n(1) space(1) c(1) h(1) à(2) o(1) = 9
+        expect(result).toHaveLength(9);
+        expect(result).not.toBe(input);
+        expect(result.charCodeAt(6)).toBe(0xc3);
+        expect(result.charCodeAt(7)).toBe(0xa0);
+    });
+
+    it("normalizes to NFC", () => {
+        // 'e' + combining acute accent (NFD)
+        const nfd = "th" + String.fromCharCode(0x65, 0x0301) + "!";
+        const result = buildQRData(
+            "text",
+            "",
+            nfd,
+            emptyWifi,
+            emptyEmail,
+            emptySms,
+        );
+
+        // Should normalize to 'ế' (NFC) which is 3 bytes in UTF-8 (actually 'é' is 2 bytes, 'ế' is more)
+        // 'é' (e acute) is 0xC3 0xA9. Total 2+1+1+1 = 5 bytes? 
+        // Wait, nfd is "thé!". "é" is 0x65 + 0x301 (2 chars). 
+        // NFC of "é" is 0xE9 (1 char). UTF-8 of 0xE9 is 0xC3 0xA9.
+        expect(result).toHaveLength(5); // t(1) h(1) é(2) !(1)
+    });
+});
+
 describe("buildQRData – wifi", () => {
     it("generates a valid WIFI: string", () => {
         const wifi: WifiContent = {
