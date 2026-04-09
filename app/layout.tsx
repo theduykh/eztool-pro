@@ -12,7 +12,7 @@ const inter = Inter({
 
 const firaCode = Fira_Code({
     variable: "--font-mono",
-    subsets: ["latin"],
+    subsets: ["latin", "vietnamese"],
 });
 
 export const metadata: Metadata = {
