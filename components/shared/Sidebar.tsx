@@ -119,7 +119,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
                     {/* Close button (mobile only) */}
                     <button
-                        className="rounded-md p-1 text-muted-foreground hover:text-foreground md:hidden"
+                        className="rounded-md p-2.5 text-muted-foreground hover:text-foreground active:bg-accent md:hidden"
                         onClick={onClose}
                         aria-label="Đóng menu"
                     >
@@ -153,7 +153,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                                     href={tool.path}
                                                     onClick={onClose}
                                                     className={cn(
-                                                        "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                                                        "flex items-center rounded-md px-3 py-3 text-sm font-medium transition-colors active:bg-accent/70",
                                                         isActive
                                                             ? "bg-accent text-blue-600 dark:text-blue-400"
                                                             : "text-muted-foreground hover:bg-accent hover:text-foreground"
