@@ -6,20 +6,6 @@ export interface WheelTemplate {
 
 export const WHEEL_TEMPLATES: WheelTemplate[] = [
     {
-        id: "beer-picker",
-        name: "🍺 Chọn người uống bia",
-        items: [
-            "Duy",
-            "Nghiệm",
-            "Hiếu",
-            "Tuấn",
-            "Phước",
-            "Hậu",
-            "Hoàng",
-            "Phong",
-        ],
-    },
-    {
         id: "drinking-penalty",
         name: "🥂 Hình thức phạt nhậu",
         items: [
@@ -31,6 +17,20 @@ export const WHEEL_TEMPLATES: WheelTemplate[] = [
             "Người tiếp theo uống 50%",
             "Người phía trước uống 50%",
             "Tất cả uống 50%",
+        ],
+    },
+    {
+        id: "beer-picker",
+        name: "🍺 Chọn người uống bia",
+        items: [
+            "Duy",
+            "Nghiệm",
+            "Hiếu",
+            "Tuấn",
+            "Phước",
+            "Hậu",
+            "Hoàng",
+            "Phong",
         ],
     },
     {

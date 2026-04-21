@@ -7,6 +7,7 @@ export interface ToolItem {
     path: string;
     category: ToolCategory;
     isNew?: boolean;
+    isHot?: boolean;
 }
 
 export const TOOLS_DIRECTORY: ToolItem[] = [
@@ -19,7 +20,7 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         description: "Làm đẹp, xác thực và nén dữ liệu JSON.",
         path: "/dev/json-formatter",
         category: "dev",
-        isNew: true,
+        isHot: true,
     },
     {
         id: "base64-encode-decode",
@@ -145,7 +146,7 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         description: "Tạo mã QR cho link, văn bản, wifi, có thể tùy chỉnh màu.",
         path: "/image/qr-generator",
         category: "image",
-        isNew: true,
+        isHot: true,
     },
     {
         id: "color-converter",
