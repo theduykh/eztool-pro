@@ -61,9 +61,9 @@ export function WordCounterClient() {
     ];
 
     return (
-        <div className="flex flex-1 flex-col gap-6">
-            {/* Stats Grid - Hiển thị 4 chỉ số chính theo dạng thẻ */}
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="flex h-full flex-col gap-4">
+            {/* Stats Grid */}
+            <div className="grid shrink-0 grid-cols-2 gap-4 md:grid-cols-4">
                 {statCards.map((card) => (
                     <div
                         key={card.label}
@@ -88,7 +88,7 @@ export function WordCounterClient() {
             </div>
 
             {/* Main Area: Input + Secondary Stats */}
-            <div className="flex flex-1 flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-lg transition-all duration-300 focus-within:ring-2 focus-within:ring-blue-500/20">
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-lg transition-all duration-300 focus-within:ring-2 focus-within:ring-blue-500/20">
                 {/* Secondary Info Bar */}
                 <div className="flex flex-col gap-3 border-b border-border bg-muted/30 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex flex-wrap items-center gap-x-6 gap-y-2">

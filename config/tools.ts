@@ -8,6 +8,8 @@ export interface ToolItem {
     category: ToolCategory;
     isNew?: boolean;
     isHot?: boolean;
+    /** "full" = no max-width (editor/canvas tools); "fixed" = centered narrow (calculator tools) */
+    layout?: "full" | "fixed";
 }
 
 export const TOOLS_DIRECTORY: ToolItem[] = [
@@ -21,6 +23,7 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         path: "/dev/json-formatter",
         category: "dev",
         isHot: true,
+        layout: "full",
     },
     {
         id: "base64-encode-decode",
@@ -28,6 +31,7 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         description: "Mã hóa hoặc giải mã chuỗi văn bản sang định dạng Base64.",
         path: "/dev/base64-encode-decode",
         category: "dev",
+        layout: "full",
     },
     {
         id: "url-encode-decode",
@@ -35,6 +39,7 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         description: "Mã hóa URL an toàn hoặc giải mã URL về dạng dễ đọc.",
         path: "/dev/url-encode-decode",
         category: "dev",
+        layout: "full",
     },
     {
         id: "jwt-decoder",
@@ -42,6 +47,7 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         description: "Giải mã JSON Web Token (JWT) để xem payload và header.",
         path: "/dev/jwt-decoder",
         category: "dev",
+        layout: "full",
     },
     {
         id: "hash-generator",
@@ -49,6 +55,7 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         description: "Tạo mã băm MD5, SHA-1, SHA-256 từ chuỗi văn bản.",
         path: "/dev/hash-generator",
         category: "dev",
+        layout: "full",
     },
 
     // ==========================================
@@ -60,6 +67,7 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         description: "Đếm số từ, số ký tự, số câu và đoạn văn chi tiết.",
         path: "/text/word-counter",
         category: "text",
+        layout: "full",
     },
     {
         id: "case-converter",
@@ -88,6 +96,7 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         description: "Dọn dẹp văn bản, xóa các dòng trống và khoảng cách thừa.",
         path: "/text/remove-line-breaks",
         category: "text",
+        layout: "full",
     },
 
     // ==========================================
@@ -135,6 +144,7 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         path: "/math/lucky-wheel",
         category: "math",
         isNew: true,
+        layout: "full",
     },
 
     // ==========================================
@@ -161,6 +171,7 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         description: "Chuyển đổi file ảnh sang chuỗi Base64 để nhúng vào HTML/CSS.",
         path: "/image/image-to-base64",
         category: "image",
+        layout: "full",
     },
     {
         id: "svg-placeholder",
@@ -175,6 +186,7 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         description: "Crop và thay đổi kích thước ảnh ngay trên trình duyệt.",
         path: "/image/image-resizer",
         category: "image",
+        layout: "full",
     }
 ];
 

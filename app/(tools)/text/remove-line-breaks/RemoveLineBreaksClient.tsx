@@ -59,9 +59,9 @@ export function RemoveLineBreaksClient() {
     };
 
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex h-full flex-col gap-4">
             {/* Options Panel */}
-            <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+            <div className="shrink-0 rounded-2xl border border-border bg-card p-6 shadow-sm">
                 <div className="flex items-center gap-2 mb-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">
                     <Settings className="size-3.5" />
                     Tùy chọn dọn dẹp
@@ -122,10 +122,10 @@ export function RemoveLineBreaksClient() {
             </div>
 
             {/* Main Workspace */}
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div className="grid min-h-0 flex-1 grid-cols-1 gap-6 lg:grid-cols-2">
                 {/* Input */}
                 <div className="flex flex-col gap-3">
-                    <div className="flex items-center justify-between">
+                    <div className="flex shrink-0 items-center justify-between">
                         <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Văn bản gốc</label>
                         <Button variant="ghost" size="sm" onClick={handleClear} className="h-8 gap-1.5 text-xs text-muted-foreground hover:bg-destructive/10 hover:text-destructive">
                             <Trash2 className="size-3.5" />
@@ -133,7 +133,7 @@ export function RemoveLineBreaksClient() {
                         </Button>
                     </div>
                     <textarea
-                        className="h-64 w-full resize-none rounded-2xl border border-border bg-card p-4 font-mono text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 md:h-96"
+                        className="flex-1 w-full resize-none rounded-2xl border border-border bg-card p-4 font-mono text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                         placeholder="Dán văn bản có nhiều dòng trống hoặc khoảng trắng thừa tại đây..."
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
@@ -142,7 +142,7 @@ export function RemoveLineBreaksClient() {
 
                 {/* Output */}
                 <div className="flex flex-col gap-3">
-                    <div className="flex items-center justify-between">
+                    <div className="flex shrink-0 items-center justify-between">
                         <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Kết quả đã dọn dẹp</label>
                         <Button
                             size="sm"
@@ -168,7 +168,7 @@ export function RemoveLineBreaksClient() {
                         </Button>
                     </div>
                     <textarea
-                        className="h-64 w-full resize-none rounded-2xl border border-border bg-card/50 p-4 font-mono text-sm shadow-sm focus:outline-none md:h-96"
+                        className="flex-1 w-full resize-none rounded-2xl border border-border bg-card/50 p-4 font-mono text-sm shadow-sm focus:outline-none"
                         value={output}
                         readOnly
                         placeholder="Kết quả dọn dẹp sẽ hiển thị ở đây..."
@@ -178,7 +178,7 @@ export function RemoveLineBreaksClient() {
 
             {/* Info Metrics */}
             {input && (
-                <div className="flex flex-wrap gap-6 px-2">
+                <div className="flex shrink-0 flex-wrap gap-6 px-2">
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <Zap className="size-3.5 text-yellow-500" />
                         <span>Giảm bớt: <span className="font-bold text-foreground">{input.length - output.length}</span> ký tự</span>

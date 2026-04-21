@@ -68,9 +68,10 @@ const TOOL_ICON_MAP: Record<string, LucideIcon> = {
 interface SidebarProps {
     isOpen: boolean;
     onClose: () => void;
+    isDesktopCollapsed?: boolean;
 }
 
-export function Sidebar({ isOpen, onClose }: SidebarProps) {
+export function Sidebar({ isOpen, onClose, isDesktopCollapsed = false }: SidebarProps) {
     const pathname = usePathname();
     const categories = getCategories();
 
@@ -107,9 +108,11 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             <aside
                 id="sidebar"
                 className={cn(
-                    "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-border bg-card transition-transform duration-200 ease-in-out",
+                    "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-border bg-card",
+                    "transition-[width,transform] duration-300 ease-in-out",
                     "md:relative md:translate-x-0",
                     isOpen ? "translate-x-0" : "-translate-x-full",
+                    isDesktopCollapsed && "md:w-0 md:overflow-hidden md:border-r-0",
                 )}
             >
                 {/* Logo */}

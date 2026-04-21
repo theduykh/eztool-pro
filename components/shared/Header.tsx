@@ -2,44 +2,60 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Menu, Search, ChevronRight } from "lucide-react";
+import { Menu, Search, ChevronRight, PanelLeft } from "lucide-react";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { TOOLS_DIRECTORY, getCategories } from "@/config/tools";
 import { Button } from "@/components/ui/button";
 
 interface HeaderProps {
-    onMenuClick: () => void;
+    onMobileMenuClick: () => void;
+    onDesktopSidebarToggle: () => void;
+    desktopSidebarCollapsed: boolean;
 }
 
-export function Header({ onMenuClick }: HeaderProps) {
+export function Header({
+    onMobileMenuClick,
+    onDesktopSidebarToggle,
+    desktopSidebarCollapsed,
+}: HeaderProps) {
     const pathname = usePathname();
-
-    // Build breadcrumb from current path
     const breadcrumbs = buildBreadcrumbs(pathname);
 
     return (
-        <header className="flex h-14 flex-shrink-0 items-center justify-between border-b border-border bg-card px-4 lg:px-8">
-            {/* Left: menu button + breadcrumb */}
-            <div className="flex items-center">
+        <header className="flex h-14 flex-shrink-0 items-center justify-between border-b border-border bg-card px-3 lg:px-5">
+            {/* Left: menu buttons + breadcrumb */}
+            <div className="flex items-center gap-1">
+                {/* Mobile: open drawer */}
                 <Button
-                    id="btn-menu"
+                    id="btn-menu-mobile"
                     variant="ghost"
                     size="icon"
-                    className="mr-2 text-muted-foreground hover:text-foreground md:hidden"
-                    onClick={onMenuClick}
+                    className="text-muted-foreground hover:text-foreground md:hidden"
+                    onClick={onMobileMenuClick}
                     aria-label="Mở menu"
                 >
                     <Menu className="size-5" />
                 </Button>
 
-                {/* Breadcrumb (hidden on very small screens) */}
+                {/* Desktop: fold / unfold sidebar */}
+                <Button
+                    id="btn-sidebar-toggle"
+                    variant="ghost"
+                    size="icon"
+                    className="hidden text-muted-foreground hover:text-foreground md:flex"
+                    onClick={onDesktopSidebarToggle}
+                    aria-label={desktopSidebarCollapsed ? "Mở sidebar" : "Thu sidebar"}
+                    title={desktopSidebarCollapsed ? "Mở sidebar" : "Thu sidebar"}
+                >
+                    <PanelLeft className="size-5" />
+                </Button>
+
+                {/* Breadcrumb */}
                 <nav className="hidden sm:flex" aria-label="Breadcrumb">
                     <ol className="flex items-center space-x-1 text-sm text-muted-foreground">
                         {breadcrumbs.map((crumb, index) => (
                             <li key={crumb.label} className="flex items-center">
-                                {index > 0 && (
-                                    <ChevronRight className="mx-1 size-3.5" />
-                                )}
+                                {index > 0 && <ChevronRight className="mx-1 size-3.5" />}
                                 {crumb.href ? (
                                     <Link
                                         href={crumb.href}
@@ -60,7 +76,6 @@ export function Header({ onMenuClick }: HeaderProps) {
 
             {/* Right: search + theme toggle */}
             <div className="flex items-center gap-2">
-                {/* Search icon button (mobile only) */}
                 <Button
                     variant="ghost"
                     size="icon"
@@ -70,9 +85,8 @@ export function Header({ onMenuClick }: HeaderProps) {
                     <Search className="size-5" />
                 </Button>
 
-                {/* Search bar (mockup, can be wired to Shadcn Command later) */}
                 <button
-                    className="hidden items-center justify-between rounded-md border border-border bg-accent/50 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent sm:flex sm:w-56 lg:w-64"
+                    className="hidden items-center justify-between rounded-md border border-border bg-accent/50 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent sm:flex sm:w-52 lg:w-64"
                     aria-label="Tìm kiếm công cụ"
                 >
                     <span className="flex items-center">
@@ -90,10 +104,6 @@ export function Header({ onMenuClick }: HeaderProps) {
     );
 }
 
-// ──────────────────────────────────────
-// Helpers
-// ──────────────────────────────────────
-
 interface BreadcrumbItem {
     label: string;
     href?: string;
@@ -101,25 +111,20 @@ interface BreadcrumbItem {
 
 function buildBreadcrumbs(pathname: string): BreadcrumbItem[] {
     const crumbs: BreadcrumbItem[] = [{ label: "Trang chủ", href: "/" }];
-
     if (pathname === "/") return crumbs;
 
-    // Try to match current tool
     const currentTool = TOOLS_DIRECTORY.find((t) => t.path === pathname);
     const categories = getCategories();
 
     if (currentTool) {
         const category = categories.find((c) => c.id === currentTool.category);
-        if (category) {
-            crumbs.push({ label: category.label });
-        }
+        if (category) crumbs.push({ label: category.label });
         crumbs.push({ label: currentTool.name });
     } else {
-        // Generic fallback: split path segments
-        const segments = pathname.split("/").filter(Boolean);
-        segments.forEach((seg) => {
-            crumbs.push({ label: decodeURIComponent(seg) });
-        });
+        pathname
+            .split("/")
+            .filter(Boolean)
+            .forEach((seg) => crumbs.push({ label: decodeURIComponent(seg) }));
     }
 
     return crumbs;
