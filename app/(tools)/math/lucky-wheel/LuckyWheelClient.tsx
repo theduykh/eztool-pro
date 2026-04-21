@@ -39,7 +39,6 @@ import {
 import {
     generateWheelSlices,
     shuffleItems,
-    calculateSpinAngle,
     getWinnerIndex,
     type WheelSlice,
 } from "@/lib/math/wheel";
@@ -50,15 +49,23 @@ interface SpeedPreset {
     id: string;
     label: string;
     icon: typeof Zap;
-    minMs: number;
-    maxMs: number;
+    /** Exponential-decay time constant (seconds). Larger = slower to stop. */
+    tau: number;
+    /** Initial angular velocity range for button spin (deg/sec). */
+    minV: number;
+    maxV: number;
 }
 
 const SPEED_PRESETS: SpeedPreset[] = [
-    { id: "fast", label: "Nhanh", icon: Zap, minMs: 1000, maxMs: 2000 },
-    { id: "medium", label: "Trung bình", icon: Timer, minMs: 3000, maxMs: 5000 },
-    { id: "suspense", label: "Hồi hộp", icon: Flame, minMs: 7000, maxMs: 10000 },
+    { id: "fast", label: "Nhanh", icon: Zap, tau: 0.5, minV: 900, maxV: 1400 },
+    { id: "medium", label: "Trung bình", icon: Timer, tau: 1.2, minV: 1400, maxV: 2000 },
+    { id: "suspense", label: "Hồi hộp", icon: Flame, tau: 2.0, minV: 1800, maxV: 2500 },
 ];
+
+/** Wheel considered stopped when |velocity| drops below this (deg/sec). */
+const STOP_VELOCITY = 12;
+/** Cap flick velocity so a violent swipe doesn't spin for ages. */
+const MAX_FLICK_VELOCITY = 3500;
 
 const DEFAULT_TEXT = WHEEL_TEMPLATES[0].items.join("\n");
 
@@ -68,7 +75,11 @@ interface WheelSVGProps {
     slices: WheelSlice[];
     rotation: number;
     isSpinning: boolean;
-    spinDurationMs: number;
+    isDragging: boolean;
+    canInteract: boolean;
+    onPointerDown?: (e: React.PointerEvent<HTMLDivElement>) => void;
+    onPointerMove?: (e: React.PointerEvent<HTMLDivElement>) => void;
+    onPointerUp?: (e: React.PointerEvent<HTMLDivElement>) => void;
     className?: string;
     id?: string;
 }
@@ -77,7 +88,11 @@ function WheelSVG({
     slices,
     rotation,
     isSpinning,
-    spinDurationMs,
+    isDragging,
+    canInteract,
+    onPointerDown,
+    onPointerMove,
+    onPointerUp,
     className,
     id,
 }: WheelSVGProps) {
@@ -159,7 +174,17 @@ function WheelSVG({
     return (
         <div
             id={id}
-            className={cn("relative block select-none", className)}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerCancel={onPointerUp}
+            className={cn(
+                "relative block select-none",
+                canInteract &&
+                    (isDragging ? "cursor-grabbing" : "cursor-grab"),
+                className,
+            )}
+            style={{ touchAction: "none" }}
         >
             {/* Pointer overlay: scales perfectly with the wheel using identical viewport */}
             <svg
@@ -188,12 +213,9 @@ function WheelSVG({
             >
                 <svg
                     viewBox={`0 0 ${size} ${size}`}
-                    className="block h-full w-full max-w-full"
+                    className="block h-full w-full max-w-full pointer-events-none"
                     style={{
                         transform: `rotate(${rotation}deg)`,
-                        transition: isSpinning
-                            ? `transform ${spinDurationMs}ms cubic-bezier(0.25, 0.1, 0.15, 1)`
-                            : "none",
                     }}
                 >
                     {/* Outer decorative border */}
@@ -338,11 +360,24 @@ export function LuckyWheelClient() {
     );
     const [speedId, setSpeedId] = useState<string>("medium");
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
 
-    // Track current rotation without triggering transition on each set
+    // Physics + rotation tracking (refs avoid re-render on every frame)
     const currentRotationRef = useRef(0);
-    const spinButtonRef = useRef<HTMLButtonElement>(null);
-    const activeDurationRef = useRef(0);
+    const velocityRef = useRef(0); // deg/sec
+    const tauRef = useRef(1.2); // friction time constant (seconds)
+    const rafRef = useRef<number | null>(null);
+    const lastFrameTimeRef = useRef(0);
+
+    // Drag tracking
+    const isDraggingRef = useRef(false);
+    const lastPointerAngleRef = useRef(0);
+    const wheelCenterRef = useRef({ x: 0, y: 0 });
+    const dragStartRotationRef = useRef(0);
+    const dragSamplesRef = useRef<
+        Array<{ rotation: number; time: number }>
+    >([]);
+    const activePointerIdRef = useRef<number | null>(null);
 
     // Randomise duration within selected speed range
     const selectedSpeed = useMemo(
@@ -359,6 +394,18 @@ export function LuckyWheelClient() {
     const slices = generateWheelSlices(items);
     const canSpin = items.length >= 2 && !isSpinning;
 
+    // Clear any stale winner/dialog when the items list changes
+    const updateItems = useCallback(
+        (next: string) => {
+            setItemsText(next);
+            if (!isSpinning) {
+                setWinner(null);
+                setShowDialog(false);
+            }
+        },
+        [isSpinning],
+    );
+
     // Handle template selection
     const handleTemplateChange = useCallback(
         (templateId: string) => {
@@ -367,17 +414,17 @@ export function LuckyWheelClient() {
                 (t: WheelTemplate) => t.id === templateId,
             );
             if (template) {
-                setItemsText(template.items.join("\n"));
+                updateItems(template.items.join("\n"));
             }
         },
-        [],
+        [updateItems],
     );
 
     // Handle shuffle
     const handleShuffle = useCallback(() => {
         const shuffled = shuffleItems(items);
-        setItemsText(shuffled.join("\n"));
-    }, [items]);
+        updateItems(shuffled.join("\n"));
+    }, [items, updateItems]);
 
     // Fire confetti + show dialog
     const announceWinner = useCallback((winnerText: string, color: string) => {
@@ -412,43 +459,213 @@ export function LuckyWheelClient() {
         frame();
     }, []);
 
-    // Handle spin
+    // ── Physics engine ─────────────────────────────────────────────────────
+    const stopPhysics = useCallback(() => {
+        if (rafRef.current !== null) {
+            cancelAnimationFrame(rafRef.current);
+            rafRef.current = null;
+        }
+    }, []);
+
+    const finishSpin = useCallback(() => {
+        if (items.length === 0) {
+            setIsSpinning(false);
+            return;
+        }
+        const winnerIdx = getWinnerIndex(
+            currentRotationRef.current,
+            items.length,
+        );
+        const winnerText = items[winnerIdx] ?? items[0];
+        const color = slices[winnerIdx]?.color ?? "#F7DC6F";
+        setIsSpinning(false);
+        announceWinner(winnerText, color);
+    }, [announceWinner, items, slices]);
+
+    const startPhysics = useCallback(
+        (initialVelocity: number, tau: number) => {
+            stopPhysics();
+            velocityRef.current = initialVelocity;
+            tauRef.current = tau;
+            lastFrameTimeRef.current = 0;
+            setWinner(null);
+            setWinnerColor(null);
+            setShowDialog(false);
+            setIsSpinning(true);
+
+            const tick = (now: number) => {
+                if (lastFrameTimeRef.current === 0) {
+                    lastFrameTimeRef.current = now;
+                    rafRef.current = requestAnimationFrame(tick);
+                    return;
+                }
+                const dt = Math.min(
+                    (now - lastFrameTimeRef.current) / 1000,
+                    0.05,
+                );
+                lastFrameTimeRef.current = now;
+
+                // Exponential friction: v(t+dt) = v(t) * exp(-dt / τ)
+                velocityRef.current *= Math.exp(-dt / tauRef.current);
+                currentRotationRef.current += velocityRef.current * dt;
+                setRotation(currentRotationRef.current);
+
+                if (Math.abs(velocityRef.current) < STOP_VELOCITY) {
+                    rafRef.current = null;
+                    finishSpin();
+                    return;
+                }
+                rafRef.current = requestAnimationFrame(tick);
+            };
+
+            rafRef.current = requestAnimationFrame(tick);
+        },
+        [finishSpin, stopPhysics],
+    );
+
+    // Handle button spin — inject a random initial velocity matching the preset
     const handleSpin = useCallback(() => {
         if (!canSpin) return;
+        const v =
+            selectedSpeed.minV +
+            Math.random() * (selectedSpeed.maxV - selectedSpeed.minV);
+        startPhysics(v, selectedSpeed.tau);
+    }, [canSpin, selectedSpeed, startPhysics]);
 
-        setIsSpinning(true);
-        setWinner(null);
-        setWinnerColor(null);
-        setShowDialog(false);
+    // ── Drag-to-spin handlers ──────────────────────────────────────────────
+    const getPointerAngleDeg = (clientX: number, clientY: number): number => {
+        const { x, y } = wheelCenterRef.current;
+        return (Math.atan2(clientY - y, clientX - x) * 180) / Math.PI;
+    };
 
-        // Randomise duration within selected speed range
-        const durationMs =
-            selectedSpeed.minMs +
-            Math.random() * (selectedSpeed.maxMs - selectedSpeed.minMs);
-        activeDurationRef.current = durationMs;
+    /** Shortest signed delta between two angles in degrees, result in (-180, 180]. */
+    const shortestAngleDelta = (from: number, to: number): number => {
+        return ((((to - from) % 360) + 540) % 360) - 180;
+    };
 
-        const targetAngle = calculateSpinAngle(currentRotationRef.current);
-        setRotation(targetAngle);
-        currentRotationRef.current = targetAngle;
+    const handleWheelPointerDown = useCallback(
+        (e: React.PointerEvent<HTMLDivElement>) => {
+            if (items.length < 2) return;
+            // Only primary pointer (ignore multi-touch secondary fingers)
+            if (activePointerIdRef.current !== null) return;
 
-        // Wait for CSS transition to finish
-        setTimeout(() => {
-            const winnerIdx = getWinnerIndex(targetAngle, items.length);
-            const winnerText = items[winnerIdx] ?? items[0];
-            const color = slices[winnerIdx]?.color ?? "#F7DC6F";
-            setIsSpinning(false);
-            announceWinner(winnerText, color);
-        }, durationMs + 200);
-    }, [canSpin, items, slices, selectedSpeed, announceWinner]);
+            const target = e.currentTarget;
+            const rect = target.getBoundingClientRect();
+            wheelCenterRef.current = {
+                x: rect.left + rect.width / 2,
+                y: rect.top + rect.height / 2,
+            };
 
-    // Reset rotation on items change (avoid stale visual)
-    useEffect(() => {
-        // Don't reset while spinning
-        if (!isSpinning) {
-            setWinner(null);
+            // Grab the wheel — halt any in-flight physics
+            stopPhysics();
             setShowDialog(false);
-        }
-    }, [itemsText]); // eslint-disable-line react-hooks/exhaustive-deps
+
+            try {
+                target.setPointerCapture(e.pointerId);
+            } catch {
+                /* pointer capture may be unavailable; drag still works */
+            }
+
+            activePointerIdRef.current = e.pointerId;
+            isDraggingRef.current = true;
+            setIsDragging(true);
+            setIsSpinning(true);
+            lastPointerAngleRef.current = getPointerAngleDeg(
+                e.clientX,
+                e.clientY,
+            );
+            dragStartRotationRef.current = currentRotationRef.current;
+            dragSamplesRef.current = [
+                {
+                    rotation: currentRotationRef.current,
+                    time: e.timeStamp,
+                },
+            ];
+        },
+        [items.length, stopPhysics],
+    );
+
+    const handleWheelPointerMove = useCallback(
+        (e: React.PointerEvent<HTMLDivElement>) => {
+            if (!isDraggingRef.current) return;
+            if (e.pointerId !== activePointerIdRef.current) return;
+
+            const a = getPointerAngleDeg(e.clientX, e.clientY);
+            const delta = shortestAngleDelta(
+                lastPointerAngleRef.current,
+                a,
+            );
+            lastPointerAngleRef.current = a;
+
+            currentRotationRef.current += delta;
+            setRotation(currentRotationRef.current);
+
+            const samples = dragSamplesRef.current;
+            samples.push({
+                rotation: currentRotationRef.current,
+                time: e.timeStamp,
+            });
+            // Keep a rolling window of the last ~150ms
+            while (
+                samples.length > 2 &&
+                e.timeStamp - samples[0].time > 150
+            ) {
+                samples.shift();
+            }
+        },
+        [],
+    );
+
+    const handleWheelPointerUp = useCallback(
+        (e: React.PointerEvent<HTMLDivElement>) => {
+            if (!isDraggingRef.current) return;
+            if (e.pointerId !== activePointerIdRef.current) return;
+
+            isDraggingRef.current = false;
+            setIsDragging(false);
+            activePointerIdRef.current = null;
+
+            try {
+                if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+                    e.currentTarget.releasePointerCapture(e.pointerId);
+                }
+            } catch {
+                /* ignore */
+            }
+
+            // Compute release velocity from the most recent ~100ms of samples
+            const samples = dragSamplesRef.current;
+            const now = e.timeStamp;
+            const recent = samples.filter((s) => now - s.time <= 100);
+            let velocity = 0;
+            if (recent.length >= 2) {
+                const first = recent[0];
+                const last = recent[recent.length - 1];
+                const dt = last.time - first.time;
+                if (dt > 0) {
+                    velocity =
+                        ((last.rotation - first.rotation) / dt) * 1000;
+                }
+            }
+            velocity = Math.max(
+                -MAX_FLICK_VELOCITY,
+                Math.min(MAX_FLICK_VELOCITY, velocity),
+            );
+
+            if (Math.abs(velocity) < STOP_VELOCITY) {
+                // Released too slowly — no spin, no winner announcement.
+                setIsSpinning(false);
+                return;
+            }
+            startPhysics(velocity, selectedSpeed.tau);
+        },
+        [selectedSpeed, startPhysics],
+    );
+
+    // Cleanup rAF on unmount
+    useEffect(() => {
+        return () => stopPhysics();
+    }, [stopPhysics]);
 
     // Toggle fullscreen using the component's state (fake fullscreen for better compatibility and dialog support)
     const toggleFullscreen = useCallback(() => {
@@ -520,7 +737,7 @@ export function LuckyWheelClient() {
                     <Textarea
                         id="items-textarea"
                         value={itemsText}
-                        onChange={(e) => setItemsText(e.target.value)}
+                        onChange={(e) => updateItems(e.target.value)}
                         placeholder={
                             "Nhập mỗi mục trên một dòng…\nVí dụ:\nNam\nHùng\nLinh"
                         }
@@ -585,7 +802,11 @@ export function LuckyWheelClient() {
                         slices={slices}
                         rotation={rotation}
                         isSpinning={isSpinning}
-                        spinDurationMs={activeDurationRef.current}
+                        isDragging={isDragging}
+                        canInteract={items.length >= 2}
+                        onPointerDown={handleWheelPointerDown}
+                        onPointerMove={handleWheelPointerMove}
+                        onPointerUp={handleWheelPointerUp}
                         className={
                             isFullscreen
                                 ? "h-[min(75vh,75vw)] w-[min(75vh,75vw)]"
@@ -610,7 +831,6 @@ export function LuckyWheelClient() {
 
                 {/* Spin button */}
                 <Button
-                    ref={spinButtonRef}
                     onClick={handleSpin}
                     disabled={!canSpin}
                     size="lg"
