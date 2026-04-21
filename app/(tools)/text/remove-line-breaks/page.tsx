@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 
 export default function RemoveLineBreaksPage() {
     return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold tracking-tight">Xóa dòng trống & Khoảng trắng</h1>
-                <p className="text-muted-foreground">
+        <div className="flex h-full flex-col">
+            <div className="mb-6 flex-shrink-0">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground">Xóa dòng trống & Khoảng trắng</h1>
+                <p className="mt-1 text-sm text-muted-foreground">
                     Làm sạch văn bản của bạn bằng cách loại bỏ các ký tự thừa, dòng trống và chuẩn hóa khoảng cách giữa các từ.
                 </p>
             </div>

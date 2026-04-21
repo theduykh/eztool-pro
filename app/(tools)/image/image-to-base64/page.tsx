@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 
 export default function ImageToBase64Page() {
     return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold tracking-tight">Ảnh sang Base64</h1>
-                <p className="text-muted-foreground">
+        <div className="flex h-full flex-col">
+            <div className="mb-6 flex-shrink-0">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground">Ảnh sang Base64</h1>
+                <p className="mt-1 text-sm text-muted-foreground">
                     Chuyển đổi các tệp hình ảnh thành chuỗi Base64 để nhúng trực tiếp vào mã nguồn mà không cần lưu trữ tệp riêng biệt.
                 </p>
             </div>

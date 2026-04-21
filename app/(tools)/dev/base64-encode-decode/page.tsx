@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 
 export default function Base64EncodeDecodePage() {
     return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold tracking-tight">Base64 Encode/Decode</h1>
-                <p className="text-muted-foreground">
+        <div className="flex h-full flex-col">
+            <div className="mb-6 flex-shrink-0">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground">Base64 Encode/Decode</h1>
+                <p className="mt-1 text-sm text-muted-foreground">
                     Chuyển đổi dữ liệu văn bản sang định dạng Base64 và ngược lại một cách nhanh chóng và an toàn.
                 </p>
             </div>

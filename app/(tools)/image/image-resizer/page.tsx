@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 
 export default function ImageResizerPage() {
     return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold tracking-tight">Thay đổi kích thước ảnh</h1>
-                <p className="text-muted-foreground">
+        <div className="flex h-full flex-col">
+            <div className="mb-6 flex-shrink-0">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground">Thay đổi kích thước ảnh</h1>
+                <p className="mt-1 text-sm text-muted-foreground">
                     Điều chỉnh chiều rộng, chiều cao và chất lượng hình ảnh của bạn một cách dễ dàng và nhanh chóng ngay trên trình duyệt.
                 </p>
             </div>

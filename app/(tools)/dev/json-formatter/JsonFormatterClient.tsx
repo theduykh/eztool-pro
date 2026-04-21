@@ -103,7 +103,7 @@ export function JsonFormatterClient() {
     }, []);
 
     return (
-        <div className="flex h-full flex-col">
+        <div className="flex flex-1 min-h-0 flex-col">
             {/* Action Bar */}
             <div className="mb-4 flex flex-wrap gap-2">
                 <Button

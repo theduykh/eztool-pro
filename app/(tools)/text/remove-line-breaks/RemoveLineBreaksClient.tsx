@@ -59,9 +59,9 @@ export function RemoveLineBreaksClient() {
     };
 
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-1 min-h-0 flex-col">
             {/* Options Panel */}
-            <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+            <div className="shrink-0 mb-4 rounded-2xl border border-border bg-card p-6 shadow-sm">
                 <div className="flex items-center gap-2 mb-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">
                     <Settings className="size-3.5" />
                     Tùy chọn dọn dẹp
@@ -122,63 +122,72 @@ export function RemoveLineBreaksClient() {
             </div>
 
             {/* Main Workspace */}
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                {/* Input */}
-                <div className="flex flex-col gap-3">
-                    <div className="flex items-center justify-between">
-                        <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Văn bản gốc</label>
-                        <Button variant="ghost" size="sm" onClick={handleClear} className="h-8 gap-1.5 text-xs text-muted-foreground hover:bg-destructive/10 hover:text-destructive">
-                            <Trash2 className="size-3.5" />
-                            Xóa
-                        </Button>
+            <div className="grid min-h-[200px] flex-1 grid-cols-1 gap-4 md:min-h-[400px] lg:grid-cols-2">
+                {/* Input Panel */}
+                <div className="flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+                    <div className="flex h-10 flex-shrink-0 items-center justify-between border-b border-border bg-muted/50 px-3">
+                        <span className="text-xs font-semibold uppercase text-muted-foreground">
+                            Văn bản gốc
+                        </span>
+                        <button
+                            onClick={handleClear}
+                            className="flex items-center text-xs text-muted-foreground transition-colors hover:text-destructive"
+                        >
+                            <Trash2 className="mr-1 size-3.5" />
+                            Xóa trắng
+                        </button>
                     </div>
                     <textarea
-                        className="h-64 w-full resize-none rounded-2xl border border-border bg-card p-4 font-mono text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 md:h-96"
-                        placeholder="Dán văn bản có nhiều dòng trống hoặc khoảng trắng thừa tại đây..."
+                        id="input-text"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
+                        className="flex-1 w-full resize-none bg-transparent p-4 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-inset focus:ring-2 focus:ring-blue-500/50"
+                        placeholder="Dán văn bản có nhiều dòng trống hoặc khoảng trắng thừa tại đây..."
+                        spellCheck={false}
                     />
                 </div>
 
-                {/* Output */}
-                <div className="flex flex-col gap-3">
-                    <div className="flex items-center justify-between">
-                        <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Kết quả đã dọn dẹp</label>
-                        <Button
-                            size="sm"
-                            variant="secondary"
+                {/* Output Panel */}
+                <div className="flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+                    <div className="flex h-10 flex-shrink-0 items-center justify-between border-b border-border bg-muted/50 px-3">
+                        <span className="text-xs font-semibold uppercase text-muted-foreground">
+                            Kết quả đã dọn dẹp
+                        </span>
+                        <button
                             onClick={handleCopy}
                             disabled={!output}
                             className={cn(
-                                "h-8 gap-2 rounded-lg transition-all",
-                                copied && "bg-green-500 text-white hover:bg-green-600"
+                                "flex items-center text-xs transition-colors",
+                                copied ? "text-green-500" : "text-muted-foreground hover:text-foreground"
                             )}
                         >
                             {copied ? (
                                 <>
-                                    <Check className="size-3.5" />
-                                    <span>Đã chép</span>
+                                    <Check className="mr-1 size-3.5" />
+                                    Đã copy!
                                 </>
                             ) : (
                                 <>
-                                    <Copy className="size-3.5" />
-                                    <span>Sao chép</span>
+                                    <Copy className="mr-1 size-3.5" />
+                                    Copy
                                 </>
                             )}
-                        </Button>
+                        </button>
                     </div>
                     <textarea
-                        className="h-64 w-full resize-none rounded-2xl border border-border bg-card/50 p-4 font-mono text-sm shadow-sm focus:outline-none md:h-96"
+                        id="output-text"
                         value={output}
                         readOnly
+                        className="flex-1 w-full resize-none bg-muted/20 p-4 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-inset focus:ring-2 focus:ring-blue-500/50"
                         placeholder="Kết quả dọn dẹp sẽ hiển thị ở đây..."
+                        spellCheck={false}
                     />
                 </div>
             </div>
 
             {/* Info Metrics */}
             {input && (
-                <div className="flex flex-wrap gap-6 px-2">
+                <div className="mt-4 flex shrink-0 flex-wrap gap-6 px-2">
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <Zap className="size-3.5 text-yellow-500" />
                         <span>Giảm bớt: <span className="font-bold text-foreground">{input.length - output.length}</span> ký tự</span>

@@ -380,6 +380,75 @@ export function QRGeneratorClient() {
         sms: <MessageSquare className="size-3.5" />,
     };
 
+    const downloadSection = (
+        <Section title="Tải xuống">
+            {/* Format */}
+            <div className="mb-3">
+                <p className="mb-1.5 text-xs font-medium text-muted-foreground">
+                    Định dạng
+                </p>
+                <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
+                    {DOWNLOAD_FORMATS.map((f) => (
+                        <button
+                            key={f.value}
+                            onClick={() => setDownloadFormat(f.value)}
+                            title={f.hint}
+                            className={`flex flex-col items-center rounded-lg py-2 text-xs font-semibold transition-colors ${downloadFormat === f.value
+                                ? "bg-primary text-primary-foreground shadow-sm"
+                                : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                                }`}
+                        >
+                            <span>{f.label}</span>
+                            <span className="mt-0.5 text-[10px] opacity-70">
+                                {f.hint}
+                            </span>
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* Size (disabled for SVG) */}
+            <div className="mb-4">
+                <p className="mb-1.5 text-xs font-medium text-muted-foreground">
+                    Kích thước
+                    {downloadFormat === "svg" && (
+                        <span className="ml-1 text-primary">
+                            (SVG không giới hạn kích thước)
+                        </span>
+                    )}
+                </p>
+                <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
+                    {DOWNLOAD_SIZES.map((s) => (
+                        <button
+                            key={s.value}
+                            onClick={() => setDownloadSize(s.value)}
+                            disabled={downloadFormat === "svg"}
+                            className={`rounded-lg py-2 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${downloadSize === s.value &&
+                                downloadFormat !== "svg"
+                                ? "bg-primary text-primary-foreground shadow-sm"
+                                : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                                }`}
+                        >
+                            {s.label}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* Download button */}
+            <Button
+                onClick={handleDownload}
+                disabled={isDownloading}
+                className="w-full gap-2"
+            >
+                <Download className="size-4" />
+                {isDownloading
+                    ? "Đang tạo..."
+                    : `Tải về ${downloadFormat.toUpperCase()}${downloadFormat !== "svg" ? ` (${downloadSize}px)` : ""}`}
+            </Button>
+        </Section>
+    );
+
     return (
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
             {/* ─── RIGHT: Preview panel (first in DOM for mobile) ───── */}
@@ -433,6 +502,10 @@ export function QRGeneratorClient() {
                     Thay đổi cài đặt bên dưới để tạo QR code tùy chỉnh. Kiểm
                     tra bằng cách quét thử trước khi in.
                 </p>
+                {/* ── 4. Download (Desktop only) ────────────────────────── */}
+                <div className="hidden w-full lg:block">
+                    {downloadSection}
+                </div>
             </div>
 
             {/* ─── LEFT: Settings panel ──────────────────────────────── */}
@@ -602,6 +675,11 @@ export function QRGeneratorClient() {
                         </div>
                     )}
                 </Section>
+
+                {/* ── 4. Download (Mobile only) ─────────────────────────── */}
+                <div className="block w-full lg:hidden">
+                    {downloadSection}
+                </div>
 
                 {/* ── 2. Style & Color ─────────────────────────────────── */}
                 <Section title="Thiết kế">
@@ -816,74 +894,6 @@ export function QRGeneratorClient() {
                             </div>
                         </div>
                     )}
-                </Section>
-
-                {/* ── 4. Download ───────────────────────────────────────── */}
-                <Section title="Tải xuống">
-                    {/* Format */}
-                    <div className="mb-3">
-                        <p className="mb-1.5 text-xs font-medium text-muted-foreground">
-                            Định dạng
-                        </p>
-                        <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
-                            {DOWNLOAD_FORMATS.map((f) => (
-                                <button
-                                    key={f.value}
-                                    onClick={() => setDownloadFormat(f.value)}
-                                    title={f.hint}
-                                    className={`flex flex-col items-center rounded-lg py-2 text-xs font-semibold transition-colors ${downloadFormat === f.value
-                                        ? "bg-primary text-primary-foreground shadow-sm"
-                                        : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
-                                        }`}
-                                >
-                                    <span>{f.label}</span>
-                                    <span className="mt-0.5 text-[10px] opacity-70">
-                                        {f.hint}
-                                    </span>
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Size (disabled for SVG) */}
-                    <div className="mb-4">
-                        <p className="mb-1.5 text-xs font-medium text-muted-foreground">
-                            Kích thước
-                            {downloadFormat === "svg" && (
-                                <span className="ml-1 text-primary">
-                                    (SVG không giới hạn kích thước)
-                                </span>
-                            )}
-                        </p>
-                        <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
-                            {DOWNLOAD_SIZES.map((s) => (
-                                <button
-                                    key={s.value}
-                                    onClick={() => setDownloadSize(s.value)}
-                                    disabled={downloadFormat === "svg"}
-                                    className={`rounded-lg py-2 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${downloadSize === s.value &&
-                                        downloadFormat !== "svg"
-                                        ? "bg-primary text-primary-foreground shadow-sm"
-                                        : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
-                                        }`}
-                                >
-                                    {s.label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Download button */}
-                    <Button
-                        onClick={handleDownload}
-                        disabled={isDownloading}
-                        className="w-full gap-2"
-                    >
-                        <Download className="size-4" />
-                        {isDownloading
-                            ? "Đang tạo..."
-                            : `Tải về ${downloadFormat.toUpperCase()}${downloadFormat !== "svg" ? ` (${downloadSize}px)` : ""}`}
-                    </Button>
                 </Section>
             </div>
 

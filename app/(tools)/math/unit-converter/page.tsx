@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 
 export default function UnitConverterPage() {
     return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold tracking-tight">Đổi đơn vị đo lường</h1>
-                <p className="text-muted-foreground">
+        <div className="flex h-full flex-col">
+            <div className="mb-6 flex-shrink-0">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground">Đổi đơn vị đo lường</h1>
+                <p className="mt-1 text-sm text-muted-foreground">
                     Chuyển đổi linh hoạt giữa các đơn vị đo lường phổ biến. Chọn loại đơn vị, nhập giá trị và xem kết quả ngay lập tức.
                 </p>
             </div>
