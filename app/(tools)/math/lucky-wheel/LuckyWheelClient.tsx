@@ -709,7 +709,7 @@ export function LuckyWheelClient() {
                         }}
                     >
                         <p
-                            className="break-all text-3xl font-extrabold"
+                            className="break-words text-3xl font-extrabold"
                             style={{ color: winnerColor ?? undefined }}
                         >
                             {winner}
