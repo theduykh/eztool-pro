@@ -14,20 +14,18 @@ export interface WheelSlice {
  * always have high contrast regardless of item count.
  */
 const SLICE_COLORS: string[] = [
-    "#FF6B6B", // coral red
-    "#4ECDC4", // teal
-    "#45B7D1", // sky blue
-    "#96CEB4", // sage green
-    "#F7DC6F", // sunflower
-    "#DDA0DD", // plum
-    "#FF9F43", // tangerine
-    "#74B9FF", // light blue
-    "#A29BFE", // lavender
-    "#55E6C1", // mint
-    "#FD79A8", // pink
-    "#FDCB6E", // gold
-    "#6C5CE7", // indigo
-    "#00CEC9", // dark cyan
+    "#EF4444", // Red
+    "#3B82F6", // Blue
+    "#22C55E", // Green
+    "#EAB308", // Yellow
+    "#F97316", // Orange
+    "#A855F7", // Purple
+    "#EC4899", // Pink
+    "#14B8A6", // Teal
+    "#6366F1", // Indigo
+    "#06B6D4", // Cyan
+    "#8B5CF6", // Violet
+    "#F43F5E", // Rose
 ];
 
 // ─── Pure functions ────────────────────────────────────────────────────────────
@@ -84,7 +82,7 @@ export function calculateSpinAngle(currentRotation: number): number {
 /**
  * Determine the winning slice index based on the final rotation angle.
  *
- * The pointer is at 12 o'clock (top). Because CSS rotates the wheel
+ * The pointer is at 3 o'clock (right side, 90°). Because CSS rotates the wheel
  * clockwise, we need to figure out which slice sits under the pointer.
  *
  * @param finalAngle  – the total accumulated CSS rotation in degrees
@@ -99,9 +97,9 @@ export function getWinnerIndex(finalAngle: number, itemCount: number): number {
     // Normalise angle into 0-360 range
     const normalised = ((finalAngle % 360) + 360) % 360;
 
-    // The pointer is at the top (0°). When the wheel rotates clockwise by
-    // `normalised` degrees the slice at "360 - normalised" sits under the pointer.
-    const pointerAngle = (360 - normalised) % 360;
+    // The pointer is at the right (90°). When the wheel rotates clockwise by
+    // `normalised` degrees, the slice at "90 - normalised" sits under the pointer.
+    const pointerAngle = (90 - normalised + 360) % 360;
 
     return Math.floor(pointerAngle / sliceAngle) % itemCount;
 }
