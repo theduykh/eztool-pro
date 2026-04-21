@@ -181,7 +181,7 @@ function WheelSVG({
             className={cn(
                 "relative block select-none",
                 canInteract &&
-                    (isDragging ? "cursor-grabbing" : "cursor-grab"),
+                (isDragging ? "cursor-grabbing" : "cursor-grab"),
                 className,
             )}
             style={{ touchAction: "none" }}
@@ -809,7 +809,7 @@ export function LuckyWheelClient() {
                         onPointerUp={handleWheelPointerUp}
                         className={
                             isFullscreen
-                                ? "h-[min(75vh,75vw)] w-[min(75vh,75vw)]"
+                                ? "h-[min(78vh,92vw)] w-[min(78vh,92vw)]"
                                 : "h-[300px] w-[300px] sm:h-[400px] sm:w-[400px]"
                         }
                     />
