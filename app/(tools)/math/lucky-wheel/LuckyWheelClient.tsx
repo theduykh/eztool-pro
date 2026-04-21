@@ -112,32 +112,70 @@ function WheelSVG({
     ): { x: number; y: number; rotation: number } {
         const midAngle = startAngle + sliceAngle / 2;
         const midRad = ((midAngle - 90) * Math.PI) / 180;
+        // Move text slightly outwards to look balanced along the radius
         const labelRadius = radius * 0.62;
         return {
             x: center + labelRadius * Math.cos(midRad),
             y: center + labelRadius * Math.sin(midRad),
-            rotation: midAngle,
+            rotation: midAngle - 90, // Text points from center outwards
         };
     }
 
     const sliceAngle = slices.length > 0 ? 360 / slices.length : 360;
+
+    // Determine font constraints based on number of items
+    const maxLines = slices.length > 24 ? 1 : slices.length > 12 ? 2 : 3;
+    const fontSize = slices.length > 24 ? 10 : slices.length > 12 ? 12 : 14;
+
+    const wrapText = (text: string) => {
+        const maxChars = 16;
+        const words = text.split(/\s+/);
+        const lines: string[] = [];
+        let current = "";
+        for (const word of words) {
+            if ((current + " " + word).trim().length <= maxChars) {
+                current = (current + " " + word).trim();
+            } else {
+                if (current) lines.push(current);
+                let rem = word;
+                while (rem.length > maxChars) {
+                    lines.push(rem.slice(0, maxChars) + "-");
+                    rem = rem.slice(maxChars);
+                }
+                current = rem;
+            }
+        }
+        if (current) lines.push(current);
+
+        if (lines.length > maxLines) {
+            const truncated = lines.slice(0, maxLines);
+            truncated[maxLines - 1] =
+                truncated[maxLines - 1].slice(0, maxChars - 1) + "…";
+            return truncated;
+        }
+        return lines;
+    };
 
     return (
         <div
             id={id}
             className={cn("relative block select-none", className)}
         >
-            {/* Pointer triangle at top-center */}
-            <div className="absolute top-0 left-1/2 z-20 -translate-x-1/2 -translate-y-1">
-                <svg width="28" height="32" viewBox="0 0 28 32">
-                    <polygon
-                        points="14,30 2,4 26,4"
-                        fill="#EF4444"
-                        stroke="white"
-                        strokeWidth="2"
-                    />
-                </svg>
-            </div>
+            {/* Pointer overlay: scales perfectly with the wheel using identical viewport */}
+            <svg
+                viewBox={`0 0 ${size} ${size}`}
+                className="pointer-events-none absolute inset-0 z-20 h-full w-full drop-shadow-md"
+                style={{ overflow: "visible" }}
+            >
+                {/* Pointer tip at right edge (x=376, y=center). Base slightly outside (x=404). */}
+                <polygon
+                    points="376,200 404,186 404,214"
+                    fill="#EF4444"
+                    stroke="white"
+                    strokeWidth="3"
+                    strokeLinejoin="round"
+                />
+            </svg>
 
             {/* Outer glow ring */}
             <div
@@ -222,22 +260,7 @@ function WheelSVG({
                                 startAngle,
                                 sliceAngle,
                             );
-                            const maxChars =
-                                slices.length > 10
-                                    ? 6
-                                    : slices.length > 6
-                                        ? 8
-                                        : 12;
-                            const displayText =
-                                slice.text.length > maxChars
-                                    ? slice.text.slice(0, maxChars) + "…"
-                                    : slice.text;
-                            const fontSize =
-                                slices.length > 10
-                                    ? 10
-                                    : slices.length > 6
-                                        ? 12
-                                        : 14;
+                            const lines = wrapText(slice.text);
 
                             return (
                                 <g key={i} filter="url(#sliceShadow)">
@@ -251,7 +274,6 @@ function WheelSVG({
                                         x={label.x}
                                         y={label.y}
                                         textAnchor="middle"
-                                        dominantBaseline="middle"
                                         transform={`rotate(${label.rotation}, ${label.x}, ${label.y})`}
                                         fill="white"
                                         fontSize={fontSize}
@@ -261,7 +283,20 @@ function WheelSVG({
                                                 "0 1px 3px rgba(0,0,0,0.4)",
                                         }}
                                     >
-                                        {displayText}
+                                        {lines.map((line, idx) => (
+                                            <tspan
+                                                key={idx}
+                                                x={label.x}
+                                                dy={
+                                                    idx === 0
+                                                        ? `-${(lines.length - 1) * 0.6}em`
+                                                        : "1.2em"
+                                                }
+                                                dominantBaseline="central"
+                                            >
+                                                {line}
+                                            </tspan>
+                                        ))}
                                     </text>
                                 </g>
                             );
@@ -644,7 +679,7 @@ export function LuckyWheelClient() {
                         isFullscreen && "mt-4 text-sm",
                     )}
                 >
-                    Mũi tên đỏ ở trên chỉ vào mục được chọn
+                    Mũi tên đỏ chỉ vào mục được chọn
                 </p>
             </div>
 
