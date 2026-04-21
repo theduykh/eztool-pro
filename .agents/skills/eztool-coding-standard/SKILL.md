@@ -33,6 +33,7 @@ Dự án "eztool.pro" là một nền tảng công cụ chuẩn SEO với Next.j
 - Viết Unit Tests bằng **Vitest**. Các test case phải bao quát được 2 mảng chính:
   - Happy Path (Đường dẫn lý tưởng, input đúng).
   - Edge Cases (Các trường hợp dị biệt, lỗi, biên).
+- Mọi phần tử (element) quan trọng trên giao diện (như input, button, tab, thẻ điều khiển, form) BẮT BUỘC phải có thuộc tính `id` rõ ràng và có ý nghĩa. Điều này hỗ trợ quá trình QA automation và viết kịch bản e2e test (ví dụ: Playwright, Selenium, Cypress).
 
 ## 6. Cấu trúc dự án hiện tại
 

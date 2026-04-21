@@ -68,16 +68,19 @@ function TabStrip<T extends string>({
     options,
     value,
     onChange,
+    idPrefix,
 }: {
     options: { label: string; value: T }[];
     value: T;
     onChange: (v: T) => void;
+    idPrefix?: string;
 }) {
     return (
         <div className="flex flex-wrap gap-1.5">
             {options.map((opt) => (
                 <button
                     key={opt.value}
+                    id={idPrefix ? `${idPrefix}-${opt.value}` : undefined}
                     onClick={() => onChange(opt.value)}
                     className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${value === opt.value
                         ? "bg-primary text-primary-foreground shadow-sm"
@@ -97,10 +100,12 @@ function ColorInput({
     label,
     value,
     onChange,
+    idPrefix,
 }: {
     label: string;
     value: string;
     onChange: (v: string) => void;
+    idPrefix?: string;
 }) {
     return (
         <div className="flex items-center gap-2">
@@ -109,12 +114,14 @@ function ColorInput({
             </label>
             <div className="flex items-center gap-2 rounded-lg border border-border bg-background px-2 py-1.5">
                 <input
+                    id={idPrefix ? `${idPrefix}-picker` : undefined}
                     type="color"
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     className="h-9 w-12 cursor-pointer rounded border-0 bg-transparent p-0"
                 />
                 <input
+                    id={idPrefix ? `${idPrefix}-text` : undefined}
                     type="text"
                     value={value}
                     onChange={(e) => {
@@ -238,6 +245,8 @@ export function QRGeneratorClient() {
                     margin: 4,
                     crossOrigin: "anonymous",
                 };
+            } else {
+                options.image = "";
             }
 
             return options;
@@ -391,6 +400,7 @@ export function QRGeneratorClient() {
                     {DOWNLOAD_FORMATS.map((f) => (
                         <button
                             key={f.value}
+                            id={`download-format-${f.value}`}
                             onClick={() => setDownloadFormat(f.value)}
                             title={f.hint}
                             className={`flex flex-col items-center rounded-lg py-2 text-xs font-semibold transition-colors ${downloadFormat === f.value
@@ -421,6 +431,7 @@ export function QRGeneratorClient() {
                     {DOWNLOAD_SIZES.map((s) => (
                         <button
                             key={s.value}
+                            id={`download-size-${s.value}`}
                             onClick={() => setDownloadSize(s.value)}
                             disabled={downloadFormat === "svg"}
                             className={`rounded-lg py-2 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${downloadSize === s.value &&
@@ -437,6 +448,7 @@ export function QRGeneratorClient() {
 
             {/* Download button */}
             <Button
+                id="btn-download"
                 onClick={handleDownload}
                 disabled={isDownloading}
                 className="w-full gap-2"
@@ -471,6 +483,7 @@ export function QRGeneratorClient() {
                 {/* Action buttons */}
                 <div className="flex flex-wrap items-center justify-center gap-3">
                     <Button
+                        id="btn-copy"
                         variant="outline"
                         onClick={handleCopy}
                         className="gap-2"
@@ -489,6 +502,7 @@ export function QRGeneratorClient() {
                     </Button>
 
                     <Button
+                        id="btn-reset"
                         variant="outline"
                         onClick={handleReset}
                         className="gap-2"
@@ -517,6 +531,7 @@ export function QRGeneratorClient() {
                         {CONTENT_TABS.map((tab) => (
                             <button
                                 key={tab.value}
+                                id={`content-type-${tab.value}`}
                                 onClick={() => setContentType(tab.value)}
                                 className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${contentType === tab.value
                                     ? "bg-primary text-primary-foreground shadow-sm"
@@ -532,6 +547,7 @@ export function QRGeneratorClient() {
                     {/* Dynamic fields */}
                     {contentType === "url" && (
                         <input
+                            id="input-url"
                             type="url"
                             className={inputCls}
                             value={urlValue}
@@ -542,6 +558,7 @@ export function QRGeneratorClient() {
 
                     {contentType === "text" && (
                         <textarea
+                            id="input-text"
                             className={`${inputCls} h-28 resize-none font-mono`}
                             value={textValue}
                             onChange={(e) => setTextValue(e.target.value)}
@@ -552,6 +569,7 @@ export function QRGeneratorClient() {
                     {contentType === "wifi" && (
                         <div className="flex flex-col gap-2">
                             <input
+                                id="input-wifi-ssid"
                                 className={inputCls}
                                 value={wifi.ssid}
                                 onChange={(e) =>
@@ -563,6 +581,7 @@ export function QRGeneratorClient() {
                                 placeholder="Tên mạng WiFi (SSID)"
                             />
                             <input
+                                id="input-wifi-password"
                                 type="password"
                                 className={inputCls}
                                 value={wifi.password}
@@ -575,6 +594,7 @@ export function QRGeneratorClient() {
                                 placeholder="Mật khẩu"
                             />
                             <select
+                                id="select-wifi-encryption"
                                 className={selectCls}
                                 value={wifi.encryption}
                                 onChange={(e) =>
@@ -593,6 +613,7 @@ export function QRGeneratorClient() {
                             </select>
                             <label className="flex items-center gap-2 text-sm text-muted-foreground">
                                 <input
+                                    id="checkbox-wifi-hidden"
                                     type="checkbox"
                                     checked={wifi.hidden}
                                     onChange={(e) =>
@@ -611,6 +632,7 @@ export function QRGeneratorClient() {
                     {contentType === "email" && (
                         <div className="flex flex-col gap-2">
                             <input
+                                id="input-email-to"
                                 type="email"
                                 className={inputCls}
                                 value={email.to}
@@ -623,6 +645,7 @@ export function QRGeneratorClient() {
                                 placeholder="Địa chỉ email"
                             />
                             <input
+                                id="input-email-subject"
                                 className={inputCls}
                                 value={email.subject}
                                 onChange={(e) =>
@@ -634,6 +657,7 @@ export function QRGeneratorClient() {
                                 placeholder="Tiêu đề (không bắt buộc)"
                             />
                             <textarea
+                                id="input-email-body"
                                 className={`${inputCls} h-20 resize-none`}
                                 value={email.body}
                                 onChange={(e) =>
@@ -650,6 +674,7 @@ export function QRGeneratorClient() {
                     {contentType === "sms" && (
                         <div className="flex flex-col gap-2">
                             <input
+                                id="input-sms-phone"
                                 type="tel"
                                 className={inputCls}
                                 value={sms.phone}
@@ -662,6 +687,7 @@ export function QRGeneratorClient() {
                                 placeholder="Số điện thoại (VD: +84912345678)"
                             />
                             <textarea
+                                id="input-sms-message"
                                 className={`${inputCls} h-20 resize-none`}
                                 value={sms.message}
                                 onChange={(e) =>
@@ -689,6 +715,7 @@ export function QRGeneratorClient() {
                             Hình dạng QR
                         </p>
                         <TabStrip
+                            idPrefix="qr-shape"
                             options={[
                                 { label: "Vuông", value: "square" as QRShape },
                                 { label: "Tròn", value: "circle" as QRShape },
@@ -701,11 +728,13 @@ export function QRGeneratorClient() {
                     {/* Colors */}
                     <div className="mb-4 flex flex-col gap-2">
                         <ColorInput
+                            idPrefix="input-dot-color"
                             label="Màu chấm"
                             value={dotColor}
                             onChange={setDotColor}
                         />
                         <ColorInput
+                            idPrefix="input-bg-color"
                             label="Màu nền"
                             value={bgColor}
                             onChange={setBgColor}
@@ -721,6 +750,7 @@ export function QRGeneratorClient() {
                             {DOT_STYLES.map((s) => (
                                 <button
                                     key={s.value}
+                                    id={`dot-style-${s.value}`}
                                     onClick={() => setDotStyle(s.value)}
                                     className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors ${dotStyle === s.value
                                         ? "bg-primary text-primary-foreground"
@@ -742,6 +772,7 @@ export function QRGeneratorClient() {
                             {CORNER_SQUARE_STYLES.map((s) => (
                                 <button
                                     key={s.value}
+                                    id={`corner-square-${s.value}`}
                                     onClick={() =>
                                         setCornerSquareStyle(s.value)
                                     }
@@ -765,6 +796,7 @@ export function QRGeneratorClient() {
                             {CORNER_DOT_STYLES.map((s) => (
                                 <button
                                     key={s.value}
+                                    id={`corner-dot-${s.value}`}
                                     onClick={() => setCornerDotStyle(s.value)}
                                     className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors ${cornerDotStyle === s.value
                                         ? "bg-primary text-primary-foreground"
@@ -791,6 +823,7 @@ export function QRGeneratorClient() {
                             {ERROR_CORRECTION_LEVELS.map((s) => (
                                 <button
                                     key={s.value}
+                                    id={`error-correction-${s.value}`}
                                     onClick={() => setErrorCorrection(s.value)}
                                     disabled={
                                         !!logoDataURL && s.value !== "H"
@@ -815,6 +848,7 @@ export function QRGeneratorClient() {
                             </span>
                         </p>
                         <input
+                            id="input-margin"
                             type="range"
                             min={0}
                             max={40}
@@ -829,7 +863,7 @@ export function QRGeneratorClient() {
                 {/* ── 3. Logo ───────────────────────────────────────────── */}
                 <Section title="Logo">
                     {!logoDataURL ? (
-                        <label className="flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed border-border py-6 transition-colors hover:border-primary hover:bg-primary/5">
+                        <label id="logo-upload-label" className="flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed border-border py-6 transition-colors hover:border-primary hover:bg-primary/5">
                             <Upload className="size-6 text-muted-foreground" />
                             <span className="text-sm text-muted-foreground">
                                 Nhấn để chọn ảnh logo
@@ -838,6 +872,7 @@ export function QRGeneratorClient() {
                                 PNG, SVG, JPEG — khuyến nghị nền trong suốt
                             </span>
                             <input
+                                id="input-logo-upload"
                                 ref={logoInputRef}
                                 type="file"
                                 accept="image/*"
@@ -864,6 +899,7 @@ export function QRGeneratorClient() {
                                     </p>
                                 </div>
                                 <button
+                                    id="btn-remove-logo"
                                     onClick={removeLogo}
                                     className="rounded-lg p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                                     title="Xóa logo"
@@ -881,6 +917,7 @@ export function QRGeneratorClient() {
                                     </span>
                                 </p>
                                 <input
+                                    id="input-logo-size"
                                     type="range"
                                     min={0.15}
                                     max={0.5}
