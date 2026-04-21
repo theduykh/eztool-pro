@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 
 export default function TextToSlugPage() {
     return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold tracking-tight">Tạo URL Slug</h1>
-                <p className="text-muted-foreground">
+        <div className="flex h-full flex-col">
+            <div className="mb-6 flex-shrink-0">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground">Tạo URL Slug</h1>
+                <p className="mt-1 text-sm text-muted-foreground">
                     Biến các tiêu đề hoặc đoạn văn bản có dấu thành đường dẫn URL không dấu, thân thiện với SEO và dễ dàng chia sẻ.
                 </p>
             </div>

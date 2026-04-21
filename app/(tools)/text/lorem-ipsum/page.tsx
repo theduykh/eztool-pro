@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 
 export default function LoremIpsumPage() {
     return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold tracking-tight">Tạo chữ giả (Lorem Ipsum)</h1>
-                <p className="text-muted-foreground">
+        <div className="flex h-full flex-col">
+            <div className="mb-6 flex-shrink-0">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground">Tạo chữ giả (Lorem Ipsum)</h1>
+                <p className="mt-1 text-sm text-muted-foreground">
                     Tạo nhanh các đoạn văn bản giả để lấp đầy không gian thiết kế, giúp bạn hình dung bố cục trang web hoặc ứng dụng một cách dễ dàng.
                 </p>
             </div>

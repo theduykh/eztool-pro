@@ -9,11 +9,11 @@ export const metadata: Metadata = {
 
 export default function JWTDecoderPage() {
     return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold tracking-tight">JWT Decoder</h1>
-                <p className="text-muted-foreground">
-                    Giải mã nhanh các chuỗi JSON Web Token (JWT) để kiểm tra thông tin Header, Claims và Payload. Lưu ý: Công cụ này chỉ giải mã để xem nội dung, không thực hiện xác thực chữ ký (Signature Verification).
+        <div className="flex h-full flex-col">
+            <div className="mb-6 flex-shrink-0">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground">JWT Decoder</h1>
+                <p className="mt-1 text-sm text-muted-foreground">
+                    Giải mã nhanh các chuỗi JSON Web Token (JWT) để kiểm tra thông tin Header, Claims và Payload.
                 </p>
             </div>
 

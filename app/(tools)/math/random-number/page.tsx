@@ -12,11 +12,11 @@ export const metadata: Metadata = {
 export default function RandomNumberPage() {
     return (
         <div className="flex h-full flex-col">
-            <div className="mb-6">
-                <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            <div className="mb-6 flex-shrink-0">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground">
                     {tool.name}
                 </h1>
-                <p className="mt-2 text-muted-foreground">{tool.description}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{tool.description}</p>
             </div>
             <RandomNumberClient />
         </div>

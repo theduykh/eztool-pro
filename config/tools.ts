@@ -144,7 +144,7 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         path: "/math/lucky-wheel",
         category: "math",
         isNew: true,
-        layout: "full",
+
     },
 
     // ==========================================

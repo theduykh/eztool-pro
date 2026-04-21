@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 
 export default function PercentageCalculatorPage() {
     return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold tracking-tight">Tính Phần Trăm (%)</h1>
-                <p className="text-muted-foreground">
+        <div className="flex h-full flex-col">
+            <div className="mb-6 flex-shrink-0">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground">Tính Phần Trăm (%)</h1>
+                <p className="mt-1 text-sm text-muted-foreground">
                     Bộ công cụ giúp bạn giải quyết mọi phép tính liên quan đến phần trăm trong cuộc sống và công việc một cách nhanh nhất.
                 </p>
             </div>

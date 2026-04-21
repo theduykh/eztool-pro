@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 
 export default function RuleOfThreePage() {
     return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold tracking-tight">Tính Tam Suất</h1>
-                <p className="text-muted-foreground">
+        <div className="flex h-full flex-col">
+            <div className="mb-6 flex-shrink-0">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground">Tính Tam Suất</h1>
+                <p className="mt-1 text-sm text-muted-foreground">
                     Phương pháp giải bài toán về ba đại lượng đã biết để tìm đại lượng thứ tư. Hỗ trợ cả tỷ lệ thuận và tỷ lệ nghịch.
                 </p>
             </div>

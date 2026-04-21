@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 
 export default function URLEncodeDecodePage() {
     return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold tracking-tight">URL Encode/Decode</h1>
-                <p className="text-muted-foreground">
+        <div className="flex h-full flex-col">
+            <div className="mb-6 flex-shrink-0">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground">URL Encode/Decode</h1>
+                <p className="mt-1 text-sm text-muted-foreground">
                     Mã hóa URL an toàn hoặc giải mã URL về dạng dễ đọc nhất. Hỗ trợ xử lý tham số truy vấn và ký tự tiếng Việt.
                 </p>
             </div>

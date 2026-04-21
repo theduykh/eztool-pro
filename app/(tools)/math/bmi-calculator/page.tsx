@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 
 export default function BMICalculatorPage() {
     return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold tracking-tight">Tính chỉ số BMI</h1>
-                <p className="text-muted-foreground">
+        <div className="flex h-full flex-col">
+            <div className="mb-6 flex-shrink-0">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground">Tính chỉ số BMI</h1>
+                <p className="mt-1 text-sm text-muted-foreground">
                     Kiểm tra chỉ số khối cơ thể (Body Mass Index) để đánh giá tình trạng cân nặng và sức khỏe của bạn so với chiều cao.
                 </p>
             </div>
