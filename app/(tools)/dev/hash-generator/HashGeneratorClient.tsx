@@ -92,7 +92,7 @@ export function HashGeneratorClient() {
                     <textarea
                         id="input-hash"
                         className="h-32 w-full resize-none rounded-2xl border border-border bg-card p-4 font-mono text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-                        placeholder="Nhập văn bản cần tạo mã băm tại đây..."
+                        placeholder="Paste text to hash"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                     />

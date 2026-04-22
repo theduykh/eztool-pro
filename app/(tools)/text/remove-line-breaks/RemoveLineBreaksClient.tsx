@@ -115,7 +115,7 @@ export function RemoveLineBreaksClient() {
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         className="h-full w-full resize-none bg-transparent p-4 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500/50"
-                        placeholder="Dán văn bản có nhiều dòng trống hoặc khoảng trắng thừa tại đây..."
+                        placeholder="Paste text to clean up"
                         spellCheck={false}
                     />
                 </ToolPanel>
@@ -156,7 +156,7 @@ export function RemoveLineBreaksClient() {
                         value={output}
                         readOnly
                         className="h-full w-full resize-none bg-muted/20 p-4 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500/50"
-                        placeholder="Kết quả dọn dẹp sẽ hiển thị ở đây..."
+                        placeholder="Cleaned text will display here..."
                         spellCheck={false}
                     />
                 </ToolPanel>

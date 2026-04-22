@@ -150,7 +150,7 @@ export function JsonFormatterClient() {
                         onChange={(e) => setInput(e.target.value)}
                         onPaste={handleInputPaste}
                         className="h-full w-full resize-none bg-transparent p-4 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500/50"
-                        placeholder={'Dán dữ liệu JSON vào đây...\nVí dụ: {"name": "eztool", "status": "active"}'}
+                        placeholder={'Example: {"name": "eztool", "status": "active"}'}
                         spellCheck={false}
                     />
                 </ToolPanel>
@@ -191,7 +191,10 @@ export function JsonFormatterClient() {
                             "h-full w-full resize-none bg-muted/20 p-4 font-mono text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500/50",
                             hasError ? "text-destructive" : "text-foreground",
                         )}
-                        placeholder="Kết quả sẽ hiển thị tại đây..."
+                        placeholder={`{
+  "name": "eztool",
+  "status": "active"
+}`}
                         spellCheck={false}
                     />
                 </ToolPanel>

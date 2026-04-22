@@ -31,6 +31,7 @@ import {
     Maximize2,
     ChevronDown,
     X,
+    LoaderPinwheel,
     type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -58,6 +59,7 @@ const TOOL_ICON_MAP: Record<string, LucideIcon> = {
     "random-number": Dices,
     "unit-converter": Ruler,
     "rule-of-three": Scale,
+    "lucky-wheel": LoaderPinwheel,
     "qr-generator": QrCode,
     "color-converter": Palette,
     "image-to-base64": FileImage,

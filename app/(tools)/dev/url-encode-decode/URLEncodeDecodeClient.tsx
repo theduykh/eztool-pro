@@ -182,8 +182,8 @@ export function URLEncodeDecodeClient() {
                         className="h-full w-full resize-none bg-transparent p-4 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500/50"
                         placeholder={
                             mode === "encode"
-                                ? "Dán văn bản hoặc URL cần mã hóa vào đây..."
-                                : "Dán URL đã mã hóa cần giải mã vào đây..."
+                                ? "Paste text to encode"
+                                : "Paste url to decode"
                         }
                         spellCheck={false}
                     />
@@ -227,7 +227,7 @@ export function URLEncodeDecodeClient() {
                             "h-full w-full resize-none bg-muted/20 p-4 font-mono text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500/50",
                             error ? "text-destructive" : "text-foreground",
                         )}
-                        placeholder="Kết quả sẽ hiển thị tại đây..."
+                        placeholder="The result will display here..."
                         spellCheck={false}
                     />
                 </ToolPanel>
