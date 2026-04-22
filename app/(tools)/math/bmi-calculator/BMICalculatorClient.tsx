@@ -9,7 +9,7 @@ import { ToolInfoBox } from "@/components/shared/ToolInfoBox";
 import { calculateBMI, getBMICategories, type BMIResult, type BMIStandard } from "@/lib/math/bmi";
 import { cn } from "@/lib/utils";
 
-export function BmiCalculatorClient() {
+export function BMICalculatorClient() {
     const [weight, setWeight] = useState<string>("70");
     const [height, setHeight] = useState<string>("170");
     const [standard, setStandard] = useState<BMIStandard>("asian");

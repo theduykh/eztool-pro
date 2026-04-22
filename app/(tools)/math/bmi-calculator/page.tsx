@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { TOOLS_DIRECTORY } from "@/config/tools";
-import { BmiCalculatorClient } from "./BmiCalculatorClient";
+import { BMICalculatorClient } from "./BMICalculatorClient";
 
 const tool = TOOLS_DIRECTORY.find((t) => t.id === "bmi-calculator")!;
 
@@ -14,7 +14,7 @@ export default function BMICalculatorPage() {
     return (
         <div className="flex h-full flex-col">
             <PageHeader title={tool.name} description={tool.description} />
-            <BmiCalculatorClient />
+            <BMICalculatorClient />
         </div>
     );
 }

@@ -147,7 +147,7 @@ const selectCls =
 
 // ─── Main component ────────────────────────────────────────────────────────────
 
-export function QrGeneratorClient() {
+export function QRGeneratorClient() {
     // ── Content state ──────────────────────────────────────────────────────
     const [contentType, setContentType] = useState<ContentType>("url");
     const [urlValue, setUrlValue] = useState("https://eztool.pro");
