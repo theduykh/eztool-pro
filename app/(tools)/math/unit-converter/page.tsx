@@ -1,22 +1,19 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { TOOLS_DIRECTORY } from "@/config/tools";
 import { UnitConverterClient } from "./UnitConverterClient";
 
+const tool = TOOLS_DIRECTORY.find((t) => t.id === "unit-converter")!;
+
 export const metadata: Metadata = {
-    title: "Đổi đơn vị đo lường trực tuyến - Chuyển đổi chính xác",
-    description:
-        "Công cụ chuyển đổi đơn vị đo lường toàn diện. Hỗ trợ đổi Độ dài, Khối lượng, Diện tích, Thể tích, Nhiệt độ nhanh chóng và chính xác.",
+    title: `${tool.name} - eztool.pro`,
+    description: tool.description,
 };
 
 export default function UnitConverterPage() {
     return (
         <div className="flex h-full flex-col">
-            <div className="mb-6 flex-shrink-0">
-                <h1 className="text-2xl font-bold tracking-tight text-foreground">Đổi đơn vị đo lường</h1>
-                <p className="mt-1 text-sm text-muted-foreground">
-                    Chuyển đổi linh hoạt giữa các đơn vị đo lường phổ biến. Chọn loại đơn vị, nhập giá trị và xem kết quả ngay lập tức.
-                </p>
-            </div>
-
+            <PageHeader title={tool.name} description={tool.description} />
             <UnitConverterClient />
         </div>
     );

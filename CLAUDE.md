@@ -36,6 +36,38 @@ npx vitest run
 
 **Theming** — Dark/Light mode via `next-themes`. Always use Shadcn CSS variables (`bg-background`, `text-foreground`, `bg-card`, `border-border`, etc.) — never hardcode colors.
 
+**Shared UI Primitives** — All tools reuse the same 5 primitives in `components/shared/`. Always compose these before reaching for raw `<div>` + Tailwind. Inconsistent one-offs are a bug.
+
+- **`PageHeader`** — Standard page title + description strip rendered at the top of every `page.tsx`. Never duplicate title markup.
+- **`ToolPanel`** — Card / section wrapper. Props: `tone` (`default`/`subtle`/`dashed`/`accent`), `padding` (`none`/`sm`/`md`/`lg`), `radius` (`md`/`lg`), optional `header` slot. Use instead of hand-rolled `rounded-*xl border border-border bg-card p-* shadow-*`.
+- **`ToolLabel`** — Tiny uppercase section label. Props: `tone` (`default`/`muted`/`accent`/`danger`/`success`), optional `icon`, `htmlFor`. Use for every form label and panel heading (replaces `text-xs font-bold uppercase tracking-widest text-muted-foreground`).
+- **`ToolInfoBox`** — Inline info/tip box with icon + optional title. Props: `tone` (`neutral`/`accent`/`warning`).
+- **`ToolToggle`** — Standard blue-on switch for boolean options (uses `role="switch"`, `aria-checked`). Use instead of custom checkbox/toggle styling.
+
+**Page Pattern (unified)** — Every `page.tsx` follows this shape:
+```tsx
+import type { Metadata } from "next";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { TOOLS_DIRECTORY } from "@/config/tools";
+import { ToolClient } from "./ToolClient";
+
+const tool = TOOLS_DIRECTORY.find((t) => t.id === "tool-id")!;
+export const metadata: Metadata = { title: `${tool.name} - eztool.pro`, description: tool.description };
+
+export default function ToolPage() {
+    return (
+        <div className="flex h-full flex-col">
+            <PageHeader title={tool.name} description={tool.description} />
+            <ToolClient />
+        </div>
+    );
+}
+```
+
+**Layout Hint** — Each tool declares a `layout` in `config/tools.ts` (`"full"` for tools filling viewport height, `"fixed"` for centered fixed-width content). Omit for default scroll layout.
+
+**QA IDs (required)** — Every interactive element (button, input, select, toggle, output region) must have a stable, semantic `id`. Convention: `btn-*`, `input-*`, `output-*`, `select-*`, `toggle-*`, `opt-*`. This is load-bearing for e2e / Playwright automation.
+
 ### Directory Map
 
 ```
@@ -48,6 +80,7 @@ app/
 components/
   ui/                  # Shadcn UI components
   shared/              # AppShell, Sidebar, Header, ThemeProvider, ThemeToggle
+                       # PageHeader, ToolPanel, ToolLabel, ToolInfoBox, ToolToggle (tool primitives)
 lib/                   # Pure functions only — no React
   formatters/          # json.ts + json.test.ts
   string/              # word-counter.ts + word-counter.test.ts
@@ -58,10 +91,10 @@ config/
 
 ## Adding a New Tool (required order)
 
-1. **Logic first** — create `lib/[domain]/[tool].ts` with pure functions, strict TypeScript, no `any`, return results/errors instead of throwing.
-2. **Tests second** — create `lib/[domain]/[tool].test.ts` with Vitest covering happy path + edge cases + error cases. Run with `npx vitest run`.
-3. **UI third** — create `app/(tools)/[category]/[tool-id]/page.tsx` (Server Component + metadata) and `[Tool]Client.tsx` (Client Component).
-4. **Register** — add entry to `TOOLS_DIRECTORY` in `config/tools.ts` if not already present.
+1. **Register** — add entry to `TOOLS_DIRECTORY` in `config/tools.ts` with `id`, `name`, `description`, `path`, `category`, optional `layout` and `isNew`. The registry drives metadata, the sidebar, and the page header — so keep copy final.
+2. **Logic** — create `lib/[domain]/[tool].ts` with pure functions, strict TypeScript, no `any`, return results/errors instead of throwing.
+3. **Tests** — create `lib/[domain]/[tool].test.ts` with Vitest covering happy path + edge cases + error cases. Run with `npx vitest run`.
+4. **UI** — create `app/(tools)/[category]/[tool-id]/page.tsx` (Server Component using the unified `PageHeader` pattern) and `[Tool]Client.tsx` (Client Component). Compose the 5 shared primitives — do not invent new card/label styling. Add `id` to every interactive element.
 
 ## Critical: Next.js 16 Breaking Changes
 

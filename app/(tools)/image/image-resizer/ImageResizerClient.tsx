@@ -1,18 +1,21 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, type ChangeEvent } from "react";
 import {
     Upload,
-    Maximize,
     Trash2,
     Download,
     Image as ImageIcon,
     Percent,
     Check,
     Lock,
-    Unlock
+    Unlock,
+    Info,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ToolPanel } from "@/components/shared/ToolPanel";
+import { ToolLabel } from "@/components/shared/ToolLabel";
+import { ToolInfoBox } from "@/components/shared/ToolInfoBox";
 import { cn } from "@/lib/utils";
 
 export function ImageResizerClient() {
@@ -23,12 +26,10 @@ export function ImageResizerClient() {
     const [quality, setQuality] = useState<number>(90);
     const [aspectRatio, setAspectRatio] = useState<number>(1);
     const [lockAspectRatio, setLockAspectRatio] = useState<boolean>(true);
-    const [isProcessing, setIsProcessing] = useState(false);
 
-    // For preview and download
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -76,7 +77,6 @@ export function ImageResizerClient() {
         setHeight(0);
     };
 
-    // Update canvas whenever width, height or quality changes
     useEffect(() => {
         if (!image || !canvasRef.current) return;
 
@@ -92,54 +92,74 @@ export function ImageResizerClient() {
     return (
         <div className="flex flex-col gap-8">
             {!image ? (
-                <label className="group relative flex h-72 w-full cursor-pointer flex-col items-center justify-center rounded-[2.5rem] border-4 border-dashed border-border bg-card transition-all hover:border-blue-500 hover:bg-blue-500/5">
-                    <input type="file" className="hidden" accept="image/*" onChange={onFileChange} />
+                <label className="group relative flex h-72 w-full cursor-pointer flex-col items-center justify-center rounded-3xl border-4 border-dashed border-border bg-card transition-all hover:border-blue-500 hover:bg-blue-500/5">
+                    <input
+                        id="input-file"
+                        type="file"
+                        className="hidden"
+                        accept="image/*"
+                        onChange={onFileChange}
+                    />
                     <div className="flex flex-col items-center gap-4">
-                        <div className="rounded-3xl bg-blue-500/10 p-5 text-blue-600 group-hover:scale-110 transition-transform">
+                        <div className="rounded-3xl bg-blue-500/10 p-5 text-blue-600 transition-transform group-hover:scale-110">
                             <Upload className="size-10" />
                         </div>
                         <div className="text-center">
                             <p className="text-xl font-bold">Tải ảnh lên để thay đổi kích thước</p>
-                            <p className="text-sm text-muted-foreground mt-1">Hỗ trợ JPG, PNG, WEBP (Tối đa 10MB)</p>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                                Hỗ trợ JPG, PNG, WEBP (Tối đa 10MB)
+                            </p>
                         </div>
                     </div>
                 </label>
             ) : (
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.5fr_1fr]">
-                    {/* Preview Area */}
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center justify-between px-2">
-                            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Xem trước kết quả</p>
+                            <ToolLabel>Xem trước kết quả</ToolLabel>
                             <div className="flex items-center gap-4 text-[10px] font-bold text-muted-foreground">
-                                <span className="flex items-center gap-1"><ImageIcon className="size-3" /> Gốc: {image.width}x{image.height}</span>
-                                <span className="flex items-center gap-1 text-blue-600"><Check className="size-3" /> Mới: {width}x{height}</span>
+                                <span id="stat-original" className="flex items-center gap-1">
+                                    <ImageIcon className="size-3" /> Gốc: {image.width}x{image.height}
+                                </span>
+                                <span id="stat-new" className="flex items-center gap-1 text-blue-600">
+                                    <Check className="size-3" /> Mới: {width}x{height}
+                                </span>
                             </div>
                         </div>
-                        <div className="relative flex min-h-[400px] items-center justify-center rounded-3xl border border-border bg-card p-4 overflow-auto shadow-inner">
-                            <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:20px_20px]" />
+                        <ToolPanel
+                            radius="lg"
+                            padding="md"
+                            className="relative min-h-[400px] shadow-inner"
+                            bodyClassName="flex items-center justify-center overflow-auto"
+                        >
+                            <div className="absolute inset-0 bg-[radial-gradient(#000_1px,transparent_1px)] opacity-[0.03] [background-size:20px_20px]" />
                             <canvas
                                 ref={canvasRef}
-                                className="max-w-full shadow-2xl rounded-sm border bg-white"
-                                style={{ maxHeight: '500px' }}
+                                className="max-w-full rounded-sm border bg-white shadow-2xl"
+                                style={{ maxHeight: "500px" }}
                             />
-                        </div>
-                        <Button variant="outline" onClick={handleClear} className="w-full rounded-2xl gap-2 hover:bg-destructive/10 hover:text-destructive">
+                        </ToolPanel>
+                        <Button
+                            id="btn-clear"
+                            variant="outline"
+                            onClick={handleClear}
+                            className="w-full gap-2 rounded-2xl hover:bg-destructive/10 hover:text-destructive"
+                        >
                             <Trash2 className="size-4" />
                             Hủy bỏ và chọn ảnh khác
                         </Button>
                     </div>
 
-                    {/* Controls Area */}
                     <div className="flex flex-col gap-6">
-                        <div className="rounded-[2.5rem] border border-border bg-card p-8 shadow-xl space-y-8">
-                            <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Cấu hình Resize</h2>
+                        <ToolPanel radius="lg" padding="lg" className="shadow-xl md:p-8">
+                            <ToolLabel className="mb-8">Cấu hình Resize</ToolLabel>
 
-                            {/* Width/Height Control */}
                             <div className="space-y-4">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Chiều rộng (px)</label>
+                                        <ToolLabel htmlFor="input-width">Chiều rộng (px)</ToolLabel>
                                         <input
+                                            id="input-width"
                                             type="number"
                                             value={width}
                                             onChange={(e) => handleWidthChange(parseInt(e.target.value) || 0)}
@@ -147,8 +167,9 @@ export function ImageResizerClient() {
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Chiều cao (px)</label>
+                                        <ToolLabel htmlFor="input-height">Chiều cao (px)</ToolLabel>
                                         <input
+                                            id="input-height"
                                             type="number"
                                             value={height}
                                             onChange={(e) => handleHeightChange(parseInt(e.target.value) || 0)}
@@ -157,20 +178,24 @@ export function ImageResizerClient() {
                                     </div>
                                 </div>
 
-                                {/* Aspect Ratio Lock Checkbox */}
-                                <label 
+                                <label
                                     className={cn(
-                                        "flex items-center gap-3 p-3 rounded-2xl border transition-all cursor-pointer",
-                                        lockAspectRatio 
-                                            ? "bg-blue-500/5 border-blue-500/20 text-blue-600" 
-                                            : "bg-muted/30 border-transparent text-muted-foreground hover:bg-muted/50"
+                                        "flex cursor-pointer items-center gap-3 rounded-2xl border p-3 transition-all",
+                                        lockAspectRatio
+                                            ? "border-blue-500/20 bg-blue-500/5 text-blue-600"
+                                            : "border-transparent bg-muted/30 text-muted-foreground hover:bg-muted/50",
                                     )}
                                 >
-                                    <div className={cn(
-                                        "size-5 rounded-md border-2 flex items-center justify-center transition-all",
-                                        lockAspectRatio ? "bg-blue-600 border-blue-600" : "border-muted-foreground/30"
-                                    )}>
+                                    <div
+                                        className={cn(
+                                            "flex size-5 items-center justify-center rounded-md border-2 transition-all",
+                                            lockAspectRatio
+                                                ? "border-blue-600 bg-blue-600"
+                                                : "border-muted-foreground/30",
+                                        )}
+                                    >
                                         <input
+                                            id="input-lock-aspect"
                                             type="checkbox"
                                             className="hidden"
                                             checked={lockAspectRatio}
@@ -184,53 +209,56 @@ export function ImageResizerClient() {
                                         />
                                         {lockAspectRatio && <Check className="size-3.5 text-white" />}
                                     </div>
-                                    <span className="text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+                                    <span className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
                                         {lockAspectRatio ? <Lock className="size-3.5" /> : <Unlock className="size-3.5" />}
                                         Khóa tỷ lệ ảnh
                                     </span>
                                 </label>
                             </div>
 
-                            {/* Quality Control (for JPEG) */}
                             {originalFile?.type !== "image/png" && (
-                                <div className="space-y-4">
-                                    <div className="flex items-center justify-between">
-                                        <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-                                            <Percent className="size-3.5" />
-                                            Chất lượng: {quality}%
-                                        </label>
-                                    </div>
+                                <div className="mt-8 space-y-4">
+                                    <ToolLabel htmlFor="input-quality" icon={<Percent className="size-3.5" />}>
+                                        Chất lượng: {quality}%
+                                    </ToolLabel>
                                     <input
+                                        id="input-quality"
                                         type="range"
                                         min="10"
                                         max="100"
                                         value={quality}
                                         onChange={(e) => setQuality(parseInt(e.target.value))}
-                                        className="w-full h-1.5 bg-muted rounded-full appearance-none accent-blue-600"
+                                        className="h-1.5 w-full appearance-none rounded-full bg-muted accent-blue-600"
                                     />
-                                    <p className="text-[10px] text-muted-foreground italic">Giảm chất lượng sẽ làm dung lượng file nhỏ hơn.</p>
+                                    <p className="text-[10px] italic text-muted-foreground">
+                                        Giảm chất lượng sẽ làm dung lượng file nhỏ hơn.
+                                    </p>
                                 </div>
                             )}
 
-                            {/* Actions */}
-                            <div className="pt-4">
+                            <div className="pt-6">
                                 <Button
+                                    id="btn-download"
                                     onClick={handleDownload}
-                                    className="w-full h-16 rounded-2xl bg-blue-600 hover:bg-blue-700 shadow-xl shadow-blue-500/30 text-lg font-bold gap-3"
+                                    className="h-16 w-full gap-3 rounded-2xl bg-blue-600 text-lg font-bold shadow-xl shadow-blue-500/30 hover:bg-blue-700"
                                 >
                                     <Download className="size-6" />
                                     Tải ảnh đã Resize
                                 </Button>
                             </div>
-                        </div>
+                        </ToolPanel>
 
-                        {/* Tips */}
-                        <div className="rounded-2xl border border-blue-500/10 bg-blue-500/5 p-6 space-y-2">
-                            <p className="text-sm font-bold text-blue-600">Mẹo Resizing</p>
-                            <p className="text-xs text-muted-foreground leading-relaxed">
-                                Để ảnh không bị biến dạng, hãy luôn bật chế độ <strong>Khóa tỷ lệ (Lock)</strong>. Nếu bạn muốn tối ưu tốc độ tải web, hãy thử giảm chất lượng xuống khoảng 80-90%.
+                        <ToolInfoBox
+                            tone="accent"
+                            icon={<Info className="size-5 text-blue-600" />}
+                            title={<span className="text-blue-600">Mẹo Resizing</span>}
+                        >
+                            <p className="leading-relaxed">
+                                Để ảnh không bị biến dạng, hãy luôn bật chế độ{" "}
+                                <strong>Khóa tỷ lệ (Lock)</strong>. Nếu bạn muốn tối ưu tốc độ tải web, hãy
+                                thử giảm chất lượng xuống khoảng 80-90%.
                             </p>
-                        </div>
+                        </ToolInfoBox>
                     </div>
                 </div>
             )}

@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
+import { ToolPanel } from "@/components/shared/ToolPanel";
 import { countText } from "@/lib/string/word-counter";
 import {
     Trash2,
@@ -14,10 +15,6 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-/**
- * WordCounterClient - Giao diện chính của công cụ đếm từ
- * Sử dụng bối cảnh "use client" vì có tương tác thời gian thực với người dùng.
- */
 export function WordCounterClient() {
     const [text, setText] = useState("");
 
@@ -62,17 +59,18 @@ export function WordCounterClient() {
 
     return (
         <div className="flex h-full flex-col gap-4">
-            {/* Stats Grid */}
             <div className="grid shrink-0 grid-cols-2 gap-4 md:grid-cols-4">
                 {statCards.map((card) => (
-                    <div
+                    <ToolPanel
                         key={card.label}
-                        className="group flex flex-col items-center justify-center rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-200 hover:border-border/80 hover:shadow-md"
+                        padding="lg"
+                        className="group items-center justify-center transition-all duration-200 hover:border-border/80 hover:shadow-md"
+                        bodyClassName="flex flex-col items-center"
                     >
                         <div
                             className={cn(
                                 "mb-3 flex size-10 items-center justify-center rounded-full transition-transform duration-200 group-hover:scale-110",
-                                card.bgColor
+                                card.bgColor,
                             )}
                         >
                             <card.icon className={cn("size-5", card.color)} />
@@ -83,13 +81,11 @@ export function WordCounterClient() {
                         <span className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">
                             {card.label}
                         </span>
-                    </div>
+                    </ToolPanel>
                 ))}
             </div>
 
-            {/* Main Area: Input + Secondary Stats */}
             <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-lg transition-all duration-300 focus-within:ring-2 focus-within:ring-blue-500/20">
-                {/* Secondary Info Bar */}
                 <div className="flex flex-col gap-3 border-b border-border bg-muted/30 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
                         <div className="flex items-center text-sm font-medium text-muted-foreground">
@@ -122,7 +118,6 @@ export function WordCounterClient() {
                     </Button>
                 </div>
 
-                {/* Text Area */}
                 <textarea
                     id="input-text"
                     value={text}
@@ -133,7 +128,6 @@ export function WordCounterClient() {
                     autoFocus
                 />
 
-                {/* Footer hint */}
                 <div className="border-t border-border bg-muted/10 px-6 py-2">
                     <p className="text-[10px] text-muted-foreground/60">
                         * Dữ liệu được xử lý trực tiếp trên trình duyệt của bạn, đảm bảo tính riêng tư tuyệt đối.

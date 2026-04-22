@@ -21,6 +21,8 @@ import {
     RefreshCw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ToolPanel } from "@/components/shared/ToolPanel";
+import { ToolLabel } from "@/components/shared/ToolLabel";
 import {
     buildQRData,
     CONTENT_TABS,
@@ -42,6 +44,7 @@ import {
     type QRShape,
 } from "@/lib/image/qr-generator";
 import type QRCodeStylingType from "qr-code-styling";
+import type { Options as QRCodeStylingOptions } from "qr-code-styling";
 
 // ─── Section wrapper ───────────────────────────────────────────────────────────
 
@@ -53,12 +56,10 @@ function Section({
     children: React.ReactNode;
 }) {
     return (
-        <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
-            <p className="mb-3 text-sm font-bold uppercase tracking-widest text-muted-foreground">
-                {title}
-            </p>
+        <ToolPanel padding="md">
+            <ToolLabel className="mb-3 text-sm">{title}</ToolLabel>
             {children}
-        </div>
+        </ToolPanel>
     );
 }
 
@@ -210,7 +211,7 @@ export function QRGeneratorClient() {
                 sms,
             );
 
-            const options: any = {
+            const options: QRCodeStylingOptions = {
                 width: overrides?.width ?? 300,
                 height: overrides?.height ?? 300,
                 type: (overrides?.type ?? "canvas") as "canvas" | "svg",

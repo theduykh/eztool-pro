@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHeader } from "@/components/shared/PageHeader";
 import { TOOLS_DIRECTORY } from "@/config/tools";
 import { LuckyWheelClient } from "./LuckyWheelClient";
 
@@ -12,14 +13,7 @@ export const metadata: Metadata = {
 export default function LuckyWheelPage() {
     return (
         <div className="flex h-full flex-col">
-            <div className="mb-6 flex-shrink-0">
-                <h1 className="text-2xl font-bold tracking-tight text-foreground">
-                    {tool.name}
-                </h1>
-                <p className="mt-1 text-sm text-muted-foreground">
-                    {tool.description}
-                </p>
-            </div>
+            <PageHeader title={tool.name} description={tool.description} />
             <LuckyWheelClient />
         </div>
     );

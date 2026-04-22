@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { Dices, RotateCcw, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ToolPanel } from "@/components/shared/ToolPanel";
 import {
     parseItems,
     getWinnerIndexFromAngle,
@@ -232,13 +233,13 @@ export function RandomNumberClient() {
 
     return (
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
-            {/* ── Left panel: input + result ─────────────────────── */}
             <div className="flex w-full flex-col gap-4 lg:w-72 lg:flex-shrink-0">
-                <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
+                <ToolPanel padding="md">
                     <label className="mb-2 block text-sm font-semibold text-foreground">
                         Danh sách mục
                     </label>
                     <textarea
+                        id="input-items"
                         className="h-52 w-full resize-none rounded-lg border border-border bg-background px-3 py-2 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-60"
                         value={itemsText}
                         onChange={(e) => setItemsText(e.target.value)}
@@ -254,11 +255,13 @@ export function RandomNumberClient() {
                             </span>
                         )}
                     </p>
-                </div>
+                </ToolPanel>
 
-                {/* Winner card */}
                 {winner && (
-                    <div className="rounded-2xl border-2 border-yellow-400 bg-yellow-400/10 p-5 text-center shadow-md">
+                    <div
+                        id="winner-card"
+                        className="rounded-2xl border-2 border-yellow-400 bg-yellow-400/10 p-5 text-center shadow-md"
+                    >
                         <div className="mb-2 flex items-center justify-center gap-2">
                             <Trophy className="size-4 text-yellow-500" />
                             <span className="text-xs font-bold uppercase tracking-widest text-yellow-600 dark:text-yellow-400">
@@ -273,9 +276,8 @@ export function RandomNumberClient() {
                 )}
             </div>
 
-            {/* ── Right panel: wheel + controls ──────────────────── */}
             <div className="flex flex-1 flex-col items-center gap-5">
-                <div className="rounded-2xl border border-border bg-card p-4 shadow-lg">
+                <ToolPanel padding="md" className="shadow-lg">
                     <canvas
                         ref={canvasRef}
                         width={CANVAS_SIZE}
@@ -283,10 +285,11 @@ export function RandomNumberClient() {
                         className="block max-w-full"
                         style={{ maxWidth: CANVAS_SIZE }}
                     />
-                </div>
+                </ToolPanel>
 
                 <div className="flex items-center gap-3">
                     <Button
+                        id="btn-spin"
                         onClick={spin}
                         disabled={!canSpin}
                         size="lg"
@@ -298,6 +301,7 @@ export function RandomNumberClient() {
 
                     {(winner || highlightIndex !== null) && !isSpinning && (
                         <Button
+                            id="btn-reset"
                             variant="outline"
                             size="lg"
                             onClick={reset}

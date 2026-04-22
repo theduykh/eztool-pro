@@ -16,6 +16,7 @@ import confetti from "canvas-confetti";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { ToolPanel } from "@/components/shared/ToolPanel";
 import { Textarea } from "@/components/ui/textarea";
 import {
     Select,
@@ -699,8 +700,7 @@ export function LuckyWheelClient() {
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
             {/* ── Left Panel: Controls ─────────────────────────────── */}
             <div className="flex w-full flex-col gap-4 lg:w-80 lg:shrink-0">
-                {/* Template selector */}
-                <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
+                <ToolPanel padding="md">
                     <label className="mb-2 block text-sm font-semibold text-foreground">
                         📋 Chọn mẫu có sẵn
                     </label>
@@ -727,10 +727,9 @@ export function LuckyWheelClient() {
                             )}
                         </SelectContent>
                     </Select>
-                </div>
+                </ToolPanel>
 
-                {/* Items textarea */}
-                <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
+                <ToolPanel padding="md">
                     <label className="mb-2 block text-sm font-semibold text-foreground">
                         ✏️ Danh sách mục (mỗi dòng = 1 mục)
                     </label>
@@ -766,7 +765,7 @@ export function LuckyWheelClient() {
                             Trộn đều
                         </Button>
                     </div>
-                </div>
+                </ToolPanel>
             </div>
 
             {/* ── Right Panel: Wheel ──────────────────────────────── */}

@@ -1,22 +1,19 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { TOOLS_DIRECTORY } from "@/config/tools";
 import { RemoveLineBreaksClient } from "./RemoveLineBreaksClient";
 
+const tool = TOOLS_DIRECTORY.find((t) => t.id === "remove-line-breaks")!;
+
 export const metadata: Metadata = {
-    title: "Xóa dòng trống & Khoảng trắng - Dọn dẹp văn bản",
-    description:
-        "Công cụ trực tuyến giúp dọn dẹp văn bản: xóa các dòng trống, thu gọn khoảng trắng thừa, xóa dấu xuống dòng và chuẩn hóa định dạng văn bản nhanh chóng.",
+    title: `${tool.name} - eztool.pro`,
+    description: tool.description,
 };
 
 export default function RemoveLineBreaksPage() {
     return (
         <div className="flex h-full flex-col">
-            <div className="mb-6 flex-shrink-0">
-                <h1 className="text-2xl font-bold tracking-tight text-foreground">Xóa dòng trống & Khoảng trắng</h1>
-                <p className="mt-1 text-sm text-muted-foreground">
-                    Làm sạch văn bản của bạn bằng cách loại bỏ các ký tự thừa, dòng trống và chuẩn hóa khoảng cách giữa các từ.
-                </p>
-            </div>
-
+            <PageHeader title={tool.name} description={tool.description} />
             <RemoveLineBreaksClient />
         </div>
     );

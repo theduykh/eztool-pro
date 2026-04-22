@@ -28,12 +28,66 @@ Dự án "eztool.pro" là một nền tảng công cụ chuẩn SEO với Next.j
 - Luôn kiểm soát toàn bộ các trạng thái trải nghiệm: Loading, Error, và Empty state.
 - Hỗ trợ **Dark/Light mode** — sử dụng Shadcn CSS variables (bg-background, text-foreground, bg-card, border-border...), KHÔNG hardcode màu sắc.
 
+### 4.1 Shared Primitives (BẮT BUỘC dùng — KHÔNG tự viết lại)
+
+Mọi tool đều phải compose 5 primitives trong `components/shared/`. Tuyệt đối không dựng `<div className="rounded-... border ... bg-card ...">` bằng tay.
+
+| Primitive | Mục đích | Props chính |
+|---|---|---|
+| `PageHeader` | Header chuẩn của mỗi `page.tsx` (title + description) | `title`, `description` |
+| `ToolPanel` | Khung card / section | `tone` (`default`/`subtle`/`dashed`/`accent`), `padding` (`none`/`sm`/`md`/`lg`), `radius` (`md`/`lg`), optional `header`, `bodyClassName` |
+| `ToolLabel` | Label nhỏ uppercase cho input và panel | `tone` (`default`/`muted`/`accent`/`danger`/`success`), `icon`, `htmlFor` |
+| `ToolInfoBox` | Box tip / info inline | `tone` (`neutral`/`accent`/`warning`), `icon`, `title` |
+| `ToolToggle` | Switch boolean chuẩn | `id`, `checked`, `onChange`, `label` |
+
+Ví dụ chuẩn:
+```tsx
+<ToolPanel radius="lg" padding="lg">
+    <ToolLabel icon={<Ruler className="size-4" />}>Kích thước</ToolLabel>
+    <input id="input-width" ... />
+</ToolPanel>
+
+<ToolInfoBox tone="accent" icon={<Info className="size-5" />} title="Gợi ý">
+    <p>Nội dung mẹo nhỏ...</p>
+</ToolInfoBox>
+```
+
+### 4.2 Unified Page Pattern
+
+Mỗi `page.tsx` đều theo cùng một cấu trúc — lấy tool từ registry, export `metadata`, render `PageHeader` + Client Component:
+
+```tsx
+import type { Metadata } from "next";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { TOOLS_DIRECTORY } from "@/config/tools";
+import { ToolClient } from "./ToolClient";
+
+const tool = TOOLS_DIRECTORY.find((t) => t.id === "tool-id")!;
+
+export const metadata: Metadata = {
+    title: `${tool.name} - eztool.pro`,
+    description: tool.description,
+};
+
+export default function ToolPage() {
+    return (
+        <div className="flex h-full flex-col">
+            <PageHeader title={tool.name} description={tool.description} />
+            <ToolClient />
+        </div>
+    );
+}
+```
+
+Mỗi tool trong `config/tools.ts` khai báo `layout`: `"full"` cho tool chiếm full chiều cao viewport (JSON formatter, lucky wheel...), `"fixed"` cho nội dung centered cố định. Bỏ trống cho layout scroll mặc định.
+
 ## 5. Mindset QA Automation (Kiểm thử)
 - Bất cứ khi nào tạo ra một file logic mới trong thư mục `lib/`, BẮT BUỘC bạn phải tạo ra một file `.test.ts` tương ứng bên cạnh.
 - Viết Unit Tests bằng **Vitest**. Các test case phải bao quát được 2 mảng chính:
   - Happy Path (Đường dẫn lý tưởng, input đúng).
   - Edge Cases (Các trường hợp dị biệt, lỗi, biên).
 - Mọi phần tử (element) quan trọng trên giao diện (như input, button, tab, thẻ điều khiển, form) BẮT BUỘC phải có thuộc tính `id` rõ ràng và có ý nghĩa. Điều này hỗ trợ quá trình QA automation và viết kịch bản e2e test (ví dụ: Playwright, Selenium, Cypress).
+- **Convention đặt `id`:** `btn-*` cho button, `input-*` cho input/textarea, `output-*` cho vùng kết quả, `select-*` cho select, `toggle-*` cho ToolToggle, `opt-*` cho tab/option. Ví dụ: `btn-copy`, `input-text`, `output-result`, `select-from-unit`, `toggle-upper`, `opt-double-spaces`.
 
 ## 6. Cấu trúc dự án hiện tại
 

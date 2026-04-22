@@ -8,7 +8,12 @@ export interface ToolItem {
     category: ToolCategory;
     isNew?: boolean;
     isHot?: boolean;
-    /** "full" = no max-width (editor/canvas tools); "fixed" = centered narrow (calculator tools) */
+    /**
+     * Controls the max-width of the tool's content wrapper in AppShell.
+     * - "full":    no max-width — use for split-pane editors, wheels, canvases, anything wide
+     * - "fixed":   max-w-3xl centered — use for narrow calculators / single-field forms
+     * - undefined: max-w-6xl centered (default) — use for the rest
+     */
     layout?: "full" | "fixed";
 }
 
@@ -82,6 +87,7 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         description: "Loại bỏ dấu tiếng Việt và tạo URL thân thiện cho SEO.",
         path: "/text/text-to-slug",
         category: "text",
+        layout: "fixed",
     },
     {
         id: "lorem-ipsum",
@@ -115,6 +121,7 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         description: "Kiểm tra chỉ số khối cơ thể (BMI) để biết tình trạng sức khỏe.",
         path: "/math/bmi-calculator",
         category: "math",
+        layout: "fixed",
     },
     {
         id: "random-number",
@@ -144,7 +151,7 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         path: "/math/lucky-wheel",
         category: "math",
         isNew: true,
-
+        layout: "full",
     },
 
     // ==========================================
@@ -157,6 +164,7 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         path: "/image/qr-generator",
         category: "image",
         isHot: true,
+        layout: "full",
     },
     {
         id: "color-converter",

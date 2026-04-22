@@ -1,22 +1,25 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { 
-    Ruler, 
-    Scale, 
-    Box, 
-    Thermometer, 
-    Layers, 
+import {
+    Ruler,
+    Scale,
+    Box,
+    Thermometer,
+    Layers,
     ArrowLeftRight,
     Zap,
     Copy,
-    Check
+    Check,
+    type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ToolPanel } from "@/components/shared/ToolPanel";
+import { ToolLabel } from "@/components/shared/ToolLabel";
 import { convertUnit, getUnitsForCategory, type UnitCategory } from "@/lib/math/converter";
 import { cn } from "@/lib/utils";
 
-const CATEGORIES: { id: UnitCategory; label: string; icon: any }[] = [
+const CATEGORIES: { id: UnitCategory; label: string; icon: LucideIcon }[] = [
     { id: "length", label: "Độ dài", icon: Ruler },
     { id: "weight", label: "Khối lượng", icon: Scale },
     { id: "area", label: "Diện tích", icon: Layers },
@@ -33,7 +36,6 @@ export function UnitConverterClient() {
 
     const units = useMemo(() => getUnitsForCategory(category), [category]);
 
-    // Set initial units when category changes
     useEffect(() => {
         setFromUnit(units[0].id);
         setToUnit(units[1]?.id || units[0].id);
@@ -43,7 +45,6 @@ export function UnitConverterClient() {
         const val = parseFloat(fromValue);
         if (isNaN(val)) return 0;
         const res = convertUnit(val, fromUnit, toUnit, category);
-        // Round to 8 decimal places to avoid float precision issues but keep it clean
         return Math.round(res * 100000000) / 100000000;
     }, [fromValue, fromUnit, toUnit, category]);
 
@@ -65,36 +66,35 @@ export function UnitConverterClient() {
 
     return (
         <div className="flex flex-col gap-8">
-            {/* Category selection */}
             <div className="flex flex-wrap gap-2 md:gap-4">
                 {CATEGORIES.map((cat) => {
                     const Icon = cat.icon;
                     return (
                         <button
+                            id={`btn-category-${cat.id}`}
                             key={cat.id}
                             onClick={() => setCategory(cat.id)}
                             className={cn(
-                                "flex flex-1 items-center justify-center gap-3 rounded-2xl border px-6 py-4 transition-all min-w-[140px]",
+                                "flex min-w-[140px] flex-1 items-center justify-center gap-3 rounded-2xl border px-6 py-4 transition-all",
                                 category === cat.id
                                     ? "border-blue-500 bg-blue-500/10 text-blue-600 shadow-sm"
-                                    : "border-border bg-card text-muted-foreground hover:bg-muted"
+                                    : "border-border bg-card text-muted-foreground hover:bg-muted",
                             )}
                         >
                             <Icon className="size-5" />
-                            <span className="font-semibold text-sm">{cat.label}</span>
+                            <span className="text-sm font-semibold">{cat.label}</span>
                         </button>
                     );
                 })}
             </div>
 
-            {/* Main Converter card */}
-            <div className="rounded-[2.5rem] border border-border bg-card p-8 shadow-xl md:p-12">
+            <ToolPanel radius="lg" padding="lg" className="shadow-xl md:p-12">
                 <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-[1fr_auto_1fr]">
-                    {/* From Section */}
                     <div className="flex flex-col gap-4">
-                        <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Từ</label>
+                        <ToolLabel>Từ</ToolLabel>
                         <div className="flex flex-col gap-3">
                             <input
+                                id="input-from"
                                 type="number"
                                 value={fromValue}
                                 onChange={(e) => setFromValue(e.target.value)}
@@ -102,20 +102,23 @@ export function UnitConverterClient() {
                                 placeholder="0"
                             />
                             <select
+                                id="select-from-unit"
                                 value={fromUnit}
                                 onChange={(e) => setFromUnit(e.target.value)}
                                 className="w-full rounded-xl border border-border bg-muted/50 p-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500/30"
                             >
                                 {units.map((u) => (
-                                    <option key={u.id} value={u.id}>{u.label}</option>
+                                    <option key={u.id} value={u.id}>
+                                        {u.label}
+                                    </option>
                                 ))}
                             </select>
                         </div>
                     </div>
 
-                    {/* Swap button */}
                     <div className="flex justify-center">
                         <Button
+                            id="btn-swap"
                             variant="outline"
                             size="icon"
                             onClick={handleSwap}
@@ -125,52 +128,67 @@ export function UnitConverterClient() {
                         </Button>
                     </div>
 
-                    {/* To Section */}
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center justify-between">
-                            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Đến</label>
-                            <Button 
-                                variant="ghost" 
-                                size="sm" 
+                            <ToolLabel>Đến</ToolLabel>
+                            <Button
+                                id="btn-copy"
+                                variant="ghost"
+                                size="sm"
                                 onClick={handleCopy}
-                                className={cn("h-8 size-8 p-0 rounded-lg", copied && "text-green-500")}
+                                className={cn(
+                                    "h-8 size-8 rounded-lg p-0",
+                                    copied && "text-green-500",
+                                )}
                             >
                                 {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
                             </Button>
                         </div>
                         <div className="flex flex-col gap-3">
-                            <div className="flex h-[60px] items-center text-5xl font-black tracking-tighter text-blue-600 dark:text-blue-400 overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-hide">
+                            <div
+                                id="output-result"
+                                className="scrollbar-hide flex h-[60px] items-center overflow-x-auto overflow-y-hidden whitespace-nowrap text-5xl font-black tracking-tighter text-blue-600 dark:text-blue-400"
+                            >
                                 {result}
                             </div>
                             <select
+                                id="select-to-unit"
                                 value={toUnit}
                                 onChange={(e) => setToUnit(e.target.value)}
                                 className="w-full rounded-xl border border-border bg-muted/50 p-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500/30"
                             >
                                 {units.map((u) => (
-                                    <option key={u.id} value={u.id}>{u.label}</option>
+                                    <option key={u.id} value={u.id}>
+                                        {u.label}
+                                    </option>
                                 ))}
                             </select>
                         </div>
                     </div>
                 </div>
-            </div>
+            </ToolPanel>
 
-            {/* Info Metrics / Details */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="flex items-start gap-4 rounded-3xl border border-border bg-card p-6">
-                    <div className="rounded-2xl bg-yellow-500/10 p-3 text-yellow-600">
-                        <Zap className="size-6" />
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <ToolPanel radius="lg" padding="lg">
+                    <div className="flex items-start gap-4">
+                        <div className="rounded-2xl bg-yellow-500/10 p-3 text-yellow-600">
+                            <Zap className="size-6" />
+                        </div>
+                        <div>
+                            <p className="text-sm font-bold">Công thức tính toán</p>
+                            <p className="mt-1 text-xs italic leading-relaxed text-muted-foreground">
+                                1 {units.find((u) => u.id === fromUnit)?.id} x{" "}
+                                {units.find((u) => u.id === fromUnit)?.ratio} ={" "}
+                                {units.find((u) => u.id === fromUnit)?.ratio} hệ thống chuẩn quốc tế
+                                (SI)
+                            </p>
+                        </div>
                     </div>
-                    <div>
-                        <p className="font-bold text-sm">Công thức tính toán</p>
-                        <p className="mt-1 text-xs text-muted-foreground leading-relaxed italic">
-                            1 {units.find(u => u.id === fromUnit)?.id} x {units.find(u => u.id === fromUnit)?.ratio} = {units.find(u => u.id === fromUnit)?.ratio} hế thống chuẩn quốc tế (SI)
-                        </p>
-                    </div>
-                </div>
+                </ToolPanel>
                 <div className="flex flex-col justify-center rounded-3xl border border-border bg-blue-600 p-6 text-white shadow-lg shadow-blue-500/20">
-                    <p className="text-xs font-bold uppercase opacity-80 tracking-widest mb-1">Kết quả tóm tắt</p>
+                    <p className="mb-1 text-xs font-bold uppercase tracking-widest opacity-80">
+                        Kết quả tóm tắt
+                    </p>
                     <p className="text-lg font-bold">
                         {fromValue} {fromUnit} = {result} {toUnit}
                     </p>

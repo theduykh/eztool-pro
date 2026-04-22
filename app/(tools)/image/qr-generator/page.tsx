@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { QRGeneratorClient } from "./QRGeneratorClient";
+import { PageHeader } from "@/components/shared/PageHeader";
 import { TOOLS_DIRECTORY } from "@/config/tools";
+import { QRGeneratorClient } from "./QrGeneratorClient";
 
 const tool = TOOLS_DIRECTORY.find((t) => t.id === "qr-generator")!;
 
@@ -12,12 +13,7 @@ export const metadata: Metadata = {
 export default function QRGeneratorPage() {
     return (
         <div className="flex h-full flex-col">
-            <div className="mb-6 flex-shrink-0">
-                <h1 className="text-2xl font-bold tracking-tight text-foreground">
-                    {tool.name}
-                </h1>
-                <p className="mt-1 text-sm text-muted-foreground">{tool.description}</p>
-            </div>
+            <PageHeader title={tool.name} description={tool.description} />
             <QRGeneratorClient />
         </div>
     );
