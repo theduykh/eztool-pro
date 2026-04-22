@@ -164,7 +164,6 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         path: "/image/qr-generator",
         category: "image",
         isHot: true,
-        layout: "full",
     },
     {
         id: "color-converter",

@@ -45,7 +45,7 @@ export function buildQRData(
             break;
 
         case "text":
-            rawData = text;
+            rawData = text.trim() || "Eztool";
             break;
 
         case "wifi": {
