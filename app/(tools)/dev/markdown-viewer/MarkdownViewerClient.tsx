@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ToolPanel } from "@/components/shared/ToolPanel";
@@ -10,7 +10,12 @@ import {
     ResizablePanel,
     ResizableHandle,
 } from "@/components/ui/resizable";
-import { FileText, Eye, GripVertical } from "lucide-react";
+import { FileText, Eye, GripVertical, Minus, Plus } from "lucide-react";
+
+const FONT_SIZE_MIN = 12;
+const FONT_SIZE_MAX = 28;
+const FONT_SIZE_STEP = 2;
+const FONT_SIZE_DEFAULT = 16;
 
 export function MarkdownViewerClient() {
     const [markdown, setMarkdown] = useState<string>(`# Chào mừng đến với Markdown Viewer
@@ -43,23 +48,41 @@ function helloWorld() {
 > Đây là một đoạn trích dẫn mẫu để kiểm tra hiển thị.
 `);
 
+    const [fontSize, setFontSize] = useState(FONT_SIZE_DEFAULT);
+
+    const decreaseFontSize = useCallback(() => {
+        setFontSize((prev) => Math.max(FONT_SIZE_MIN, prev - FONT_SIZE_STEP));
+    }, []);
+
+    const increaseFontSize = useCallback(() => {
+        setFontSize((prev) => Math.min(FONT_SIZE_MAX, prev + FONT_SIZE_STEP));
+    }, []);
+
     return (
-        <div className="flex flex-1 min-h-0 overflow-hidden h-full p-4 md:p-6">
-            <ResizablePanelGroup orientation="horizontal" className="flex-1 rounded-lg">
-                <ResizablePanel defaultSize={50} minSize={20} className="flex flex-col min-h-0">
-                    <ToolPanel padding="md" className="flex flex-col flex-1 min-h-0" bodyClassName="flex flex-col flex-1 min-h-0">
-                        <ToolLabel icon={<FileText className="size-4" />} htmlFor="input-markdown">
-                            Raw Markdown
-                        </ToolLabel>
-                        <textarea
-                            id="input-markdown"
-                            className="flex-1 w-full p-4 mt-2 bg-transparent border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent font-mono text-sm leading-relaxed"
-                            value={markdown}
-                            onChange={(e) => setMarkdown(e.target.value)}
-                            placeholder="Nhập nội dung markdown của bạn ở đây..."
-                            spellCheck={false}
-                        />
-                    </ToolPanel>
+        <div className="flex min-h-0 flex-1 flex-col">
+            <ResizablePanelGroup orientation="horizontal" className="min-h-[200px] flex-1 md:min-h-[400px]">
+                <ResizablePanel defaultSize={50} minSize={20}>
+                <ToolPanel
+                    padding="none"
+                    className="h-full"
+                    bodyClassName="h-full"
+                    header={
+                        <>
+                            <ToolLabel icon={<FileText className="size-3.5" />}>
+                                Raw Markdown
+                            </ToolLabel>
+                        </>
+                    }
+                >
+                    <textarea
+                        id="input-markdown"
+                        value={markdown}
+                        onChange={(e) => setMarkdown(e.target.value)}
+                        className="h-full w-full resize-none bg-transparent p-4 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500/50"
+                        placeholder="Nhập nội dung markdown của bạn ở đây..."
+                        spellCheck={false}
+                    />
+                </ToolPanel>
                 </ResizablePanel>
 
                 <ResizableHandle className="w-4 bg-transparent hover:bg-accent/50 active:bg-accent/70 transition-colors duration-150 cursor-col-resize data-[resize-handle-active]:bg-accent/70">
@@ -68,21 +91,56 @@ function helloWorld() {
                     </div>
                 </ResizableHandle>
 
-                <ResizablePanel defaultSize={50} minSize={20} className="flex flex-col min-h-0">
-                    <ToolPanel padding="md" className="flex flex-col flex-1 min-h-0" bodyClassName="flex flex-col flex-1 min-h-0">
-                        <ToolLabel icon={<Eye className="size-4" />}>
-                            Preview
-                        </ToolLabel>
-                        <div className="flex-1 w-full p-6 mt-2 border rounded-md overflow-y-auto bg-card">
-                            <div className="prose dark:prose-invert max-w-none w-full break-words">
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                    {markdown}
-                                </ReactMarkdown>
+                <ResizablePanel defaultSize={50} minSize={20}>
+                <ToolPanel
+                    padding="none"
+                    className="h-full"
+                    bodyClassName="h-full"
+                    header={
+                        <>
+                            <ToolLabel icon={<Eye className="size-3.5" />}>
+                                Preview
+                            </ToolLabel>
+                            <div className="flex items-center gap-1">
+                                <button
+                                    id="btn-font-increase"
+                                    onClick={increaseFontSize}
+                                    disabled={fontSize >= FONT_SIZE_MAX}
+                                    className="flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40 disabled:pointer-events-none"
+                                    title="Tăng cỡ chữ"
+                                >
+                                    <Plus className="size-3.5" />
+                                </button>
+                                <span className="min-w-[2.5rem] text-center text-xs tabular-nums text-muted-foreground">
+                                    {fontSize}px
+                                </span>
+                                <button
+                                    id="btn-font-decrease"
+                                    onClick={decreaseFontSize}
+                                    disabled={fontSize <= FONT_SIZE_MIN}
+                                    className="flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40 disabled:pointer-events-none"
+                                    title="Giảm cỡ chữ"
+                                >
+                                    <Minus className="size-3.5" />
+                                </button>
                             </div>
+                        </>
+                    }
+                >
+                    <div className="h-full w-full overflow-y-auto bg-muted/20 p-4">
+                        <div
+                            className="prose dark:prose-invert max-w-none w-full break-words"
+                            style={{ fontSize: `${fontSize}px` }}
+                        >
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {markdown}
+                            </ReactMarkdown>
                         </div>
-                    </ToolPanel>
+                    </div>
+                </ToolPanel>
                 </ResizablePanel>
             </ResizablePanelGroup>
         </div>
     );
 }
+

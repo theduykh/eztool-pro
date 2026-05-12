@@ -21,6 +21,8 @@ export function Footer() {
                         <Home className="size-4" />
                         Trang chủ
                     </Link>
+                    <span className="hidden sm:inline text-border">|</span>
+                    <span className="hidden sm:inline text-xs italic opacity-70">Developed by theduykh</span>
                     <span className="text-xs">© {currentYear}</span>
                 </div>
             </div>
