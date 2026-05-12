@@ -62,6 +62,15 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         category: "dev",
         layout: "full",
     },
+    {
+        id: "markdown-viewer",
+        name: "Markdown Viewer",
+        description: "Xem trước văn bản Markdown với định dạng chuẩn, hỗ trợ bảng biểu, code block.",
+        path: "/dev/markdown-viewer",
+        category: "dev",
+        layout: "full",
+        isNew: true,
+    },
 
     // ==========================================
     // 🔤 TEXT TOOLS (Công cụ xử lý Văn bản)
