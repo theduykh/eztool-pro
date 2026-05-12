@@ -1,9 +1,14 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { Copy, Check, Trash2, Settings, Zap, AlignJustify } from "lucide-react";
+import { Copy, Check, Trash2, Settings, Zap, AlignJustify, GripVertical } from "lucide-react";
 import { ToolPanel } from "@/components/shared/ToolPanel";
 import { ToolLabel } from "@/components/shared/ToolLabel";
+import {
+    ResizablePanelGroup,
+    ResizablePanel,
+    ResizableHandle,
+} from "@/components/ui/resizable";
 import { cleanText, type CleaningOptions } from "@/lib/string/cleaner";
 import { cn } from "@/lib/utils";
 
@@ -93,9 +98,12 @@ export function RemoveLineBreaksClient() {
                 </div>
             </ToolPanel>
 
-            <div className="grid min-h-[200px] flex-1 grid-cols-1 gap-4 md:min-h-[400px] lg:grid-cols-2">
+            <ResizablePanelGroup orientation="horizontal" className="min-h-[200px] flex-1 md:min-h-[400px]">
+                <ResizablePanel defaultSize={50} minSize={20}>
                 <ToolPanel
                     padding="none"
+                    className="h-full"
+                    bodyClassName="h-full"
                     header={
                         <>
                             <ToolLabel>Văn bản gốc</ToolLabel>
@@ -119,9 +127,19 @@ export function RemoveLineBreaksClient() {
                         spellCheck={false}
                     />
                 </ToolPanel>
+                </ResizablePanel>
 
+                <ResizableHandle className="w-4 bg-transparent hover:bg-accent/50 active:bg-accent/70 transition-colors duration-150 cursor-col-resize data-[resize-handle-active]:bg-accent/70">
+                    <div className="z-10 flex h-8 w-4 items-center justify-center rounded-sm border bg-border shadow-sm">
+                        <GripVertical className="size-3.5 text-muted-foreground" />
+                    </div>
+                </ResizableHandle>
+
+                <ResizablePanel defaultSize={50} minSize={20}>
                 <ToolPanel
                     padding="none"
+                    className="h-full"
+                    bodyClassName="h-full"
                     header={
                         <>
                             <ToolLabel>Kết quả đã dọn dẹp</ToolLabel>
@@ -160,7 +178,8 @@ export function RemoveLineBreaksClient() {
                         spellCheck={false}
                     />
                 </ToolPanel>
-            </div>
+                </ResizablePanel>
+            </ResizablePanelGroup>
 
             {input && (
                 <div className="mt-4 flex shrink-0 flex-wrap gap-6 px-2">

@@ -11,10 +11,16 @@ import {
     Check,
     AlertCircle,
     Zap,
+    GripVertical,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ToolPanel } from "@/components/shared/ToolPanel";
 import { ToolLabel } from "@/components/shared/ToolLabel";
+import {
+    ResizablePanelGroup,
+    ResizablePanel,
+    ResizableHandle,
+} from "@/components/ui/resizable";
 import { encodeBase64, decodeBase64 } from "@/lib/string/base64-codec";
 import { cn } from "@/lib/utils";
 
@@ -156,9 +162,12 @@ export function Base64EncodeDecodeClient() {
                 </div>
             </div>
 
-            <div className="grid min-h-[200px] flex-1 grid-cols-1 gap-4 md:min-h-[400px] lg:grid-cols-2">
+            <ResizablePanelGroup orientation="horizontal" className="min-h-[200px] flex-1 md:min-h-[400px]">
+                <ResizablePanel defaultSize={50} minSize={20}>
                 <ToolPanel
                     padding="none"
+                    className="h-full"
+                    bodyClassName="h-full"
                     header={
                         <>
                             <ToolLabel>
@@ -188,9 +197,19 @@ export function Base64EncodeDecodeClient() {
                         spellCheck={false}
                     />
                 </ToolPanel>
+                </ResizablePanel>
 
+                <ResizableHandle className="w-4 bg-transparent hover:bg-accent/50 active:bg-accent/70 transition-colors duration-150 cursor-col-resize data-[resize-handle-active]:bg-accent/70">
+                    <div className="z-10 flex h-8 w-4 items-center justify-center rounded-sm border bg-border shadow-sm">
+                        <GripVertical className="size-3.5 text-muted-foreground" />
+                    </div>
+                </ResizableHandle>
+
+                <ResizablePanel defaultSize={50} minSize={20}>
                 <ToolPanel
                     padding="none"
+                    className="h-full"
+                    bodyClassName="h-full"
                     header={
                         <>
                             <div className="flex items-center gap-2">
@@ -231,7 +250,8 @@ export function Base64EncodeDecodeClient() {
                         spellCheck={false}
                     />
                 </ToolPanel>
-            </div>
+                </ResizablePanel>
+            </ResizablePanelGroup>
         </div>
     );
 }
