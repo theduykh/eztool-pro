@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ToolPanel } from "@/components/shared/ToolPanel";
@@ -10,7 +10,7 @@ import {
     ResizablePanel,
     ResizableHandle,
 } from "@/components/ui/resizable";
-import { FileText, Eye, GripVertical, Minus, Plus } from "lucide-react";
+import { FileText, Eye, GripVertical, Minus, Plus, Maximize2, Minimize2 } from "lucide-react";
 
 const FONT_SIZE_MIN = 12;
 const FONT_SIZE_MAX = 28;
@@ -49,6 +49,7 @@ function helloWorld() {
 `);
 
     const [fontSize, setFontSize] = useState(FONT_SIZE_DEFAULT);
+    const [isFullscreen, setIsFullscreen] = useState(false);
 
     const decreaseFontSize = useCallback(() => {
         setFontSize((prev) => Math.max(FONT_SIZE_MIN, prev - FONT_SIZE_STEP));
@@ -57,6 +58,54 @@ function helloWorld() {
     const increaseFontSize = useCallback(() => {
         setFontSize((prev) => Math.min(FONT_SIZE_MAX, prev + FONT_SIZE_STEP));
     }, []);
+
+    const toggleFullscreen = useCallback(() => {
+        setIsFullscreen((prev) => !prev);
+    }, []);
+
+    useEffect(() => {
+        if (!isFullscreen) return;
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") setIsFullscreen(false);
+        };
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [isFullscreen]);
+
+    useEffect(() => {
+        if (isFullscreen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+        return () => { document.body.style.overflow = ""; };
+    }, [isFullscreen]);
+
+    const fontControls = (
+        <div className="flex items-center gap-1">
+            <button
+                id="btn-font-increase"
+                onClick={increaseFontSize}
+                disabled={fontSize >= FONT_SIZE_MAX}
+                className="flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40 disabled:pointer-events-none"
+                title="Tăng cỡ chữ"
+            >
+                <Plus className="size-3.5" />
+            </button>
+            <span className="min-w-[2.5rem] text-center text-xs tabular-nums text-muted-foreground">
+                {fontSize}px
+            </span>
+            <button
+                id="btn-font-decrease"
+                onClick={decreaseFontSize}
+                disabled={fontSize <= FONT_SIZE_MIN}
+                className="flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40 disabled:pointer-events-none"
+                title="Giảm cỡ chữ"
+            >
+                <Minus className="size-3.5" />
+            </button>
+        </div>
+    );
 
     return (
         <div className="flex min-h-0 flex-1 flex-col">
@@ -102,26 +151,15 @@ function helloWorld() {
                                 Preview
                             </ToolLabel>
                             <div className="flex items-center gap-1">
+                                {fontControls}
+                                <div className="mx-0.5 h-4 w-px bg-border" />
                                 <button
-                                    id="btn-font-increase"
-                                    onClick={increaseFontSize}
-                                    disabled={fontSize >= FONT_SIZE_MAX}
-                                    className="flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40 disabled:pointer-events-none"
-                                    title="Tăng cỡ chữ"
+                                    id="btn-fullscreen-toggle"
+                                    onClick={toggleFullscreen}
+                                    className="flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                                    title="Toàn màn hình"
                                 >
-                                    <Plus className="size-3.5" />
-                                </button>
-                                <span className="min-w-[2.5rem] text-center text-xs tabular-nums text-muted-foreground">
-                                    {fontSize}px
-                                </span>
-                                <button
-                                    id="btn-font-decrease"
-                                    onClick={decreaseFontSize}
-                                    disabled={fontSize <= FONT_SIZE_MIN}
-                                    className="flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40 disabled:pointer-events-none"
-                                    title="Giảm cỡ chữ"
-                                >
-                                    <Minus className="size-3.5" />
+                                    <Maximize2 className="size-3.5" />
                                 </button>
                             </div>
                         </>
@@ -140,6 +178,41 @@ function helloWorld() {
                 </ToolPanel>
                 </ResizablePanel>
             </ResizablePanelGroup>
+
+            {/* Fullscreen overlay */}
+            {isFullscreen ? (
+                <div className="fixed inset-0 z-50 flex flex-col bg-background animate-in fade-in duration-200">
+                    {/* Fullscreen header */}
+                    <div className="flex h-12 flex-shrink-0 items-center justify-between gap-2 border-b border-border bg-muted/50 px-4">
+                        <ToolLabel icon={<Eye className="size-3.5" />}>
+                            Preview — Full Screen
+                        </ToolLabel>
+                        <div className="flex items-center gap-1">
+                            {fontControls}
+                            <div className="mx-0.5 h-4 w-px bg-border" />
+                            <button
+                                id="btn-fullscreen-exit"
+                                onClick={toggleFullscreen}
+                                className="flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                                title="Thoát toàn màn hình (Esc)"
+                            >
+                                <Minimize2 className="size-4" />
+                            </button>
+                        </div>
+                    </div>
+                    {/* Fullscreen body */}
+                    <div className="flex-1 overflow-y-auto bg-muted/20 p-6 md:p-10">
+                        <div
+                            className="prose dark:prose-invert mx-auto max-w-4xl w-full break-words"
+                            style={{ fontSize: `${fontSize}px` }}
+                        >
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {markdown}
+                            </ReactMarkdown>
+                        </div>
+                    </div>
+                </div>
+            ) : null}
         </div>
     );
 }
