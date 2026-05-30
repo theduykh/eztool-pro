@@ -41,3 +41,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Claude Code – cấu hình/dữ liệu cá nhân (không commit lên repo public)
+.claude/settings.local.json
+.claude/worktrees/
+
