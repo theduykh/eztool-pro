@@ -1,4 +1,4 @@
-export type ToolCategory = "dev" | "text" | "math" | "image";
+export type ToolCategory = "dev" | "image" | "text" | "math";
 
 export interface ToolItem {
     id: string;
@@ -29,6 +29,24 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         category: "dev",
         isHot: true,
         layout: "full",
+    },
+    {
+        id: "markdown-viewer",
+        name: "Markdown Viewer",
+        description: "Xem trước văn bản Markdown với định dạng chuẩn, hỗ trợ bảng biểu, code block.",
+        path: "/dev/markdown-viewer",
+        category: "dev",
+        layout: "full",
+        isNew: true,
+    },
+    {
+        id: "html-viewer",
+        name: "HTML Viewer",
+        description: "Nhập HTML raw bên trái, chỉnh sửa trực quan (WYSIWYG) bên phải. Đồng bộ hai chiều tức thì.",
+        path: "/dev/html-viewer",
+        category: "dev",
+        layout: "full",
+        isNew: true,
     },
     {
         id: "base64-encode-decode",
@@ -62,14 +80,47 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         category: "dev",
         layout: "full",
     },
+
+    // ==========================================
+    // 🖼️ IMAGE TOOLS (Công cụ Hình ảnh/Màu sắc)
+    // ==========================================
     {
-        id: "markdown-viewer",
-        name: "Markdown Viewer",
-        description: "Xem trước văn bản Markdown với định dạng chuẩn, hỗ trợ bảng biểu, code block.",
-        path: "/dev/markdown-viewer",
-        category: "dev",
+        id: "qr-generator",
+        name: "Tạo mã QR Code",
+        description: "Tạo mã QR cho link, văn bản, wifi, có thể tùy chỉnh màu.",
+        path: "/image/qr-generator",
+        category: "image",
+        isHot: true,
+    },
+    {
+        id: "color-converter",
+        name: "Chuyển đổi HEX / RGB",
+        description: "Chuyển đổi mã màu giữa HEX, RGB, HSL nhanh chóng.",
+        path: "/image/color-converter",
+        category: "image",
+    },
+    {
+        id: "image-to-base64",
+        name: "Ảnh sang Base64",
+        description: "Chuyển đổi file ảnh sang chuỗi Base64 để nhúng vào HTML/CSS.",
+        path: "/image/image-to-base64",
+        category: "image",
         layout: "full",
-        isNew: true,
+    },
+    {
+        id: "svg-placeholder",
+        name: "Tạo ảnh Placeholder",
+        description: "Tạo nhanh các ảnh kích thước chuẩn để test giao diện.",
+        path: "/image/svg-placeholder",
+        category: "image",
+    },
+    {
+        id: "image-resizer",
+        name: "Đổi kích thước ảnh",
+        description: "Crop và thay đổi kích thước ảnh ngay trên trình duyệt.",
+        path: "/image/image-resizer",
+        category: "image",
+        layout: "full",
     },
 
     // ==========================================
@@ -160,48 +211,6 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         path: "/math/lucky-wheel",
         category: "math",
         isNew: true,
-    },
-
-    // ==========================================
-    // 🖼️ IMAGE TOOLS (Công cụ Hình ảnh/Màu sắc)
-    // ==========================================
-    {
-        id: "qr-generator",
-        name: "Tạo mã QR Code",
-        description: "Tạo mã QR cho link, văn bản, wifi, có thể tùy chỉnh màu.",
-        path: "/image/qr-generator",
-        category: "image",
-        isHot: true,
-    },
-    {
-        id: "color-converter",
-        name: "Chuyển đổi HEX / RGB",
-        description: "Chuyển đổi mã màu giữa HEX, RGB, HSL nhanh chóng.",
-        path: "/image/color-converter",
-        category: "image",
-    },
-    {
-        id: "image-to-base64",
-        name: "Ảnh sang Base64",
-        description: "Chuyển đổi file ảnh sang chuỗi Base64 để nhúng vào HTML/CSS.",
-        path: "/image/image-to-base64",
-        category: "image",
-        layout: "full",
-    },
-    {
-        id: "svg-placeholder",
-        name: "Tạo ảnh Placeholder",
-        description: "Tạo nhanh các ảnh kích thước chuẩn để test giao diện.",
-        path: "/image/svg-placeholder",
-        category: "image",
-    },
-    {
-        id: "image-resizer",
-        name: "Đổi kích thước ảnh",
-        description: "Crop và thay đổi kích thước ảnh ngay trên trình duyệt.",
-        path: "/image/image-resizer",
-        category: "image",
-        layout: "full",
     }
 ];
 
@@ -209,8 +218,8 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
 export const getCategories = () => {
     return [
         { id: "dev", label: "Dev Tools", icon: "terminal" },
+        { id: "image", label: "Hình Ảnh", icon: "image" },
         { id: "text", label: "Văn Bản", icon: "type" },
         { id: "math", label: "Toán Học", icon: "calculator" },
-        { id: "image", label: "Hình Ảnh", icon: "image" },
     ];
 };
