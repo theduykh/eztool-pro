@@ -1,60 +1,60 @@
 ---
 name: eztool-coding-standard
-description: Tiêu chuẩn lập trình và quy định về code của eztool.pro. Đọc skill này trước khi viết code cho dự án.
+description: Coding standards and code conventions for eztool.pro. Read this skill before writing any code for the project.
 ---
 
-# Tiêu chuẩn lập trình eztool.pro
+# eztool.pro Coding Standard
 
-Dự án "eztool.pro" là một nền tảng công cụ chuẩn SEO với Next.js 16 (App Router) và TypeScript. Khi làm việc với codebase này, bạn bắt buộc phải tuân thủ nghiêm ngặt các quy tắc dưới đây:
+"eztool.pro" is an SEO-friendly utility-tool platform built with Next.js 16 (App Router) and TypeScript. When working in this codebase, you must strictly follow the rules below:
 
-## 1. Tách biệt Logic và UI (Pure Functions)
-- Mọi logic tính toán, chuyển đổi dữ liệu không được nằm trong React Component.
-- Tách riêng thành các hàm thuần túy (Pure Functions) và đặt trong thư mục `lib/`.
-- Logic không phụ thuộc vào React, Window object (ngoại trừ khi thật sự cần thiết) để bảo đảm 100% testable.
+## 1. Logic / UI Separation (Pure Functions)
+- No computation or data-transformation logic may live inside React Components.
+- Extract it into pure functions placed in the `lib/` directory.
+- Logic must not depend on React or the Window object (except when truly necessary) so it remains 100% testable.
 
 ## 2. TypeScript Strict Mode
-- Không bao giờ dùng `any`. Định nghĩa `interface` hoặc `type` rõ ràng cho mọi input/output.
-- Bắt buộc phải xử lý triệt để các rủi ro `undefined`, `null`, và lỗi parsing.
+- Never use `any`. Define explicit `interface` or `type` for every input/output.
+- You must exhaustively handle `undefined`, `null`, and parsing errors.
 
 ## 3. Next.js App Router & Rendering
-- Các trang (`page.tsx`) mặc định phải là **Server Component** để thân thiện với SEO.
-- Hạn chế sử dụng `"use client"`. Chỉ đặt chỉ thị này ở component cấp nhỏ nhất có chứa tương tác của người dùng (nút bấm, form input). KHÔNG đặt `"use client"` ở root page.
-- Luôn tạo thẻ `<title>` và `<meta>` động cho từng trang công cụ bằng cách export `metadata` từ file `page.tsx`.
-- **QUAN TRỌNG:** Đây là Next.js 16, `params` trong layout/page là Promise. Đọc docs tại `node_modules/next/dist/docs/` trước khi dùng API mới.
+- Pages (`page.tsx`) must default to **Server Components** for SEO friendliness.
+- Minimize `"use client"`. Only place this directive on the smallest component that contains user interaction (buttons, form inputs). NEVER put `"use client"` on a root page.
+- Always generate dynamic `<title>` and `<meta>` tags for each tool page by exporting `metadata` from `page.tsx`.
+- **IMPORTANT:** This is Next.js 16 — `params` in layouts/pages are Promises. Read the docs at `node_modules/next/dist/docs/` before using new APIs.
 
-## 4. Giao diện & Trải nghiệm (UI/UX)
-- Sử dụng **Tailwind CSS** kết hợp với **Shadcn UI** (nằm trong thư mục `components/ui/`).
-- Phong cách thiết kế ưu tiên: "Clean, Minimal, Professional". Đảm bảo tuyệt đối Responsive.
-- Luôn kiểm soát toàn bộ các trạng thái trải nghiệm: Loading, Error, và Empty state.
-- Hỗ trợ **Dark/Light mode** — sử dụng Shadcn CSS variables (bg-background, text-foreground, bg-card, border-border...), KHÔNG hardcode màu sắc.
+## 4. UI / UX
+- Use **Tailwind CSS** together with **Shadcn UI** (located in `components/ui/`).
+- Preferred design style: "Clean, Minimal, Professional". Responsiveness is mandatory.
+- Always handle every experience state: Loading, Error, and Empty state.
+- Support **Dark/Light mode** — use Shadcn CSS variables (bg-background, text-foreground, bg-card, border-border...). NEVER hardcode colors.
 
-### 4.1 Shared Primitives (BẮT BUỘC dùng — KHÔNG tự viết lại)
+### 4.1 Shared Primitives (MANDATORY — do NOT re-implement)
 
-Mọi tool đều phải compose 5 primitives trong `components/shared/`. Tuyệt đối không dựng `<div className="rounded-... border ... bg-card ...">` bằng tay.
+Every tool must compose the 5 primitives in `components/shared/`. Never hand-roll `<div className="rounded-... border ... bg-card ...">`.
 
-| Primitive | Mục đích | Props chính |
+| Primitive | Purpose | Key props |
 |---|---|---|
-| `PageHeader` | Header chuẩn của mỗi `page.tsx` (title + description) | `title`, `description` |
-| `ToolPanel` | Khung card / section | `tone` (`default`/`subtle`/`dashed`/`accent`), `padding` (`none`/`sm`/`md`/`lg`), `radius` (`md`/`lg`), optional `header`, `bodyClassName` |
-| `ToolLabel` | Label nhỏ uppercase cho input và panel | `tone` (`default`/`muted`/`accent`/`danger`/`success`), `icon`, `htmlFor` |
-| `ToolInfoBox` | Box tip / info inline | `tone` (`neutral`/`accent`/`warning`), `icon`, `title` |
-| `ToolToggle` | Switch boolean chuẩn | `id`, `checked`, `onChange`, `label` |
+| `PageHeader` | Standard header of each `page.tsx` (title + description) | `title`, `description` |
+| `ToolPanel` | Card / section wrapper | `tone` (`default`/`subtle`/`dashed`/`accent`), `padding` (`none`/`sm`/`md`/`lg`), `radius` (`md`/`lg`), optional `header`, `bodyClassName` |
+| `ToolLabel` | Small uppercase label for inputs and panels | `tone` (`default`/`muted`/`accent`/`danger`/`success`), `icon`, `htmlFor` |
+| `ToolInfoBox` | Inline tip / info box | `tone` (`neutral`/`accent`/`warning`), `icon`, `title` |
+| `ToolToggle` | Standard boolean switch | `id`, `checked`, `onChange`, `label` |
 
-Ví dụ chuẩn:
+Standard example:
 ```tsx
 <ToolPanel radius="lg" padding="lg">
-    <ToolLabel icon={<Ruler className="size-4" />}>Kích thước</ToolLabel>
+    <ToolLabel icon={<Ruler className="size-4" />}>Dimensions</ToolLabel>
     <input id="input-width" ... />
 </ToolPanel>
 
-<ToolInfoBox tone="accent" icon={<Info className="size-5" />} title="Gợi ý">
-    <p>Nội dung mẹo nhỏ...</p>
+<ToolInfoBox tone="accent" icon={<Info className="size-5" />} title="Tip">
+    <p>Short tip content...</p>
 </ToolInfoBox>
 ```
 
 ### 4.2 Unified Page Pattern
 
-Mỗi `page.tsx` đều theo cùng một cấu trúc — lấy tool từ registry, export `metadata`, render `PageHeader` + Client Component:
+Every `page.tsx` follows the same structure — fetch the tool from the registry, export `metadata`, render `PageHeader` + the Client Component:
 
 ```tsx
 import type { Metadata } from "next";
@@ -79,17 +79,17 @@ export default function ToolPage() {
 }
 ```
 
-Mỗi tool trong `config/tools.ts` khai báo `layout`: `"full"` cho tool chiếm full chiều cao viewport (JSON formatter, lucky wheel...), `"fixed"` cho nội dung centered cố định. Bỏ trống cho layout scroll mặc định.
+Each tool in `config/tools.ts` declares a `layout`: `"full"` for tools that fill the full viewport height (JSON formatter, lucky wheel...), `"fixed"` for centered fixed-width content. Omit for the default scroll layout.
 
-## 5. Mindset QA Automation (Kiểm thử)
-- Bất cứ khi nào tạo ra một file logic mới trong thư mục `lib/`, BẮT BUỘC bạn phải tạo ra một file `.test.ts` tương ứng bên cạnh.
-- Viết Unit Tests bằng **Vitest**. Các test case phải bao quát được 2 mảng chính:
-  - Happy Path (Đường dẫn lý tưởng, input đúng).
-  - Edge Cases (Các trường hợp dị biệt, lỗi, biên).
-- Mọi phần tử (element) quan trọng trên giao diện (như input, button, tab, thẻ điều khiển, form) BẮT BUỘC phải có thuộc tính `id` rõ ràng và có ý nghĩa. Điều này hỗ trợ quá trình QA automation và viết kịch bản e2e test (ví dụ: Playwright, Selenium, Cypress).
-- **Convention đặt `id`:** `btn-*` cho button, `input-*` cho input/textarea, `output-*` cho vùng kết quả, `select-*` cho select, `toggle-*` cho ToolToggle, `opt-*` cho tab/option. Ví dụ: `btn-copy`, `input-text`, `output-result`, `select-from-unit`, `toggle-upper`, `opt-double-spaces`.
+## 5. QA Automation Mindset (Testing)
+- Whenever you create a new logic file in `lib/`, you MUST create a sibling `.test.ts` file next to it.
+- Write Unit Tests with **Vitest**. Test cases must cover two main areas:
+  - Happy Path (ideal path, valid input).
+  - Edge Cases (unusual, error, and boundary conditions).
+- Every important UI element (input, button, tab, control, form) MUST have a clear, meaningful `id` attribute. This supports QA automation and writing e2e test scripts (e.g. Playwright, Selenium, Cypress).
+- **`id` convention:** `btn-*` for buttons, `input-*` for input/textarea, `output-*` for result regions, `select-*` for selects, `toggle-*` for ToolToggle, `opt-*` for tabs/options. Examples: `btn-copy`, `input-text`, `output-result`, `select-from-unit`, `toggle-upper`, `opt-double-spaces`.
 
-## 6. Cấu trúc dự án hiện tại
+## 6. Current Project Structure
 
 ```
 eztool-pro/
@@ -97,29 +97,29 @@ eztool-pro/
 │   ├── layout.tsx              # Root layout (Server Component) — Inter + Fira Code font, ThemeProvider, AppShell
 │   ├── globals.css             # Tailwind v4 + Shadcn CSS vars (dark/light)
 │   ├── page.tsx                # Homepage
-│   └── (tools)/                # Route group cho tất cả công cụ
-│       └── [category]/[tool]/  # Routing theo category/tool-name
-│           └── page.tsx        # Server Component, export metadata
+│   └── (tools)/                # Route group for all tools
+│       └── [category]/[tool]/  # Routing by category/tool-name
+│           └── page.tsx        # Server Component, exports metadata
 ├── components/
 │   ├── ui/                     # Shadcn UI components (button, input, textarea...)
-│   └── shared/                 # Components dùng chung
+│   └── shared/                 # Shared components
 │       ├── AppShell.tsx        # Client — layout shell (sidebar + header + content)
 │       ├── Sidebar.tsx         # Client — sidebar navigation, tool grouping
 │       ├── Header.tsx          # Client — breadcrumb, search, theme toggle
 │       ├── ThemeProvider.tsx   # Client — next-themes wrapper
 │       └── ThemeToggle.tsx     # Client — sun/moon toggle button
-├── lib/                        # Pure logic functions (KHÔNG chứa React)
+├── lib/                        # Pure logic functions (NO React)
 │   ├── utils.ts                # cn() helper
-│   ├── formatters/             # Logic xử lý format (json, xml...)
-│   ├── math/                   # Hàm tính toán
-│   └── string/                 # Xử lý chuỗi
+│   ├── formatters/             # Formatting logic (json, xml...)
+│   ├── math/                   # Computation functions
+│   └── string/                 # String processing
 ├── config/
-│   └── tools.ts                # Registry tất cả tools + categories
-└── __tests__/                  # Hoặc đặt .test.ts ngay cạnh file logic trong lib/
+│   └── tools.ts                # Registry of all tools + categories
+└── __tests__/                  # Or place .test.ts right next to the logic file in lib/
 ```
 
 ## 7. Routing Convention
-- URL pattern: `/{category}/{tool-id}` — ví dụ `/dev/json-formatter`, `/text/word-counter`
-- Folder structure: `app/(tools)/[tương ứng path trong config/tools.ts]/page.tsx`
-- Mỗi page export `metadata` object cho SEO.
-- Client-interactive component tách riêng file, chỉ `"use client"` ở component đó.
+- URL pattern: `/{category}/{tool-id}` — e.g. `/dev/json-formatter`, `/text/word-counter`
+- Folder structure: `app/(tools)/[matching the path in config/tools.ts]/page.tsx`
+- Each page exports a `metadata` object for SEO.
+- The client-interactive component lives in a separate file, with `"use client"` only on that component.

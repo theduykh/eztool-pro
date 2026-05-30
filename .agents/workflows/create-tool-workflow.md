@@ -1,55 +1,55 @@
 ---
-description: Hướng dẫn tạo công cụ tiện ích (Tool) mới trên nền tảng eztool.pro
+description: Guide for creating a new utility tool on the eztool.pro platform
 ---
 
-# Quy trình tạo tool mới (Micro-prompting)
+# New Tool Creation Workflow (Micro-prompting)
 
-Áp dụng tư duy QA Automation để xây dựng công cụ bằng cách chia nhỏ quá trình. Thực hiện theo trình tự các bước sau, TUYỆT ĐỐI không làm ngược lại:
+Apply a QA Automation mindset to build tools by breaking the process into small steps. Follow the steps below in order — NEVER do them out of sequence:
 
-## Bước 0: Đọc Coding Standard
-- Đọc file `.agents/skills/eztool-coding-standard/SKILL.md` để nắm rõ cấu trúc dự án và quy tắc.
-- Kiểm tra `config/tools.ts` để xem tool đã được khai báo chưa (id, path, category).
+## Step 0: Read the Coding Standard
+- Read `.agents/skills/eztool-coding-standard/SKILL.md` to understand the project structure and rules.
+- Check `config/tools.ts` to see whether the tool is already registered (id, path, category).
 
-## Bước 1: Xây dựng Logic Core (Pure Functions)
-- Không chạm vào UI. Chỉ tạo logic cốt lõi.
-- Tạo file `.ts` trong `lib/[domain]/` — ví dụ `lib/formatters/json.ts`, `lib/math/percentage.ts`.
-- Viết các hàm logic thuần túy (pure functions).
-- Áp dụng TypeScript nghiêm ngặt, định nghĩa `interface`/`type` rõ ràng. Không dùng `any`.
-- Hàm phải trả về kết quả hoặc error message, KHÔNG throw exception không kiểm soát.
+## Step 1: Build the Core Logic (Pure Functions)
+- Do not touch the UI. Build only the core logic.
+- Create a `.ts` file in `lib/[domain]/` — e.g. `lib/formatters/json.ts`, `lib/math/percentage.ts`.
+- Write pure functions.
+- Apply strict TypeScript, define explicit `interface`/`type`. Do not use `any`.
+- Functions must return a result or an error message — do NOT throw uncontrolled exceptions.
 
-## Bước 2: Viết Unit Tests (QA Standard)
-- Tạo file `.test.ts` ngay bên cạnh file logic vừa tạo (ví dụ `lib/formatters/json.test.ts`).
-- Viết test bằng **Vitest**.
-- Phải cover:
-  - ✅ Happy Path (input hợp lệ, kết quả đúng).
-  - ✅ Edge Cases (input rỗng, null, undefined, quá dài, ký tự đặc biệt).
-  - ✅ Error Cases (input sai format, dữ liệu không parse được).
+## Step 2: Write Unit Tests (QA Standard)
+- Create a `.test.ts` file right next to the logic file you just created (e.g. `lib/formatters/json.test.ts`).
+- Write tests with **Vitest**.
+- Must cover:
+  - ✅ Happy Path (valid input, correct result).
+  - ✅ Edge Cases (empty, null, undefined, overly long, special characters).
+  - ✅ Error Cases (malformed input, unparseable data).
 // turbo
-- Chạy test: `npx vitest run lib/[domain]/[file].test.ts`
+- Run tests: `npx vitest run lib/[domain]/[file].test.ts`
 
-## Bước 3: Thiết kế Giao diện (UI)
-- Tạo route folder tương ứng path trong `config/tools.ts`.
-  - Ví dụ tool có `path: "/dev/json-formatter"` → tạo `app/(tools)/dev/json-formatter/page.tsx`
-- File `page.tsx` là **Server Component**:
-  - Export `metadata` object (title, description lấy từ `config/tools.ts`).
-  - Render tiêu đề + mô tả công cụ.
-  - Import và render Client Component chứa logic tương tác.
-- Tạo Client Component riêng trong cùng folder (ví dụ `JsonFormatterClient.tsx`):
-  - Đặt `"use client"` ở đầu file.
-  - Sử dụng các components từ `components/ui/` (Button, Textarea...).
-  - Sử dụng Shadcn CSS variables cho màu sắc (KHÔNG hardcode) để hỗ trợ dark mode.
-  - Thiết kế phù hợp với layout đã có (content nằm trong vùng workspace của AppShell).
+## Step 3: Design the UI
+- Create the route folder matching the path in `config/tools.ts`.
+  - Example: a tool with `path: "/dev/json-formatter"` → create `app/(tools)/dev/json-formatter/page.tsx`
+- The `page.tsx` file is a **Server Component**:
+  - Export a `metadata` object (title, description taken from `config/tools.ts`).
+  - Render the tool title + description.
+  - Import and render the Client Component that holds the interactive logic.
+- Create a separate Client Component in the same folder (e.g. `JsonFormatterClient.tsx`):
+  - Put `"use client"` at the top of the file.
+  - Use components from `components/ui/` (Button, Textarea...).
+  - Use Shadcn CSS variables for colors (do NOT hardcode) to support dark mode.
+  - Match the existing layout (content sits within the AppShell workspace area).
 
-## Bước 4: Ghép nối & Kiểm tra (Integration)
-- Import hàm logic từ `lib/` vào Client Component.
-- Xử lý hiển thị các trạng thái: Thành công, Loading, Lỗi, và Empty state.
-- Mở browser tại `http://localhost:3000/{category}/{tool-id}` để verify:
-  - ✅ UI render đúng trên cả Light & Dark mode.
-  - ✅ Sidebar highlight đúng tool đang active.
-  - ✅ Breadcrumb hiển thị chính xác.
+## Step 4: Integration & Verification
+- Import the logic functions from `lib/` into the Client Component.
+- Handle all display states: Success, Loading, Error, and Empty state.
+- Open the browser at `http://localhost:3000/{category}/{tool-id}` to verify:
+  - ✅ UI renders correctly in both Light & Dark mode.
+  - ✅ The sidebar highlights the active tool.
+  - ✅ The breadcrumb displays correctly.
   - ✅ Responsive (mobile view).
-  - ✅ Logic hoạt động: nhập input → nhận output đúng.
+  - ✅ Logic works: enter input → get the correct output.
 
-## Bước 5: Đăng ký Tool (nếu chưa có)
-- Nếu tool chưa tồn tại trong `config/tools.ts`, thêm entry mới vào `TOOLS_DIRECTORY`.
-- Đảm bảo các trường: `id`, `name`, `description`, `path`, `category`, và `isNew` (nếu là tool mới).
+## Step 5: Register the Tool (if not already)
+- If the tool does not yet exist in `config/tools.ts`, add a new entry to `TOOLS_DIRECTORY`.
+- Ensure the fields: `id`, `name`, `description`, `path`, `category`, and `isNew` (if it is a new tool).

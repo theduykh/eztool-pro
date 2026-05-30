@@ -1,28 +1,28 @@
 ---
-description: Quy trình triển khai hệ thống eztool.pro lên hạ tầng CentOS VM (Giai đoạn 1)
+description: Deployment process for the eztool.pro system onto a CentOS VM (Phase 1)
 ---
 
-# Lộ trình Deploy lên CentOS VM
+# CentOS VM Deployment Roadmap
 
-Quy trình Deploy tiêu chuẩn hiện tại của dự án thực hiện qua Containerization.
+The project's current standard deployment process is done via Containerization.
 
-### Bước 1: Build Image
-- Build ứng dụng lấy image base Docker.
+### Step 1: Build the Image
+- Build the application into a base Docker image.
 ```bash
 docker build -t eztool-web .
 ```
 
-### Bước 2: Khởi chạy Service
-- Chạy container ứng dụng (thông thường qua docker-compose mapping cổng, ví dụ `8080`), hoặc dùng `pm2` nếu triển khai trực tiếp.
+### Step 2: Start the Service
+- Run the application container (typically via docker-compose port mapping, e.g. `8080`), or use `pm2` for a direct deployment.
 
-### Bước 3: Cấu hình Web Server (Reverse Proxy)
-- Mở **Nginx** trên CentOS để cấu hình làm Reverse Proxy.
-- Trỏ domain `eztool.pro` vào `localhost:8080`.
-- Xử lý SSL Let's Encrypt, Gzip/Brotli trên lớp Nginx.
+### Step 3: Configure the Web Server (Reverse Proxy)
+- Set up **Nginx** on CentOS to act as a Reverse Proxy.
+- Point the `eztool.pro` domain to `localhost:8080`.
+- Handle Let's Encrypt SSL and Gzip/Brotli at the Nginx layer.
 
-### Bước 4: Tự động hoá qua CDN (Cloudflare)
-- Trỏ NameServer của tên miền `eztool.pro` vào hệ thống DNS của Cloudflare.
-- Bật chế độ "Proxied" (đám mây màu cam) trên DNS record của domain.
-- Cloudflare sẽ giúp cache toàn bộ tài nguyên (SSG html, images, JS, CSS) để tránh ăn mòn server gốc.
+### Step 4: Automate via CDN (Cloudflare)
+- Point the `eztool.pro` domain's nameservers to Cloudflare's DNS.
+- Enable "Proxied" mode (the orange cloud) on the domain's DNS record.
+- Cloudflare caches all assets (SSG html, images, JS, CSS) to offload the origin server.
 
-> **Ghi chú mở rộng (Giai đoạn lên Cloud - Tương lai):** Khi đổi kiến trúc lên sử dụng Vercel, tiến trình này sẽ chuyển đổi sang Push to Github -> Vercel auto-build/deploy kèm Global CDN + SSL.
+> **Future note (Cloud phase):** When the architecture moves to Vercel, this process will switch to Push to GitHub → Vercel auto-build/deploy with a global CDN + SSL.
