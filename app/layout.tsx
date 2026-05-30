@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Fira_Code } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 import { ThemeProvider } from "@/components/shared/ThemeProvider";
@@ -10,9 +10,9 @@ const inter = Inter({
     subsets: ["latin", "latin-ext", "vietnamese"],
 });
 
-const firaCode = Fira_Code({
+const jetbrainsMono = JetBrains_Mono({
     variable: "--font-mono",
-    subsets: ["latin", "latin-ext"],
+    subsets: ["latin", "latin-ext", "vietnamese"],
 });
 
 export const metadata: Metadata = {
@@ -32,7 +32,7 @@ export default function RootLayout({
     return (
         <html
             lang="vi"
-            className={`${inter.variable} ${firaCode.variable}`}
+            className={`${inter.variable} ${jetbrainsMono.variable}`}
             suppressHydrationWarning
         >
             <body>

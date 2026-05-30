@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
 import { ToolPanel } from "@/components/shared/ToolPanel";
 import { ToolLabel } from "@/components/shared/ToolLabel";
 import { formatJson, minifyJson, type JsonFormatResult } from "@/lib/formatters/json";
@@ -353,11 +352,39 @@ function buildLinePathMap(formattedJson: string): string[] {
     return result;
 }
 
+const DEFAULT_JSON = `{
+    "name": "eztool.pro",
+    "version": "1.0.0",
+    "description": "Bộ công cụ tiện ích trực tuyến siêu tốc dành cho lập trình viên",
+    "active": true,
+    "stats": {
+        "users": 2500,
+        "rating": 4.9,
+        "latency_ms": 12
+    },
+    "features": [
+        "JSON Formatter & Minifier",
+        "Base64 Encode/Decode",
+        "URL Encode/Decode",
+        "Hash Generator",
+        "JWT Decoder"
+    ],
+    "tags": [
+        "developer",
+        "utility",
+        "free"
+    ],
+    "author": {
+        "name": "theduykh",
+        "github": "github.com/theduykh"
+    }
+}`;
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function JsonFormatterClient() {
-    const [input, setInput] = useState("");
-    const [output, setOutput] = useState("");
+    const [input, setInput] = useState(DEFAULT_JSON);
+    const [output, setOutput] = useState(DEFAULT_JSON);
     const [hasError, setHasError] = useState(false);
     const [copied, setCopied] = useState(false);
 
@@ -496,6 +523,8 @@ export function JsonFormatterClient() {
         setClickedPath(null);
     }, []);
 
+
+
     const handlePaste = useCallback(async () => {
         try {
             const text = await navigator.clipboard.readText();
@@ -599,21 +628,6 @@ export function JsonFormatterClient() {
 
     return (
         <div className="flex min-h-0 flex-1 flex-col">
-            <div className="mb-4 flex flex-wrap items-center gap-2">
-                <Button id="btn-format" onClick={() => handleProcess("format")} size="lg">
-                    <AlignLeft data-icon="inline-start" />
-                    Format (Làm đẹp)
-                </Button>
-                <Button id="btn-minify" variant="outline" size="lg" onClick={() => handleProcess("minify")}>
-                    <Minimize2 data-icon="inline-start" />
-                    Minify (Nén)
-                </Button>
-                <Button id="btn-clear" variant="destructive" size="lg" className="ml-auto" onClick={handleClear}>
-                    <Trash2 data-icon="inline-start" />
-                    Xóa trắng
-                </Button>
-            </div>
-
             <ResizablePanelGroup
                 orientation="horizontal"
                 className="min-h-[200px] flex-1 md:min-h-[400px]"
@@ -627,14 +641,25 @@ export function JsonFormatterClient() {
                         header={
                             <>
                                 <ToolLabel>Input</ToolLabel>
-                                <button
-                                    id="btn-paste"
-                                    onClick={handlePaste}
-                                    className="flex items-center text-xs text-muted-foreground transition-colors hover:text-foreground"
-                                >
-                                    <ClipboardPaste className="mr-1 size-3.5" />
-                                    Paste
-                                </button>
+                                <div className="flex items-center gap-3">
+                                    <button
+                                        id="btn-paste"
+                                        onClick={handlePaste}
+                                        className="flex items-center text-xs text-muted-foreground transition-colors hover:text-foreground"
+                                    >
+                                        <ClipboardPaste className="mr-1 size-3.5" />
+                                        Paste
+                                    </button>
+                                    <button
+                                        id="btn-clear"
+                                        onClick={handleClear}
+                                        className="flex items-center text-xs text-destructive/85 transition-colors hover:text-destructive"
+                                        title="Xóa trắng nội dung"
+                                    >
+                                        <Trash2 className="mr-1 size-3.5" />
+                                        Clear
+                                    </button>
+                                </div>
                             </>
                         }
                     >
@@ -670,6 +695,24 @@ export function JsonFormatterClient() {
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <button
+                                        id="btn-format"
+                                        onClick={() => handleProcess("format")}
+                                        className="flex items-center text-xs text-muted-foreground transition-colors hover:text-foreground"
+                                        title="Làm đẹp JSON"
+                                    >
+                                        <AlignLeft className="mr-1 size-3.5" />
+                                        Format
+                                    </button>
+                                    <button
+                                        id="btn-minify"
+                                        onClick={() => handleProcess("minify")}
+                                        className="flex items-center text-xs text-muted-foreground transition-colors hover:text-foreground"
+                                        title="Nén JSON"
+                                    >
+                                        <Minimize2 className="mr-1 size-3.5" />
+                                        Minify
+                                    </button>
+                                    <button
                                         id="btn-search"
                                         onClick={() => setSearchOpen((v) => !v)}
                                         className={cn(
@@ -680,7 +723,8 @@ export function JsonFormatterClient() {
                                         )}
                                         title="Tìm kiếm trong output"
                                     >
-                                        <Search className="size-3.5" />
+                                        <Search className="mr-1 size-3.5" />
+                                        Search
                                     </button>
                                     <button
                                         id="btn-copy"
@@ -750,8 +794,8 @@ export function JsonFormatterClient() {
                                     {matches.length > 0
                                         ? `${currentMatchIndex + 1}/${matches.length}`
                                         : searchQuery
-                                          ? "0 kết quả"
-                                          : ""}
+                                            ? "0 kết quả"
+                                            : ""}
                                 </span>
                                 <button
                                     id="btn-search-prev"
