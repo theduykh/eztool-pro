@@ -574,7 +574,7 @@
             "winnerDialogTitle": "🎉 당첨자가 선정되었습니다!",
             "winnerDialogDesc": "축하합니다! 무작위로 선택된 항목은 다음과 같습니다:",
             "btnCopy": "결과 복사",
-            "btnRemoveWinner": "이 항목 제외하고 계속",
+            "btnRemoveWinner": "계속",
             "speedPresetLabel": "⚡ 회전 속도 및 마찰력",
             "speedFast": "빠르게",
             "speedMedium": "보통",

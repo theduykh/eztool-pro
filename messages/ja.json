@@ -576,7 +576,7 @@
             "winnerDialogTitle": "🎉 当選者が決定しました！",
             "winnerDialogDesc": "おめでとうございます！以下の項目がランダムに選ばれました：",
             "btnCopy": "結果をコピー",
-            "btnRemoveWinner": "この項目を除外して続行",
+            "btnRemoveWinner": "続行",
             "speedPresetLabel": "⚡ 回転速度と摩擦",
             "speedFast": "高速",
             "speedMedium": "標準",

@@ -574,7 +574,7 @@
             "winnerDialogTitle": "🎉 We Have a Winner!",
             "winnerDialogDesc": "Congratulations! The following item has been randomly selected:",
             "btnCopy": "Copy Result",
-            "btnRemoveWinner": "Remove this item and continue",
+            "btnRemoveWinner": "Continue",
             "speedPresetLabel": "⚡ Speed & Friction",
             "speedFast": "Fast",
             "speedMedium": "Medium",

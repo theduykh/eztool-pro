@@ -575,7 +575,7 @@
             "winnerDialogTitle": "🎉 产生了一名胜出者！",
             "winnerDialogDesc": "恭喜！已随机选中以下项目：",
             "btnCopy": "复制结果",
-            "btnRemoveWinner": "排除此项并继续",
+            "btnRemoveWinner": "继续",
             "speedPresetLabel": "⚡ 旋转速度与摩擦力",
             "speedFast": "快速",
             "speedMedium": "中速",
