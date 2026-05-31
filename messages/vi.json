@@ -1,0 +1,130 @@
+{
+    "metadata": {
+        "titleDefault": "eztool.pro – Công cụ tiện ích siêu tốc",
+        "titleTemplate": "%s | eztool.pro",
+        "description": "Bộ công cụ tiện ích hàng ngày và dành cho lập trình viên. Nhanh chóng, chính xác, không quảng cáo."
+    },
+    "common": {
+        "openTool": "Mở công cụ",
+        "searchTools": "Tìm kiếm công cụ...",
+        "home": "Trang chủ",
+        "hot": "Hot",
+        "new": "New",
+        "toggleTheme": "Chuyển đổi giao diện",
+        "openMenu": "Mở menu",
+        "closeMenu": "Đóng menu",
+        "expandSidebar": "Mở sidebar",
+        "collapseSidebar": "Thu sidebar",
+        "selectLanguage": "Chọn ngôn ngữ"
+    },
+    "home": {
+        "tagline": "Bộ công cụ tiện ích siêu tốc dành cho lập trình viên và người dùng hàng ngày. Nhanh chóng, chính xác, không quảng cáo.",
+        "trending": "Đang hot",
+        "latest": "Mới nhất"
+    },
+    "categories": {
+        "dev": "Dev Tools",
+        "image": "Hình Ảnh",
+        "text": "Văn Bản",
+        "math": "Toán Học"
+    },
+    "notFound": {
+        "title": "Không tìm thấy trang",
+        "body": "Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển.",
+        "backHome": "Quay về trang chủ"
+    },
+    "tools": {
+        "json-formatter": {
+            "name": "JSON Formatter",
+            "description": "Làm đẹp, xác thực và nén dữ liệu JSON."
+        },
+        "markdown-viewer": {
+            "name": "Markdown Viewer",
+            "description": "Xem trước văn bản Markdown với định dạng chuẩn, hỗ trợ bảng biểu, code block."
+        },
+        "html-viewer": {
+            "name": "HTML Viewer",
+            "description": "Nhập HTML raw bên trái, chỉnh sửa trực quan (WYSIWYG) bên phải. Đồng bộ hai chiều tức thì."
+        },
+        "base64-encode-decode": {
+            "name": "Base64 Encode/Decode",
+            "description": "Mã hóa hoặc giải mã chuỗi văn bản sang định dạng Base64."
+        },
+        "url-encode-decode": {
+            "name": "URL Encode/Decode",
+            "description": "Mã hóa URL an toàn hoặc giải mã URL về dạng dễ đọc."
+        },
+        "jwt-decoder": {
+            "name": "JWT Decoder",
+            "description": "Giải mã JSON Web Token (JWT) để xem payload và header."
+        },
+        "hash-generator": {
+            "name": "Hash Generator",
+            "description": "Tạo mã băm MD5, SHA-1, SHA-256 từ chuỗi văn bản."
+        },
+        "qr-generator": {
+            "name": "Tạo mã QR Code",
+            "description": "Tạo mã QR cho link, văn bản, wifi, có thể tùy chỉnh màu."
+        },
+        "color-converter": {
+            "name": "Chuyển đổi HEX / RGB",
+            "description": "Chuyển đổi mã màu giữa HEX, RGB, HSL nhanh chóng."
+        },
+        "image-to-base64": {
+            "name": "Ảnh sang Base64",
+            "description": "Chuyển đổi file ảnh sang chuỗi Base64 để nhúng vào HTML/CSS."
+        },
+        "svg-placeholder": {
+            "name": "Tạo ảnh Placeholder",
+            "description": "Tạo nhanh các ảnh kích thước chuẩn để test giao diện."
+        },
+        "image-resizer": {
+            "name": "Đổi kích thước ảnh",
+            "description": "Crop và thay đổi kích thước ảnh ngay trên trình duyệt."
+        },
+        "word-counter": {
+            "name": "Đếm từ & Ký tự",
+            "description": "Đếm số từ, số ký tự, số câu và đoạn văn chi tiết."
+        },
+        "case-converter": {
+            "name": "Chuyển đổi chữ hoa/thường",
+            "description": "Chuyển đổi UPPERCASE, lowercase, Capitalized Case, camelCase."
+        },
+        "text-to-slug": {
+            "name": "Tạo URL Slug",
+            "description": "Loại bỏ dấu tiếng Việt và tạo URL thân thiện cho SEO."
+        },
+        "lorem-ipsum": {
+            "name": "Tạo chữ giả (Lorem Ipsum)",
+            "description": "Tạo nhanh các đoạn văn bản mẫu cho thiết kế UI/UX."
+        },
+        "remove-line-breaks": {
+            "name": "Xóa dòng trống & Khoảng trắng",
+            "description": "Dọn dẹp văn bản, xóa các dòng trống và khoảng cách thừa."
+        },
+        "percentage-calculator": {
+            "name": "Tính Phần Trăm (%)",
+            "description": "Tính % của một số, sự tăng/giảm phần trăm nhanh chóng."
+        },
+        "bmi-calculator": {
+            "name": "Tính chỉ số BMI",
+            "description": "Kiểm tra chỉ số khối cơ thể (BMI) để biết tình trạng sức khỏe."
+        },
+        "random-number": {
+            "name": "Quay số ngẫu nhiên",
+            "description": "Tạo một hoặc nhiều số ngẫu nhiên trong khoảng chỉ định."
+        },
+        "unit-converter": {
+            "name": "Đổi Đơn Vị đo lường",
+            "description": "Chuyển đổi chiều dài, khối lượng, nhiệt độ, diện tích."
+        },
+        "rule-of-three": {
+            "name": "Tính Tam Suất",
+            "description": "Tính nhanh quy tắc tam suất (Nếu A=B, C=D thì tìm ẩn số)."
+        },
+        "lucky-wheel": {
+            "name": "Vòng quay may mắn",
+            "description": "Tạo vòng quay ngẫu nhiên với hiệu ứng đẹp mắt. Chọn người, phân việc, quyết định nhanh."
+        }
+    }
+}

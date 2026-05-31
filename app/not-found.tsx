@@ -1,25 +1,41 @@
-import Link from "next/link";
-import { Home } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { defaultLocale } from "@/i18n/routing";
 
-export default function NotFound() {
+/**
+ * Global 404 (`out/404.html`) for paths that don't match any locale segment.
+ * Renders a full document because the root layout is a pass-through. Localized
+ * in-app 404s are handled by `app/[locale]/not-found.tsx`.
+ */
+export default function GlobalNotFound() {
     return (
-        <div className="flex flex-1 flex-col items-center justify-center gap-6 py-20 text-center">
-            <p className="text-7xl font-bold text-muted-foreground/30">404</p>
-            <div>
-                <h2 className="text-xl font-semibold text-foreground">
-                    Không tìm thấy trang
-                </h2>
-                <p className="mt-1 text-sm text-muted-foreground">
-                    Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển.
+        <html lang={defaultLocale}>
+            <head>
+                <title>404 – eztool.pro</title>
+                <meta name="robots" content="noindex" />
+            </head>
+            <body
+                style={{
+                    margin: 0,
+                    minHeight: "100vh",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "1rem",
+                    fontFamily: "system-ui, sans-serif",
+                    background: "#0a0a0a",
+                    color: "#fafafa",
+                }}
+            >
+                <p style={{ fontSize: "4rem", fontWeight: 700, opacity: 0.3, margin: 0 }}>
+                    404
                 </p>
-            </div>
-            <Button asChild size="lg">
-                <Link href="/">
-                    <Home data-icon="inline-start" />
-                    Quay về trang chủ
-                </Link>
-            </Button>
-        </div>
+                <a
+                    href={`/${defaultLocale}`}
+                    style={{ color: "#3b82f6", textDecoration: "none", fontWeight: 500 }}
+                >
+                    eztool.pro →
+                </a>
+            </body>
+        </html>
     );
 }

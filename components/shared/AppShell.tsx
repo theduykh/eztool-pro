@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname } from "@/i18n/navigation";
 import { Sidebar } from "@/components/shared/Sidebar";
 import { Header } from "@/components/shared/Header";
 import { Footer } from "@/components/shared/Footer";

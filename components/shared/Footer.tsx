@@ -1,7 +1,9 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Home } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 
 export function Footer() {
+    const t = useTranslations();
     const currentYear = new Date().getFullYear();
 
     return (
@@ -10,7 +12,7 @@ export function Footer() {
                 <div className="flex items-center gap-2 min-w-0">
                     <span className="font-semibold text-foreground">eztool.pro</span>
                     <span className="hidden md:inline text-border">|</span>
-                    <p className="hidden md:inline truncate">Bộ công cụ tiện ích miễn phí, nhanh chóng và chính xác.</p>
+                    <p className="hidden md:inline truncate">{t("home.tagline")}</p>
                 </div>
 
                 <div className="flex items-center gap-4 md:gap-6">
@@ -20,7 +22,7 @@ export function Footer() {
                         className="flex items-center gap-1.5 transition-opacity hover:text-foreground hover:opacity-80"
                     >
                         <Home className="size-4" />
-                        Trang chủ
+                        {t("common.home")}
                     </Link>
                     <span className="text-border">|</span>
                     <a
