@@ -1,45 +1,13 @@
-import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import type { ReactNode } from "react";
 
-import { ThemeProvider } from "@/components/shared/ThemeProvider";
-import { AppShell } from "@/components/shared/AppShell";
-
-const inter = Inter({
-    variable: "--font-sans",
-    subsets: ["latin", "latin-ext", "vietnamese"],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-    variable: "--font-mono",
-    subsets: ["latin", "latin-ext", "vietnamese"],
-});
-
-export const metadata: Metadata = {
-    title: {
-        default: "eztool.pro – Công cụ tiện ích siêu tốc",
-        template: "%s | eztool.pro",
-    },
-    description:
-        "Bộ công cụ tiện ích hàng ngày và dành cho lập trình viên. Nhanh chóng, chính xác, không quảng cáo.",
-};
-
-export default function RootLayout({
-    children,
-}: Readonly<{
-    children: React.ReactNode;
-}>) {
-    return (
-        <html
-            lang="vi"
-            className={`${inter.variable} ${jetbrainsMono.variable}`}
-            suppressHydrationWarning
-        >
-            <body>
-                <ThemeProvider>
-                    <AppShell>{children}</AppShell>
-                </ThemeProvider>
-            </body>
-        </html>
-    );
+/**
+ * Pass-through root layout. The real document (`<html lang>`, `<body>`,
+ * fonts, providers, AppShell) lives in `app/[locale]/layout.tsx` so the
+ * `lang` attribute and metadata can vary per locale in the static export.
+ * The only other route under this layout is the `/` redirect page, which
+ * renders its own minimal document.
+ */
+export default function RootLayout({ children }: { children: ReactNode }) {
+    return children;
 }

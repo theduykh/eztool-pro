@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
 import { TOOLS_DIRECTORY, getCategories, type ToolItem } from "@/config/tools";
 import {
     Terminal,
@@ -74,6 +74,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ isOpen, onClose, isDesktopCollapsed = false }: SidebarProps) {
+    const t = useTranslations();
     const pathname = usePathname();
     const categories = getCategories();
 
@@ -128,7 +129,7 @@ export function Sidebar({ isOpen, onClose, isDesktopCollapsed = false }: Sidebar
                     <button
                         className="rounded-md p-2.5 text-muted-foreground hover:text-foreground active:bg-accent md:hidden"
                         onClick={onClose}
-                        aria-label="Đóng menu"
+                        aria-label={t("common.closeMenu")}
                     >
                         <X className="size-5" />
                     </button>
@@ -158,7 +159,7 @@ export function Sidebar({ isOpen, onClose, isDesktopCollapsed = false }: Sidebar
                                 >
                                     <CategoryIcon className="size-4 shrink-0 text-blue-600 dark:text-blue-400" />
                                     <span className="flex-1 text-left tracking-wide uppercase text-xs">
-                                        {category.label}
+                                        {t(`categories.${category.id}`)}
                                     </span>
                                     <ChevronDown
                                         className={cn(
@@ -188,16 +189,18 @@ export function Sidebar({ isOpen, onClose, isDesktopCollapsed = false }: Sidebar
                                                         )}
                                                     >
                                                         <ToolIcon className="size-3.5 shrink-0" />
-                                                        <span className="flex-1 truncate">{tool.name}</span>
+                                                        <span className="flex-1 truncate">
+                                                            {t(`tools.${tool.id}.name`)}
+                                                        </span>
 
                                                         {tool.isHot && !tool.isNew && (
                                                             <span className="rounded bg-orange-500/15 px-1.5 py-0.5 text-[10px] font-bold uppercase text-orange-600 dark:bg-orange-500/20 dark:text-orange-400">
-                                                                Hot
+                                                                {t("common.hot")}
                                                             </span>
                                                         )}
                                                         {tool.isNew && (
                                                             <span className="rounded bg-blue-500/15 px-1.5 py-0.5 text-[10px] font-bold uppercase text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
-                                                                New
+                                                                {t("common.new")}
                                                             </span>
                                                         )}
                                                     </Link>

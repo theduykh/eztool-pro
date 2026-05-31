@@ -1,0 +1,130 @@
+{
+    "metadata": {
+        "titleDefault": "eztool.pro – Lightning-fast utility tools",
+        "titleTemplate": "%s | eztool.pro",
+        "description": "Everyday and developer utility tools. Fast, accurate, and ad-free."
+    },
+    "common": {
+        "openTool": "Open tool",
+        "searchTools": "Search tools...",
+        "home": "Home",
+        "hot": "Hot",
+        "new": "New",
+        "toggleTheme": "Toggle theme",
+        "openMenu": "Open menu",
+        "closeMenu": "Close menu",
+        "expandSidebar": "Expand sidebar",
+        "collapseSidebar": "Collapse sidebar",
+        "selectLanguage": "Select language"
+    },
+    "home": {
+        "tagline": "Lightning-fast utility tools for developers and everyday users. Fast, accurate, and ad-free.",
+        "trending": "Trending",
+        "latest": "Latest"
+    },
+    "categories": {
+        "dev": "Dev Tools",
+        "image": "Image",
+        "text": "Text",
+        "math": "Math"
+    },
+    "notFound": {
+        "title": "Page not found",
+        "body": "The page you are looking for doesn't exist or has been moved.",
+        "backHome": "Back to home"
+    },
+    "tools": {
+        "json-formatter": {
+            "name": "JSON Formatter",
+            "description": "Beautify, validate, and minify JSON data."
+        },
+        "markdown-viewer": {
+            "name": "Markdown Viewer",
+            "description": "Preview Markdown with proper formatting, including tables and code blocks."
+        },
+        "html-viewer": {
+            "name": "HTML Viewer",
+            "description": "Paste raw HTML on the left, edit visually (WYSIWYG) on the right. Instant two-way sync."
+        },
+        "base64-encode-decode": {
+            "name": "Base64 Encode/Decode",
+            "description": "Encode or decode text strings to and from Base64."
+        },
+        "url-encode-decode": {
+            "name": "URL Encode/Decode",
+            "description": "Safely encode a URL or decode it back to readable text."
+        },
+        "jwt-decoder": {
+            "name": "JWT Decoder",
+            "description": "Decode a JSON Web Token (JWT) to inspect its header and payload."
+        },
+        "hash-generator": {
+            "name": "Hash Generator",
+            "description": "Generate MD5, SHA-1 and SHA-256 hashes from text."
+        },
+        "qr-generator": {
+            "name": "QR Code Generator",
+            "description": "Create QR codes for links, text and wifi, with customizable colors."
+        },
+        "color-converter": {
+            "name": "HEX / RGB Converter",
+            "description": "Convert color codes between HEX, RGB and HSL instantly."
+        },
+        "image-to-base64": {
+            "name": "Image to Base64",
+            "description": "Convert image files to a Base64 string to embed in HTML/CSS."
+        },
+        "svg-placeholder": {
+            "name": "Placeholder Generator",
+            "description": "Quickly create standard-sized placeholder images to test layouts."
+        },
+        "image-resizer": {
+            "name": "Image Resizer",
+            "description": "Crop and resize images right in your browser."
+        },
+        "word-counter": {
+            "name": "Word & Character Counter",
+            "description": "Count words, characters, sentences and paragraphs in detail."
+        },
+        "case-converter": {
+            "name": "Case Converter",
+            "description": "Convert between UPPERCASE, lowercase, Capitalized Case and camelCase."
+        },
+        "text-to-slug": {
+            "name": "URL Slug Generator",
+            "description": "Strip accents and create SEO-friendly URL slugs."
+        },
+        "lorem-ipsum": {
+            "name": "Lorem Ipsum Generator",
+            "description": "Quickly generate placeholder text for UI/UX design."
+        },
+        "remove-line-breaks": {
+            "name": "Remove Line Breaks & Spaces",
+            "description": "Clean up text by removing blank lines and extra whitespace."
+        },
+        "percentage-calculator": {
+            "name": "Percentage Calculator",
+            "description": "Calculate the percentage of a number and percentage increase or decrease."
+        },
+        "bmi-calculator": {
+            "name": "BMI Calculator",
+            "description": "Check your Body Mass Index (BMI) to assess your health."
+        },
+        "random-number": {
+            "name": "Random Number Generator",
+            "description": "Generate one or more random numbers within a given range."
+        },
+        "unit-converter": {
+            "name": "Unit Converter",
+            "description": "Convert length, weight, temperature and area."
+        },
+        "rule-of-three": {
+            "name": "Rule of Three",
+            "description": "Quickly solve the rule of three (if A=B and C=D, find the unknown)."
+        },
+        "lucky-wheel": {
+            "name": "Lucky Wheel",
+            "description": "Create a random spinning wheel with great effects. Pick people, assign tasks, decide fast."
+        }
+    }
+}

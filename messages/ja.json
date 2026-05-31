@@ -1,0 +1,130 @@
+{
+    "metadata": {
+        "titleDefault": "eztool.pro – 超高速ユーティリティツール",
+        "titleTemplate": "%s | eztool.pro",
+        "description": "日常ユーザーと開発者向けのユーティリティツール集。高速・正確・広告なし。"
+    },
+    "common": {
+        "openTool": "ツールを開く",
+        "searchTools": "ツールを検索...",
+        "home": "ホーム",
+        "hot": "人気",
+        "new": "新着",
+        "toggleTheme": "テーマを切り替え",
+        "openMenu": "メニューを開く",
+        "closeMenu": "メニューを閉じる",
+        "expandSidebar": "サイドバーを展開",
+        "collapseSidebar": "サイドバーを折りたたむ",
+        "selectLanguage": "言語を選択"
+    },
+    "home": {
+        "tagline": "開発者と日常ユーザーのための超高速ユーティリティツール。高速・正確・広告なし。",
+        "trending": "人気のツール",
+        "latest": "最新のツール"
+    },
+    "categories": {
+        "dev": "開発ツール",
+        "image": "画像",
+        "text": "テキスト",
+        "math": "計算"
+    },
+    "notFound": {
+        "title": "ページが見つかりません",
+        "body": "お探しのページは存在しないか、移動されました。",
+        "backHome": "ホームに戻る"
+    },
+    "tools": {
+        "json-formatter": {
+            "name": "JSON フォーマッター",
+            "description": "JSON データを整形・検証・圧縮します。"
+        },
+        "markdown-viewer": {
+            "name": "Markdown ビューア",
+            "description": "表やコードブロックを含め、Markdown を標準的な書式でプレビューします。"
+        },
+        "html-viewer": {
+            "name": "HTML ビューア",
+            "description": "左側に生の HTML を貼り付け、右側でビジュアル編集（WYSIWYG）。双方向に即時同期します。"
+        },
+        "base64-encode-decode": {
+            "name": "Base64 エンコード/デコード",
+            "description": "テキスト文字列を Base64 にエンコード、またはデコードします。"
+        },
+        "url-encode-decode": {
+            "name": "URL エンコード/デコード",
+            "description": "URL を安全にエンコード、または読みやすいテキストにデコードします。"
+        },
+        "jwt-decoder": {
+            "name": "JWT デコーダー",
+            "description": "JSON Web Token (JWT) をデコードしてヘッダーとペイロードを確認します。"
+        },
+        "hash-generator": {
+            "name": "ハッシュ生成",
+            "description": "テキストから MD5、SHA-1、SHA-256 ハッシュを生成します。"
+        },
+        "qr-generator": {
+            "name": "QR コード生成",
+            "description": "リンク・テキスト・WiFi 用の QR コードを、色をカスタマイズして生成します。"
+        },
+        "color-converter": {
+            "name": "HEX / RGB 変換",
+            "description": "HEX、RGB、HSL 間で色コードを即座に変換します。"
+        },
+        "image-to-base64": {
+            "name": "画像を Base64 に変換",
+            "description": "画像ファイルを Base64 文字列に変換し、HTML/CSS に埋め込みます。"
+        },
+        "svg-placeholder": {
+            "name": "プレースホルダー生成",
+            "description": "レイアウト確認用の標準サイズのプレースホルダー画像をすばやく作成します。"
+        },
+        "image-resizer": {
+            "name": "画像リサイズ",
+            "description": "ブラウザ上で画像のトリミングとサイズ変更を行います。"
+        },
+        "word-counter": {
+            "name": "文字数・単語数カウント",
+            "description": "単語数、文字数、文の数、段落数を詳細にカウントします。"
+        },
+        "case-converter": {
+            "name": "大文字・小文字変換",
+            "description": "UPPERCASE、lowercase、Capitalized Case、camelCase の間で変換します。"
+        },
+        "text-to-slug": {
+            "name": "URL スラッグ生成",
+            "description": "アクセント記号を除去し、SEO に適した URL スラッグを作成します。"
+        },
+        "lorem-ipsum": {
+            "name": "Lorem Ipsum 生成",
+            "description": "UI/UX デザイン用のダミーテキストをすばやく生成します。"
+        },
+        "remove-line-breaks": {
+            "name": "改行・空白の削除",
+            "description": "空行や余分な空白を削除してテキストを整理します。"
+        },
+        "percentage-calculator": {
+            "name": "パーセント計算",
+            "description": "ある数値の割合や増減率をすばやく計算します。"
+        },
+        "bmi-calculator": {
+            "name": "BMI 計算",
+            "description": "体格指数（BMI）を計算して健康状態を確認します。"
+        },
+        "random-number": {
+            "name": "乱数生成",
+            "description": "指定した範囲で 1 つ以上の乱数を生成します。"
+        },
+        "unit-converter": {
+            "name": "単位変換",
+            "description": "長さ、重さ、温度、面積を変換します。"
+        },
+        "rule-of-three": {
+            "name": "比例計算",
+            "description": "比例計算をすばやく解きます（A=B、C=D のとき未知数を求める）。"
+        },
+        "lucky-wheel": {
+            "name": "ラッキールーレット",
+            "description": "華やかな演出のランダムルーレットを作成。人選び、タスク割り当て、すばやい決定に。"
+        }
+    }
+}

@@ -1,0 +1,130 @@
+{
+    "metadata": {
+        "titleDefault": "eztool.pro – 极速实用工具",
+        "titleTemplate": "%s | eztool.pro",
+        "description": "面向日常用户和开发者的实用工具集。快速、精准、无广告。"
+    },
+    "common": {
+        "openTool": "打开工具",
+        "searchTools": "搜索工具...",
+        "home": "首页",
+        "hot": "热门",
+        "new": "新增",
+        "toggleTheme": "切换主题",
+        "openMenu": "打开菜单",
+        "closeMenu": "关闭菜单",
+        "expandSidebar": "展开侧边栏",
+        "collapseSidebar": "收起侧边栏",
+        "selectLanguage": "选择语言"
+    },
+    "home": {
+        "tagline": "面向开发者和日常用户的极速实用工具。快速、精准、无广告。",
+        "trending": "热门工具",
+        "latest": "最新工具"
+    },
+    "categories": {
+        "dev": "开发工具",
+        "image": "图像",
+        "text": "文本",
+        "math": "数学"
+    },
+    "notFound": {
+        "title": "页面未找到",
+        "body": "您访问的页面不存在或已被移动。",
+        "backHome": "返回首页"
+    },
+    "tools": {
+        "json-formatter": {
+            "name": "JSON 格式化",
+            "description": "美化、校验并压缩 JSON 数据。"
+        },
+        "markdown-viewer": {
+            "name": "Markdown 预览",
+            "description": "以标准格式预览 Markdown，支持表格和代码块。"
+        },
+        "html-viewer": {
+            "name": "HTML 预览",
+            "description": "左侧粘贴原始 HTML，右侧可视化编辑（所见即所得），双向实时同步。"
+        },
+        "base64-encode-decode": {
+            "name": "Base64 编码/解码",
+            "description": "在文本与 Base64 之间进行编码或解码。"
+        },
+        "url-encode-decode": {
+            "name": "URL 编码/解码",
+            "description": "安全地对 URL 进行编码，或解码为可读文本。"
+        },
+        "jwt-decoder": {
+            "name": "JWT 解码",
+            "description": "解码 JSON Web Token (JWT)，查看其头部和负载。"
+        },
+        "hash-generator": {
+            "name": "哈希生成器",
+            "description": "从文本生成 MD5、SHA-1、SHA-256 哈希值。"
+        },
+        "qr-generator": {
+            "name": "二维码生成器",
+            "description": "为链接、文本、WiFi 生成二维码，可自定义颜色。"
+        },
+        "color-converter": {
+            "name": "HEX / RGB 转换",
+            "description": "在 HEX、RGB、HSL 之间快速转换颜色代码。"
+        },
+        "image-to-base64": {
+            "name": "图片转 Base64",
+            "description": "将图片文件转换为 Base64 字符串，便于嵌入 HTML/CSS。"
+        },
+        "svg-placeholder": {
+            "name": "占位图生成器",
+            "description": "快速生成标准尺寸的占位图，用于测试界面布局。"
+        },
+        "image-resizer": {
+            "name": "图片尺寸调整",
+            "description": "直接在浏览器中裁剪和调整图片尺寸。"
+        },
+        "word-counter": {
+            "name": "字数与字符统计",
+            "description": "详细统计字数、字符数、句子数和段落数。"
+        },
+        "case-converter": {
+            "name": "大小写转换",
+            "description": "在 UPPERCASE、lowercase、Capitalized Case、camelCase 之间转换。"
+        },
+        "text-to-slug": {
+            "name": "URL Slug 生成器",
+            "description": "去除重音符号，生成对 SEO 友好的 URL slug。"
+        },
+        "lorem-ipsum": {
+            "name": "Lorem Ipsum 生成器",
+            "description": "快速生成用于 UI/UX 设计的占位文本。"
+        },
+        "remove-line-breaks": {
+            "name": "去除换行与空格",
+            "description": "清理文本，删除空行和多余的空白字符。"
+        },
+        "percentage-calculator": {
+            "name": "百分比计算器",
+            "description": "快速计算某个数的百分比及百分比增减。"
+        },
+        "bmi-calculator": {
+            "name": "BMI 计算器",
+            "description": "计算身体质量指数 (BMI)，了解健康状况。"
+        },
+        "random-number": {
+            "name": "随机数生成器",
+            "description": "在指定范围内生成一个或多个随机数。"
+        },
+        "unit-converter": {
+            "name": "单位换算",
+            "description": "换算长度、重量、温度和面积。"
+        },
+        "rule-of-three": {
+            "name": "三数法则",
+            "description": "快速求解三数法则（已知 A=B、C=D，求未知数）。"
+        },
+        "lucky-wheel": {
+            "name": "幸运转盘",
+            "description": "创建带精美特效的随机转盘。选人、分配任务、快速决策。"
+        }
+    }
+}
