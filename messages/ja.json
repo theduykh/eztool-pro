@@ -33,6 +33,13 @@
         "body": "お探しのページは存在しないか、移動されました。",
         "backHome": "ホームに戻る"
     },
+    "search": {
+        "hint": "ツールを検索して開く",
+        "noResults": "「{query}」に一致する結果がありません",
+        "navigate": "移動",
+        "open": "開く",
+        "close": "閉じる"
+    },
     "tools": {
         "json-formatter": {
             "name": "JSON フォーマッター",
@@ -125,6 +132,107 @@
         "lucky-wheel": {
             "name": "ラッキールーレット",
             "description": "華やかな演出のランダムルーレットを作成。人選び、タスク割り当て、すばやい決定に。"
+        }
+    },
+    "toolCommon": {
+        "copy": "コピー",
+        "copied": "コピーしました！",
+        "paste": "貼り付け",
+        "clear": "クリア",
+        "auto": "自動",
+        "enableAuto": "自動をオン",
+        "disableAuto": "自動をオフ",
+        "swap": "入れ替え（出力を入力に）",
+        "encode": "エンコード",
+        "decode": "デコード",
+        "resultPlaceholder": "結果がここに表示されます...",
+        "errorGeneric": "エラーが発生しました",
+        "errorLabel": "エラー",
+        "charCount": "{count} 文字",
+        "close": "閉じる"
+    },
+    "toolUI": {
+        "base64-encode-decode": {
+            "plainText": "元のテキスト",
+            "base64String": "Base64 文字列",
+            "placeholderEncode": "エンコードするテキストを貼り付け",
+            "placeholderDecode": "デコードする Base64 を貼り付け"
+        },
+        "url-encode-decode": {
+            "plainUrl": "テキスト / 元の URL",
+            "safeUrl": "安全な URL",
+            "encodedUrl": "エンコード済みの URL",
+            "placeholderEncode": "エンコードするテキストを貼り付け",
+            "placeholderDecode": "デコードする URL を貼り付け"
+        },
+        "jwt-decoder": {
+            "inputLabel": "JWT トークンを入力",
+            "placeholder": "ここにトークンを貼り付け（header.payload.signature）...",
+            "invalidToken": "無効なトークン",
+            "headerLabel": "Header（アルゴリズムとトークン種別）",
+            "payloadLabel": "Payload（データ / クレーム）",
+            "signatureLabel": "Signature",
+            "headerEmpty": "// Header がここに表示されます",
+            "payloadEmpty": "// Payload がここに表示されます",
+            "signatureEmpty": "// 署名がここに表示されます",
+            "copyHeader": "Header JSON をコピー",
+            "copyPayload": "Payload JSON をコピー",
+            "aboutTitle": "このツールについて",
+            "about1Title": "シークレット不要",
+            "about1Body": "JWT は転送のために Base64Url でエンコードされているだけなので、誰でも秘密鍵なしでデコードして内容を見ることができます。",
+            "about2Title": "完全にプライベート",
+            "about2Body": "すべてのデコードは 100% ブラウザ内で行われます。トークンがサーバーに送信されることはありません。",
+            "about3Title": "トークンの検証",
+            "about3Body": "このツールはデータの確認に重点を置いています。有効性を検証するには秘密鍵が必要です。"
+        },
+        "hash-generator": {
+            "inputLabel": "入力データ",
+            "uppercase": "大文字",
+            "placeholder": "ハッシュ化するテキストを貼り付け",
+            "resultsLabel": "ハッシュ結果",
+            "emptyHash": "{alg} のデータはまだありません...",
+            "tipTitle": "使い方のヒント：",
+            "tip1": "ハッシュは一方向であり、「逆ハッシュ」（de-hash）して元のテキストを復元することはできません。",
+            "tip2": "すべてのデータは 100% ブラウザ（クライアント側）で処理され、サーバーに送信されることはありません。",
+            "tip3": "機密データのセキュリティには SHA-256 または SHA-512 を使用してください。",
+            "md5Desc": "128 ビットハッシュ（ファイルの整合性チェックに広く使用）",
+            "sha1Desc": "160 ビットハッシュ（旧標準、高いセキュリティには非推奨）",
+            "sha256Desc": "256 ビットハッシュ（非常に安全、SSL/ブロックチェーンの現代標準）",
+            "sha512Desc": "512 ビットハッシュ（極めて安全、最高セキュリティ用途向け）"
+        },
+        "markdown-viewer": {
+            "rawLabel": "Markdown ソース",
+            "preview": "プレビュー",
+            "previewFullscreen": "プレビュー — 全画面",
+            "placeholder": "ここに Markdown を入力してください...",
+            "increaseFont": "文字サイズを大きく",
+            "decreaseFont": "文字サイズを小さく",
+            "fullscreen": "全画面",
+            "exitFullscreen": "全画面を終了 (Esc)",
+            "sample": "# Markdown ビューアへようこそ\n\n左の列に **Markdown** を書くと、右側にレンダリング結果が表示されます。\n\n## 対応機能\n\n- **太字**、*斜体*、~~取り消し線~~\n- リスト\n- 表\n- コードブロック\n- 引用\n\n### 表の例\n\n| 列 A | 列 B |\n|------|------|\n| データ 1 | データ 2 |\n| 2 行目, 列 A | 2 行目, 列 B |\n\n### コードの例\n\n```javascript\nfunction helloWorld() {\n  console.log(\"Hello, World!\");\n}\n```\n\n> これはレンダリングを確認するためのサンプル引用です。\n"
+        },
+        "json-formatter": {
+            "input": "入力",
+            "output": "出力",
+            "format": "整形",
+            "minify": "圧縮",
+            "search": "検索",
+            "textMode": "テキスト",
+            "inputPlaceholder": "例: {\"name\": \"eztool\", \"status\": \"active\"}",
+            "clearTitle": "内容をクリア",
+            "formatTitle": "JSON を整形",
+            "minifyTitle": "JSON を圧縮",
+            "searchTitle": "出力内を検索",
+            "searchTextPlaceholder": "検索...（Enter で次へ）",
+            "searchPathPlaceholder": "$.key または data.users[0].name",
+            "noResults": "結果 0 件",
+            "prevMatch": "前の結果 (Shift+Enter)",
+            "nextMatch": "次の結果 (Enter)",
+            "closeEsc": "閉じる (Esc)",
+            "pathLabel": "パス",
+            "copyPath": "パスをコピー",
+            "formatError": "JSON 形式エラー",
+            "sampleDescription": "開発者向けの超高速オンラインユーティリティツール集"
         }
     }
 }

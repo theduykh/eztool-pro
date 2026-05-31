@@ -45,3 +45,6 @@ next-env.d.ts
 .claude/settings.local.json
 .claude/worktrees/
 
+
+# i18n batch tooling (temporary)
+tmp-i18n/

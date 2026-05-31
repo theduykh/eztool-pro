@@ -33,6 +33,13 @@
         "body": "The page you are looking for doesn't exist or has been moved.",
         "backHome": "Back to home"
     },
+    "search": {
+        "hint": "Search and open a tool",
+        "noResults": "No results for “{query}”",
+        "navigate": "Navigate",
+        "open": "Open",
+        "close": "Close"
+    },
     "tools": {
         "json-formatter": {
             "name": "JSON Formatter",
@@ -125,6 +132,107 @@
         "lucky-wheel": {
             "name": "Lucky Wheel",
             "description": "Create a random spinning wheel with great effects. Pick people, assign tasks, decide fast."
+        }
+    },
+    "toolCommon": {
+        "copy": "Copy",
+        "copied": "Copied!",
+        "paste": "Paste",
+        "clear": "Clear",
+        "auto": "Auto",
+        "enableAuto": "Enable auto",
+        "disableAuto": "Disable auto",
+        "swap": "Swap (use output as input)",
+        "encode": "Encode",
+        "decode": "Decode",
+        "resultPlaceholder": "The result will appear here...",
+        "errorGeneric": "Something went wrong",
+        "errorLabel": "Error",
+        "charCount": "{count} characters",
+        "close": "Close"
+    },
+    "toolUI": {
+        "base64-encode-decode": {
+            "plainText": "Plain text",
+            "base64String": "Base64 string",
+            "placeholderEncode": "Paste text to encode",
+            "placeholderDecode": "Paste Base64 to decode"
+        },
+        "url-encode-decode": {
+            "plainUrl": "Text / original URL",
+            "safeUrl": "Safe URL",
+            "encodedUrl": "Encoded URL",
+            "placeholderEncode": "Paste text to encode",
+            "placeholderDecode": "Paste URL to decode"
+        },
+        "jwt-decoder": {
+            "inputLabel": "Enter JWT token",
+            "placeholder": "Paste your token here (header.payload.signature)...",
+            "invalidToken": "Invalid token",
+            "headerLabel": "Header (algorithm & token type)",
+            "payloadLabel": "Payload (data / claims)",
+            "signatureLabel": "Signature",
+            "headerEmpty": "// Header will appear here",
+            "payloadEmpty": "// Payload will appear here",
+            "signatureEmpty": "// Signature hash will appear here",
+            "copyHeader": "Copy header JSON",
+            "copyPayload": "Copy payload JSON",
+            "aboutTitle": "About this tool",
+            "about1Title": "No secret needed",
+            "about1Body": "A JWT is only Base64Url-encoded for transport, so anyone can decode and read its contents without the secret key.",
+            "about2Title": "Completely private",
+            "about2Body": "All decoding happens 100% in your browser. The token is never sent to our servers.",
+            "about3Title": "Token verification",
+            "about3Body": "This tool focuses on inspecting the data. To verify validity you need the secret key."
+        },
+        "hash-generator": {
+            "inputLabel": "Input data",
+            "uppercase": "Uppercase",
+            "placeholder": "Paste text to hash",
+            "resultsLabel": "Hash results",
+            "emptyHash": "No {alg} data yet...",
+            "tipTitle": "Tips:",
+            "tip1": "A hash is one-way; you cannot \"de-hash\" it to recover the original text.",
+            "tip2": "Everything is processed 100% in your browser (client-side); data is never sent to a server.",
+            "tip3": "Use SHA-256 or SHA-512 for sensitive data security needs.",
+            "md5Desc": "128-bit hash (commonly used to check file integrity)",
+            "sha1Desc": "160-bit hash (legacy standard, not recommended for high security)",
+            "sha256Desc": "256-bit hash (very secure, the modern standard for SSL/Blockchain)",
+            "sha512Desc": "512-bit hash (extremely secure, for maximum-security applications)"
+        },
+        "markdown-viewer": {
+            "rawLabel": "Raw Markdown",
+            "preview": "Preview",
+            "previewFullscreen": "Preview — Full Screen",
+            "placeholder": "Type your markdown content here...",
+            "increaseFont": "Increase font size",
+            "decreaseFont": "Decrease font size",
+            "fullscreen": "Fullscreen",
+            "exitFullscreen": "Exit fullscreen (Esc)",
+            "sample": "# Welcome to Markdown Viewer\n\nWrite **Markdown** in the left column and see the rendered result on the right.\n\n## Supported features\n\n- **Bold**, *italic*, ~~strikethrough~~\n- Lists\n- Tables\n- Code blocks\n- Blockquotes\n\n### Table example\n\n| Column A | Column B |\n|----------|----------|\n| Data 1 | Data 2 |\n| Row 2, Col A | Row 2, Col B |\n\n### Code example\n\n```javascript\nfunction helloWorld() {\n  console.log(\"Hello, World!\");\n}\n```\n\n> This is a sample blockquote to test rendering.\n"
+        },
+        "json-formatter": {
+            "input": "Input",
+            "output": "Output",
+            "format": "Format",
+            "minify": "Minify",
+            "search": "Search",
+            "textMode": "Text",
+            "inputPlaceholder": "Example: {\"name\": \"eztool\", \"status\": \"active\"}",
+            "clearTitle": "Clear content",
+            "formatTitle": "Beautify JSON",
+            "minifyTitle": "Minify JSON",
+            "searchTitle": "Search in output",
+            "searchTextPlaceholder": "Search... (Enter for next)",
+            "searchPathPlaceholder": "$.key or data.users[0].name",
+            "noResults": "0 results",
+            "prevMatch": "Previous match (Shift+Enter)",
+            "nextMatch": "Next match (Enter)",
+            "closeEsc": "Close (Esc)",
+            "pathLabel": "path",
+            "copyPath": "Copy path",
+            "formatError": "JSON format error",
+            "sampleDescription": "A lightning-fast online utility toolkit for developers"
         }
     }
 }

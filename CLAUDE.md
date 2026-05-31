@@ -108,8 +108,9 @@ i18n/                  # next-intl wiring
   routing.ts           # locales, defaultLocale, localeNames, defineRouting (localePrefix: "always")
   navigation.ts        # locale-aware Link / usePathname / useRouter (use these, not next/*)
   request.ts           # getRequestConfig — loads messages/{locale}.json
-messages/              # Translation catalogs: en, vi, zh, ko, ja (namespaces: common, home,
-                       # categories, tools.<id>.{name,description}, notFound, metadata)
+messages/              # Translation catalogs: en, vi, zh, ko, ja. Namespaces: common, home,
+                       # categories, notFound, search, metadata, tools.<id>.{name,description},
+                       # toolCommon (strings shared across tools), toolUI.<id> (per-tool UI strings)
 components/
   ui/                  # Shadcn UI components
   shared/              # AppShell, Sidebar, Header, ThemeProvider, ThemeToggle, LanguageSwitcher
@@ -127,18 +128,22 @@ config/
 ## Adding a New Tool (required order)
 
 1. **Register** — add a structural entry to `TOOLS_DIRECTORY` in `config/tools.ts` with `id`, `path`, `category`, optional `layout`/`isNew`/`isHot`. No `name`/`description` here.
-2. **Translate** — add `tools.<id>.name` and `tools.<id>.description` to **every** `messages/{locale}.json` (en, vi, zh, ko, ja). The id must match the registry entry.
+2. **Translate** — in **every** `messages/{locale}.json` (en, vi, zh, ko, ja): add `tools.<id>.name`/`.description`, plus a `toolUI.<id>` block for the tool's own UI strings (reuse `toolCommon` for shared ones like copy/paste/clear). The id must match the registry entry. Strings with literal `{ }` (code/JSON samples) are read with `t.raw()`.
 3. **Logic** — create `lib/[domain]/[tool].ts` with pure functions, strict TypeScript, no `any`, return results/errors instead of throwing.
 4. **Tests** — create `lib/[domain]/[tool].test.ts` with Vitest covering happy path + edge cases + error cases. Run with `npx vitest run`.
-5. **UI** — create `app/[locale]/(tools)/[category]/[tool-id]/page.tsx` (async Server Component using the unified Page Pattern above) and `[Tool]Client.tsx` (Client Component). Compose the 5 shared primitives — do not invent new card/label styling. Add `id` to every interactive element.
+5. **UI** — create `app/[locale]/(tools)/[category]/[tool-id]/page.tsx` (async Server Component using the unified Page Pattern above) and `[Tool]Client.tsx` (Client Component reading text via `useTranslations("toolUI.<id>")` + `useTranslations("toolCommon")` — no hardcoded strings). Compose the 5 shared primitives. Add `id` to every interactive element.
 
 The tool is automatically picked up by the sidebar, homepage, breadcrumbs, sitemap, and hreflang alternates — no other wiring needed.
 
-## Internationalization (i18n)
+> Full reference: **`.agents/skills/eztool-i18n/SKILL.md`**. Summary below.
 
 - **Library**: next-intl. Locales (`en`, `vi`, `zh`, `ko`, `ja`) and `defaultLocale` are defined once in `i18n/routing.ts`. To add a locale: extend `locales`/`localeNames` there and add a `messages/<locale>.json`.
 - **URLs**: every locale is prefixed (`/en/...`). Root `/` is a static redirect page that picks the best match from `navigator.language`. There is **no middleware** (static export) — routing is the `[locale]` segment + `generateStaticParams`.
 - **Reading strings**: server components use `getTranslations` (async) from `next-intl/server`; client components use `useTranslations` from `next-intl`. `useTranslations` also works in *sync* server components.
+- **String namespaces**: tool *name/description* → `tools.<id>`; in-tool UI strings → `toolUI.<id>` (per tool) or `toolCommon` (shared across tools). `config/tools.ts` holds no strings.
+- **ICU braces**: next-intl parses `{ }` as ICU args. A string with *literal* braces (JSON/HTML/code sample) must be read with **`t.raw(key)`**, not `t(key)`, or it throws `MALFORMED_ARGUMENT`. Use `t(key, { count })` only for real interpolation (`{count}`, `{alg}`, `{query}`).
+- **Navigation**: import `Link`/`usePathname`/`useRouter` from `@/i18n/navigation`, never `next/*`.
+- **Language switcher**: `LanguageSwitcher` does a **full** `window.location.assign(...)` (not a soft router push) so the `[locale]` layout — which renders the next-themes anti-flash `<script>` — re-renders on the server, avoiding React's "script tag while rendering" warning.
 - **Static rendering**: every page/layout that renders translated content must call `setRequestLocale(locale)` (already done in the locale layout, homepage, and tool pages).
 - **SEO**: `<html lang>` is per-locale (locale layout); `buildAlternates(locale, path)` in `lib/seo/alternates.ts` produces the canonical + reciprocal hreflang block (incl. `x-default`); `metadataBase` (from `config/site.ts`) makes alternate URLs absolute; `app/sitemap.ts` emits all locale variants.
 

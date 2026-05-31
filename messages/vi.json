@@ -33,6 +33,13 @@
         "body": "Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển.",
         "backHome": "Quay về trang chủ"
     },
+    "search": {
+        "hint": "Tìm và mở công cụ",
+        "noResults": "Không có kết quả cho “{query}”",
+        "navigate": "Di chuyển",
+        "open": "Mở",
+        "close": "Đóng"
+    },
     "tools": {
         "json-formatter": {
             "name": "JSON Formatter",
@@ -125,6 +132,107 @@
         "lucky-wheel": {
             "name": "Vòng quay may mắn",
             "description": "Tạo vòng quay ngẫu nhiên với hiệu ứng đẹp mắt. Chọn người, phân việc, quyết định nhanh."
+        }
+    },
+    "toolCommon": {
+        "copy": "Sao chép",
+        "copied": "Đã sao chép!",
+        "paste": "Dán",
+        "clear": "Xóa",
+        "auto": "Tự động",
+        "enableAuto": "Bật tự động",
+        "disableAuto": "Tắt tự động",
+        "swap": "Đổi chiều (dùng output làm input)",
+        "encode": "Mã hóa",
+        "decode": "Giải mã",
+        "resultPlaceholder": "Kết quả sẽ hiển thị ở đây...",
+        "errorGeneric": "Đã có lỗi xảy ra",
+        "errorLabel": "Lỗi",
+        "charCount": "{count} ký tự",
+        "close": "Đóng"
+    },
+    "toolUI": {
+        "base64-encode-decode": {
+            "plainText": "Văn bản gốc",
+            "base64String": "Chuỗi Base64",
+            "placeholderEncode": "Dán văn bản cần mã hóa",
+            "placeholderDecode": "Dán chuỗi Base64 cần giải mã"
+        },
+        "url-encode-decode": {
+            "plainUrl": "Văn bản / URL gốc",
+            "safeUrl": "URL an toàn",
+            "encodedUrl": "URL đã mã hóa",
+            "placeholderEncode": "Dán văn bản cần mã hóa",
+            "placeholderDecode": "Dán URL cần giải mã"
+        },
+        "jwt-decoder": {
+            "inputLabel": "Nhập JWT Token",
+            "placeholder": "Dán token vào đây (header.payload.signature)...",
+            "invalidToken": "Token không hợp lệ",
+            "headerLabel": "Header (thuật toán & loại token)",
+            "payloadLabel": "Payload (dữ liệu / claims)",
+            "signatureLabel": "Signature",
+            "headerEmpty": "// Header sẽ hiển thị ở đây",
+            "payloadEmpty": "// Payload sẽ hiển thị ở đây",
+            "signatureEmpty": "// Chữ ký sẽ hiển thị ở đây",
+            "copyHeader": "Sao chép Header JSON",
+            "copyPayload": "Sao chép Payload JSON",
+            "aboutTitle": "Về công cụ này",
+            "about1Title": "Không cần Secret",
+            "about1Body": "JWT chỉ được mã hóa Base64Url để truyền tải, bất kỳ ai cũng có thể giải mã để xem nội dung mà không cần khóa bí mật.",
+            "about2Title": "An toàn tuyệt đối",
+            "about2Body": "Mọi quá trình giải mã diễn ra 100% trong trình duyệt của bạn. Token không bao giờ được gửi lên Server của chúng tôi.",
+            "about3Title": "Xác thực Token",
+            "about3Body": "Công cụ này tập trung vào việc hiển thị dữ liệu (\"Inspect\"). Để xác thực tính hợp lệ, bạn cần khóa bí mật (Secret/Key)."
+        },
+        "hash-generator": {
+            "inputLabel": "Dữ liệu đầu vào",
+            "uppercase": "Chữ hoa",
+            "placeholder": "Dán văn bản cần băm",
+            "resultsLabel": "Kết quả mã băm",
+            "emptyHash": "Chưa có dữ liệu {alg}...",
+            "tipTitle": "Mẹo sử dụng:",
+            "tip1": "Mã băm là một chiều, không thể \"giải băm\" (de-hash) để lấy lại văn bản gốc.",
+            "tip2": "Chúng tôi xử lý mọi dữ liệu 100% trên trình duyệt của bạn (Client-side), dữ liệu không bao giờ được gửi lên máy chủ.",
+            "tip3": "Sử dụng SHA-256 hoặc SHA-512 cho các nhu cầu bảo mật dữ liệu nhạy cảm.",
+            "md5Desc": "Mã băm 128-bit (Dùng phổ biến để kiểm tra tính toàn vẹn file)",
+            "sha1Desc": "Mã băm 160-bit (Tiêu chuẩn cũ, không khuyến nghị cho bảo mật cao)",
+            "sha256Desc": "Mã băm 256-bit (Rất an toàn, tiêu chuẩn hiện đại cho SSL/Blockchain)",
+            "sha512Desc": "Mã băm 512-bit (Cực kỳ an toàn, dùng cho các ứng dụng yêu cầu bảo mật tối đa)"
+        },
+        "markdown-viewer": {
+            "rawLabel": "Markdown thô",
+            "preview": "Xem trước",
+            "previewFullscreen": "Xem trước — Toàn màn hình",
+            "placeholder": "Nhập nội dung markdown của bạn ở đây...",
+            "increaseFont": "Tăng cỡ chữ",
+            "decreaseFont": "Giảm cỡ chữ",
+            "fullscreen": "Toàn màn hình",
+            "exitFullscreen": "Thoát toàn màn hình (Esc)",
+            "sample": "# Chào mừng đến với Markdown Viewer\n\nBạn có thể viết **Markdown** ở cột bên trái và xem kết quả hiển thị ở cột bên phải.\n\n## Tính năng hỗ trợ\n\n- **In đậm**, *in nghiêng*, ~~gạch ngang~~\n- Danh sách (List)\n- Bảng biểu (Table)\n- Code block\n- Trích dẫn (Blockquote)\n\n### Ví dụ về Bảng\n\n| Cột A | Cột B |\n|-------|-------|\n| Dữ liệu 1 | Dữ liệu 2 |\n| Hàng 2, Cột A | Hàng 2, Cột B |\n\n### Ví dụ về Code\n\n```javascript\nfunction helloWorld() {\n  console.log(\"Hello, World!\");\n}\n```\n\n> Đây là một đoạn trích dẫn mẫu để kiểm tra hiển thị.\n"
+        },
+        "json-formatter": {
+            "input": "Đầu vào",
+            "output": "Kết quả",
+            "format": "Định dạng",
+            "minify": "Thu gọn",
+            "search": "Tìm kiếm",
+            "textMode": "Text",
+            "inputPlaceholder": "Ví dụ: {\"name\": \"eztool\", \"status\": \"active\"}",
+            "clearTitle": "Xóa trắng nội dung",
+            "formatTitle": "Làm đẹp JSON",
+            "minifyTitle": "Nén JSON",
+            "searchTitle": "Tìm kiếm trong output",
+            "searchTextPlaceholder": "Tìm kiếm... (Enter để next)",
+            "searchPathPlaceholder": "$.key hoặc data.users[0].name",
+            "noResults": "0 kết quả",
+            "prevMatch": "Kết quả trước (Shift+Enter)",
+            "nextMatch": "Kết quả tiếp (Enter)",
+            "closeEsc": "Đóng (Esc)",
+            "pathLabel": "path",
+            "copyPath": "Sao chép path",
+            "formatError": "Lỗi định dạng JSON",
+            "sampleDescription": "Bộ công cụ tiện ích trực tuyến siêu tốc dành cho lập trình viên"
         }
     }
 }

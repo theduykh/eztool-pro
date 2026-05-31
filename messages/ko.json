@@ -33,6 +33,13 @@
         "body": "찾으시는 페이지가 존재하지 않거나 이동되었습니다.",
         "backHome": "홈으로 돌아가기"
     },
+    "search": {
+        "hint": "도구 검색 후 열기",
+        "noResults": "“{query}”에 대한 결과가 없습니다",
+        "navigate": "이동",
+        "open": "열기",
+        "close": "닫기"
+    },
     "tools": {
         "json-formatter": {
             "name": "JSON 포매터",
@@ -125,6 +132,107 @@
         "lucky-wheel": {
             "name": "행운의 돌림판",
             "description": "멋진 효과의 랜덤 돌림판을 만듭니다. 사람 선택, 업무 배분, 빠른 결정."
+        }
+    },
+    "toolCommon": {
+        "copy": "복사",
+        "copied": "복사됨!",
+        "paste": "붙여넣기",
+        "clear": "지우기",
+        "auto": "자동",
+        "enableAuto": "자동 켜기",
+        "disableAuto": "자동 끄기",
+        "swap": "교체 (출력을 입력으로)",
+        "encode": "인코딩",
+        "decode": "디코딩",
+        "resultPlaceholder": "결과가 여기에 표시됩니다...",
+        "errorGeneric": "오류가 발생했습니다",
+        "errorLabel": "오류",
+        "charCount": "{count}자",
+        "close": "닫기"
+    },
+    "toolUI": {
+        "base64-encode-decode": {
+            "plainText": "원본 텍스트",
+            "base64String": "Base64 문자열",
+            "placeholderEncode": "인코딩할 텍스트를 붙여넣으세요",
+            "placeholderDecode": "디코딩할 Base64를 붙여넣으세요"
+        },
+        "url-encode-decode": {
+            "plainUrl": "텍스트 / 원본 URL",
+            "safeUrl": "안전한 URL",
+            "encodedUrl": "인코딩된 URL",
+            "placeholderEncode": "인코딩할 텍스트를 붙여넣으세요",
+            "placeholderDecode": "디코딩할 URL을 붙여넣으세요"
+        },
+        "jwt-decoder": {
+            "inputLabel": "JWT 토큰 입력",
+            "placeholder": "여기에 토큰을 붙여넣으세요 (header.payload.signature)...",
+            "invalidToken": "유효하지 않은 토큰",
+            "headerLabel": "Header (알고리즘 및 토큰 유형)",
+            "payloadLabel": "Payload (데이터 / 클레임)",
+            "signatureLabel": "Signature",
+            "headerEmpty": "// Header가 여기에 표시됩니다",
+            "payloadEmpty": "// Payload가 여기에 표시됩니다",
+            "signatureEmpty": "// 서명이 여기에 표시됩니다",
+            "copyHeader": "Header JSON 복사",
+            "copyPayload": "Payload JSON 복사",
+            "aboutTitle": "이 도구에 대하여",
+            "about1Title": "비밀 키 불필요",
+            "about1Body": "JWT는 전송을 위해 Base64Url로 인코딩될 뿐이므로, 누구나 비밀 키 없이 디코딩하여 내용을 볼 수 있습니다.",
+            "about2Title": "완전한 프라이버시",
+            "about2Body": "모든 디코딩은 100% 브라우저에서 이루어집니다. 토큰은 서버로 전송되지 않습니다.",
+            "about3Title": "토큰 검증",
+            "about3Body": "이 도구는 데이터 확인에 중점을 둡니다. 유효성을 검증하려면 비밀 키가 필요합니다."
+        },
+        "hash-generator": {
+            "inputLabel": "입력 데이터",
+            "uppercase": "대문자",
+            "placeholder": "해시할 텍스트를 붙여넣으세요",
+            "resultsLabel": "해시 결과",
+            "emptyHash": "{alg} 데이터가 아직 없습니다...",
+            "tipTitle": "사용 팁:",
+            "tip1": "해시는 단방향이므로 \"역해시\"(de-hash)하여 원본 텍스트를 복구할 수 없습니다.",
+            "tip2": "모든 데이터는 100% 브라우저(클라이언트)에서 처리되며 서버로 전송되지 않습니다.",
+            "tip3": "민감한 데이터 보안에는 SHA-256 또는 SHA-512를 사용하세요.",
+            "md5Desc": "128비트 해시 (파일 무결성 확인에 흔히 사용)",
+            "sha1Desc": "160비트 해시 (구형 표준, 높은 보안에는 권장하지 않음)",
+            "sha256Desc": "256비트 해시 (매우 안전, SSL/블록체인의 현대 표준)",
+            "sha512Desc": "512비트 해시 (극도로 안전, 최고 보안 애플리케이션용)"
+        },
+        "markdown-viewer": {
+            "rawLabel": "원본 Markdown",
+            "preview": "미리보기",
+            "previewFullscreen": "미리보기 — 전체 화면",
+            "placeholder": "여기에 Markdown 내용을 입력하세요...",
+            "increaseFont": "글자 크기 키우기",
+            "decreaseFont": "글자 크기 줄이기",
+            "fullscreen": "전체 화면",
+            "exitFullscreen": "전체 화면 종료 (Esc)",
+            "sample": "# Markdown 뷰어에 오신 것을 환영합니다\n\n왼쪽 열에 **Markdown**을 작성하면 오른쪽에서 렌더링 결과를 볼 수 있습니다.\n\n## 지원 기능\n\n- **굵게**, *기울임*, ~~취소선~~\n- 목록\n- 표\n- 코드 블록\n- 인용구\n\n### 표 예시\n\n| 열 A | 열 B |\n|------|------|\n| 데이터 1 | 데이터 2 |\n| 2행, 열 A | 2행, 열 B |\n\n### 코드 예시\n\n```javascript\nfunction helloWorld() {\n  console.log(\"Hello, World!\");\n}\n```\n\n> 렌더링을 테스트하기 위한 예시 인용구입니다.\n"
+        },
+        "json-formatter": {
+            "input": "입력",
+            "output": "출력",
+            "format": "포맷",
+            "minify": "압축",
+            "search": "검색",
+            "textMode": "텍스트",
+            "inputPlaceholder": "예: {\"name\": \"eztool\", \"status\": \"active\"}",
+            "clearTitle": "내용 지우기",
+            "formatTitle": "JSON 정리",
+            "minifyTitle": "JSON 압축",
+            "searchTitle": "출력에서 검색",
+            "searchTextPlaceholder": "검색... (Enter로 다음)",
+            "searchPathPlaceholder": "$.key 또는 data.users[0].name",
+            "noResults": "결과 0개",
+            "prevMatch": "이전 결과 (Shift+Enter)",
+            "nextMatch": "다음 결과 (Enter)",
+            "closeEsc": "닫기 (Esc)",
+            "pathLabel": "경로",
+            "copyPath": "경로 복사",
+            "formatError": "JSON 형식 오류",
+            "sampleDescription": "개발자를 위한 초고속 온라인 유틸리티 도구 모음"
         }
     }
 }

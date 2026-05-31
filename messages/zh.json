@@ -33,6 +33,13 @@
         "body": "您访问的页面不存在或已被移动。",
         "backHome": "返回首页"
     },
+    "search": {
+        "hint": "搜索并打开工具",
+        "noResults": "没有找到“{query}”的结果",
+        "navigate": "导航",
+        "open": "打开",
+        "close": "关闭"
+    },
     "tools": {
         "json-formatter": {
             "name": "JSON 格式化",
@@ -125,6 +132,107 @@
         "lucky-wheel": {
             "name": "幸运转盘",
             "description": "创建带精美特效的随机转盘。选人、分配任务、快速决策。"
+        }
+    },
+    "toolCommon": {
+        "copy": "复制",
+        "copied": "已复制！",
+        "paste": "粘贴",
+        "clear": "清除",
+        "auto": "自动",
+        "enableAuto": "开启自动",
+        "disableAuto": "关闭自动",
+        "swap": "交换（用输出作为输入）",
+        "encode": "编码",
+        "decode": "解码",
+        "resultPlaceholder": "结果将显示在此处……",
+        "errorGeneric": "出错了",
+        "errorLabel": "错误",
+        "charCount": "{count} 个字符",
+        "close": "关闭"
+    },
+    "toolUI": {
+        "base64-encode-decode": {
+            "plainText": "原始文本",
+            "base64String": "Base64 字符串",
+            "placeholderEncode": "粘贴要编码的文本",
+            "placeholderDecode": "粘贴要解码的 Base64"
+        },
+        "url-encode-decode": {
+            "plainUrl": "文本 / 原始 URL",
+            "safeUrl": "安全 URL",
+            "encodedUrl": "已编码的 URL",
+            "placeholderEncode": "粘贴要编码的文本",
+            "placeholderDecode": "粘贴要解码的 URL"
+        },
+        "jwt-decoder": {
+            "inputLabel": "输入 JWT Token",
+            "placeholder": "在此粘贴你的 token（header.payload.signature）……",
+            "invalidToken": "Token 无效",
+            "headerLabel": "Header（算法与令牌类型）",
+            "payloadLabel": "Payload（数据 / 声明）",
+            "signatureLabel": "Signature",
+            "headerEmpty": "// Header 将显示在此处",
+            "payloadEmpty": "// Payload 将显示在此处",
+            "signatureEmpty": "// 签名将显示在此处",
+            "copyHeader": "复制 Header JSON",
+            "copyPayload": "复制 Payload JSON",
+            "aboutTitle": "关于本工具",
+            "about1Title": "无需密钥",
+            "about1Body": "JWT 仅使用 Base64Url 编码用于传输，任何人都可以解码并查看其内容，无需密钥。",
+            "about2Title": "完全私密",
+            "about2Body": "所有解码 100% 在你的浏览器中进行。Token 绝不会发送到我们的服务器。",
+            "about3Title": "Token 验证",
+            "about3Body": "本工具专注于查看数据。若要验证其有效性，你需要密钥。"
+        },
+        "hash-generator": {
+            "inputLabel": "输入数据",
+            "uppercase": "大写",
+            "placeholder": "粘贴要哈希的文本",
+            "resultsLabel": "哈希结果",
+            "emptyHash": "暂无 {alg} 数据……",
+            "tipTitle": "使用提示：",
+            "tip1": "哈希是单向的，无法\"反哈希\"（de-hash）来恢复原始文本。",
+            "tip2": "我们 100% 在你的浏览器（客户端）中处理所有数据，数据绝不会发送到服务器。",
+            "tip3": "对敏感数据的安全需求请使用 SHA-256 或 SHA-512。",
+            "md5Desc": "128 位哈希（常用于检查文件完整性）",
+            "sha1Desc": "160 位哈希（旧标准，不建议用于高安全性场景）",
+            "sha256Desc": "256 位哈希（非常安全，SSL/区块链的现代标准）",
+            "sha512Desc": "512 位哈希（极其安全，用于最高安全要求的应用）"
+        },
+        "markdown-viewer": {
+            "rawLabel": "Markdown 源码",
+            "preview": "预览",
+            "previewFullscreen": "预览 — 全屏",
+            "placeholder": "在此输入你的 Markdown 内容……",
+            "increaseFont": "增大字号",
+            "decreaseFont": "减小字号",
+            "fullscreen": "全屏",
+            "exitFullscreen": "退出全屏 (Esc)",
+            "sample": "# 欢迎使用 Markdown 预览\n\n在左侧输入 **Markdown**，右侧即可看到渲染结果。\n\n## 支持的功能\n\n- **加粗**、*斜体*、~~删除线~~\n- 列表\n- 表格\n- 代码块\n- 引用\n\n### 表格示例\n\n| 列 A | 列 B |\n|------|------|\n| 数据 1 | 数据 2 |\n| 第 2 行, 列 A | 第 2 行, 列 B |\n\n### 代码示例\n\n```javascript\nfunction helloWorld() {\n  console.log(\"Hello, World!\");\n}\n```\n\n> 这是一段用于测试渲染的引用示例。\n"
+        },
+        "json-formatter": {
+            "input": "输入",
+            "output": "输出",
+            "format": "格式化",
+            "minify": "压缩",
+            "search": "搜索",
+            "textMode": "文本",
+            "inputPlaceholder": "示例：{\"name\": \"eztool\", \"status\": \"active\"}",
+            "clearTitle": "清空内容",
+            "formatTitle": "美化 JSON",
+            "minifyTitle": "压缩 JSON",
+            "searchTitle": "在输出中搜索",
+            "searchTextPlaceholder": "搜索……（按 Enter 查找下一个）",
+            "searchPathPlaceholder": "$.key 或 data.users[0].name",
+            "noResults": "0 个结果",
+            "prevMatch": "上一个结果 (Shift+Enter)",
+            "nextMatch": "下一个结果 (Enter)",
+            "closeEsc": "关闭 (Esc)",
+            "pathLabel": "路径",
+            "copyPath": "复制路径",
+            "formatError": "JSON 格式错误",
+            "sampleDescription": "面向开发者的极速在线实用工具集"
         }
     }
 }

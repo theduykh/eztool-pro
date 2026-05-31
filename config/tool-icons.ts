@@ -1,0 +1,65 @@
+import {
+    Terminal,
+    Type,
+    Calculator,
+    ImageIcon,
+    Code,
+    ArrowLeftRight,
+    Link2,
+    KeyRound,
+    Hash,
+    FileText,
+    CaseSensitive,
+    TextCursorInput,
+    Pilcrow,
+    RemoveFormatting,
+    Percent,
+    Activity,
+    Dices,
+    Ruler,
+    Scale,
+    QrCode,
+    Palette,
+    FileImage,
+    RectangleHorizontal,
+    Maximize2,
+    LoaderPinwheel,
+    type LucideIcon,
+} from "lucide-react";
+
+/** Icon per tool id, keyed by `TOOLS_DIRECTORY` id. Falls back to `Code`. */
+export const TOOL_ICON_MAP: Record<string, LucideIcon> = {
+    "json-formatter": Code,
+    "markdown-viewer": FileText,
+    "html-viewer": Code,
+    "base64-encode-decode": ArrowLeftRight,
+    "url-encode-decode": Link2,
+    "jwt-decoder": KeyRound,
+    "hash-generator": Hash,
+    "word-counter": FileText,
+    "case-converter": CaseSensitive,
+    "text-to-slug": TextCursorInput,
+    "lorem-ipsum": Pilcrow,
+    "remove-line-breaks": RemoveFormatting,
+    "percentage-calculator": Percent,
+    "bmi-calculator": Activity,
+    "random-number": Dices,
+    "unit-converter": Ruler,
+    "rule-of-three": Scale,
+    "lucky-wheel": LoaderPinwheel,
+    "qr-generator": QrCode,
+    "color-converter": Palette,
+    "image-to-base64": FileImage,
+    "svg-placeholder": RectangleHorizontal,
+    "image-resizer": Maximize2,
+};
+
+/** Icon per category icon key (from `getCategories()`). */
+export const CATEGORY_ICON_MAP: Record<string, LucideIcon> = {
+    terminal: Terminal,
+    type: Type,
+    calculator: Calculator,
+    image: ImageIcon,
+};
+
+export { Code as DefaultToolIcon };

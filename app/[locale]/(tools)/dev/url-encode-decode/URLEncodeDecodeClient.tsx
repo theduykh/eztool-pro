@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import {
     Link2,
     Link2Off,
@@ -25,6 +26,8 @@ import { encodeUrl, decodeUrl } from "@/lib/string/url-codec";
 import { cn } from "@/lib/utils";
 
 export function URLEncodeDecodeClient() {
+    const t = useTranslations("toolUI.url-encode-decode");
+    const tc = useTranslations("toolCommon");
     const [input, setInput] = useState("");
     const [output, setOutput] = useState("");
     const [isAuto, setIsAuto] = useState(true);
@@ -32,21 +35,24 @@ export function URLEncodeDecodeClient() {
     const [error, setError] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
 
-    const convert = useCallback((text: string, currentMode: "encode" | "decode") => {
-        if (!text) {
-            setOutput("");
-            setError(null);
-            return;
-        }
-        try {
-            const result = currentMode === "encode" ? encodeUrl(text) : decodeUrl(text);
-            setOutput(result);
-            setError(null);
-        } catch (e: unknown) {
-            setError(e instanceof Error ? e.message : "Đã có lỗi xảy ra");
-            setOutput("");
-        }
-    }, []);
+    const convert = useCallback(
+        (text: string, currentMode: "encode" | "decode") => {
+            if (!text) {
+                setOutput("");
+                setError(null);
+                return;
+            }
+            try {
+                const result = currentMode === "encode" ? encodeUrl(text) : decodeUrl(text);
+                setOutput(result);
+                setError(null);
+            } catch (e: unknown) {
+                setError(e instanceof Error ? e.message : tc("errorGeneric"));
+                setOutput("");
+            }
+        },
+        [tc],
+    );
 
     useEffect(() => {
         if (isAuto) convert(input, mode);
@@ -101,7 +107,7 @@ export function URLEncodeDecodeClient() {
         setError(null);
     }, []);
 
-    const outputText = error ? `❌ Lỗi:\n${error}` : output;
+    const outputText = error ? `❌ ${tc("errorLabel")}:\n${error}` : output;
 
     return (
         <div className="flex min-h-0 flex-1 flex-col">
@@ -113,7 +119,7 @@ export function URLEncodeDecodeClient() {
                     size="lg"
                 >
                     <Link2 data-icon="inline-start" />
-                    Mã hóa (Encode)
+                    {tc("encode")}
                 </Button>
                 <Button
                     id="btn-decode"
@@ -122,7 +128,7 @@ export function URLEncodeDecodeClient() {
                     size="lg"
                 >
                     <Link2Off data-icon="inline-start" />
-                    Giải mã (Decode)
+                    {tc("decode")}
                 </Button>
 
                 <div className="ml-auto flex items-center gap-1">
@@ -134,18 +140,18 @@ export function URLEncodeDecodeClient() {
                                 ? "bg-accent text-foreground"
                                 : "text-muted-foreground hover:text-foreground",
                         )}
-                        title={isAuto ? "Tắt tự động" : "Bật tự động"}
+                        title={isAuto ? tc("disableAuto") : tc("enableAuto")}
                     >
                         <Zap
                             className={cn("size-4", isAuto && "fill-yellow-400 text-yellow-500")}
                         />
-                        Tự động
+                        {tc("auto")}
                     </button>
                     <Button
                         variant="ghost"
                         size="icon"
                         onClick={handleSwap}
-                        title="Đổi chiều (dùng output làm input)"
+                        title={tc("swap")}
                         disabled={!output || !!error}
                     >
                         <ArrowLeftRight className="size-4" />
@@ -157,7 +163,7 @@ export function URLEncodeDecodeClient() {
                         onClick={handleClear}
                     >
                         <Trash2 data-icon="inline-start" />
-                        Xóa trắng
+                        {tc("clear")}
                     </Button>
                 </div>
             </div>
@@ -171,7 +177,7 @@ export function URLEncodeDecodeClient() {
                     header={
                         <>
                             <ToolLabel>
-                                {mode === "encode" ? "Văn bản / URL gốc" : "URL đã mã hóa"}
+                                {mode === "encode" ? t("plainUrl") : t("encodedUrl")}
                             </ToolLabel>
                             <button
                                 id="btn-paste"
@@ -179,7 +185,7 @@ export function URLEncodeDecodeClient() {
                                 className="flex items-center text-xs text-muted-foreground transition-colors hover:text-foreground"
                             >
                                 <ClipboardPaste className="mr-1 size-3.5" />
-                                Paste
+                                {tc("paste")}
                             </button>
                         </>
                     }
@@ -191,8 +197,8 @@ export function URLEncodeDecodeClient() {
                         className="h-full w-full resize-none bg-transparent p-4 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500/50"
                         placeholder={
                             mode === "encode"
-                                ? "Paste text to encode"
-                                : "Paste url to decode"
+                                ? t("placeholderEncode")
+                                : t("placeholderDecode")
                         }
                         spellCheck={false}
                     />
@@ -214,7 +220,7 @@ export function URLEncodeDecodeClient() {
                         <>
                             <div className="flex items-center gap-2">
                                 <ToolLabel>
-                                    {mode === "encode" ? "URL an toàn" : "Văn bản / URL gốc"}
+                                    {mode === "encode" ? t("safeUrl") : t("plainUrl")}
                                 </ToolLabel>
                                 {error && <AlertCircle className="size-3.5 text-destructive" />}
                             </div>
@@ -226,12 +232,12 @@ export function URLEncodeDecodeClient() {
                                 {copied ? (
                                     <>
                                         <Check className="mr-1 size-3.5 text-green-500" />
-                                        Đã copy!
+                                        {tc("copied")}
                                     </>
                                 ) : (
                                     <>
                                         <Copy className="mr-1 size-3.5" />
-                                        Copy
+                                        {tc("copy")}
                                     </>
                                 )}
                             </button>
@@ -246,7 +252,7 @@ export function URLEncodeDecodeClient() {
                             "h-full w-full resize-none bg-muted/20 p-4 font-mono text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500/50",
                             error ? "text-destructive" : "text-foreground",
                         )}
-                        placeholder="The result will display here..."
+                        placeholder={tc("resultPlaceholder")}
                         spellCheck={false}
                     />
                 </ToolPanel>
