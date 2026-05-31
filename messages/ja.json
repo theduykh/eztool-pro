@@ -117,10 +117,7 @@
             "name": "BMI 計算",
             "description": "体格指数（BMI）を計算して健康状態を確認します。"
         },
-        "random-number": {
-            "name": "乱数生成",
-            "description": "指定した範囲で 1 つ以上の乱数を生成します。"
-        },
+
         "unit-converter": {
             "name": "単位変換",
             "description": "長さ、重さ、温度、面積を変換します。"
@@ -536,18 +533,7 @@
             },
             "inputWarning": "分析結果を表示するには、体重と身長を入力してください。"
         },
-        "random-number": {
-            "listTitle": "項目リスト",
-            "placeholderInput": "1行に1項目ずつ入力してください…\n例:\n項目 1\n項目 2\n項目 3",
-            "itemsCount": "{count} 項目",
-            "minItemsWarning": "— ホイールを回すには少なくとも 2 つ必要です",
-            "resultTitle": "結果",
-            "btnSpin": "回す！",
-            "spinningText": "回転中…",
-            "btnReset": "リセット",
-            "arrowHint": "上の赤い矢印が選択された項目を指します",
-            "emptyWheel": "開始するには項目を追加してください"
-        },
+
         "unit-converter": {
             "categories": {
                 "length": "長さ",

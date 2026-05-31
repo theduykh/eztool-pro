@@ -117,10 +117,7 @@
             "name": "BMI Calculator",
             "description": "Check your Body Mass Index (BMI) to assess your health."
         },
-        "random-number": {
-            "name": "Random Number Generator",
-            "description": "Generate one or more random numbers within a given range."
-        },
+
         "unit-converter": {
             "name": "Unit Converter",
             "description": "Convert length, weight, temperature and area."
@@ -534,18 +531,7 @@
             },
             "inputWarning": "Please enter weight and height to see the analysis result."
         },
-        "random-number": {
-            "listTitle": "Items List",
-            "placeholderInput": "Enter each item on a new line…\nExample:\nItem 1\nItem 2\nItem 3",
-            "itemsCount": "{count} items",
-            "minItemsWarning": "— need at least 2 to spin",
-            "resultTitle": "Result",
-            "btnSpin": "Spin Now!",
-            "spinningText": "Spinning…",
-            "btnReset": "Reset",
-            "arrowHint": "Red arrow pointing down indicates the selected item",
-            "emptyWheel": "Add items to start"
-        },
+
         "unit-converter": {
             "categories": {
                 "length": "Length",

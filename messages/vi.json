@@ -117,10 +117,7 @@
             "name": "Tính chỉ số BMI",
             "description": "Kiểm tra chỉ số khối cơ thể (BMI) để biết tình trạng sức khỏe."
         },
-        "random-number": {
-            "name": "Quay số ngẫu nhiên",
-            "description": "Tạo một hoặc nhiều số ngẫu nhiên trong khoảng chỉ định."
-        },
+
         "unit-converter": {
             "name": "Đổi Đơn Vị đo lường",
             "description": "Chuyển đổi chiều dài, khối lượng, nhiệt độ, diện tích."
@@ -534,18 +531,7 @@
             },
             "inputWarning": "Vui lòng nhập cân nặng và chiều cao để xem kết quả phân tích."
         },
-        "random-number": {
-            "listTitle": "Danh sách mục",
-            "placeholderInput": "Nhập mỗi mục trên một dòng…\nVí dụ:\nAnh\nEm\nBạn bè",
-            "itemsCount": "{count} mục",
-            "minItemsWarning": "— cần ít nhất 2 để quay",
-            "resultTitle": "Kết quả",
-            "btnSpin": "Quay ngay!",
-            "spinningText": "Đang quay…",
-            "btnReset": "Đặt lại",
-            "arrowHint": "Mũi tên đỏ ở trên chỉ vào mục được chọn",
-            "emptyWheel": "Thêm mục để bắt đầu"
-        },
+
         "unit-converter": {
             "categories": {
                 "length": "Độ dài",

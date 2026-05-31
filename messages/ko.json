@@ -117,10 +117,7 @@
             "name": "BMI 계산기",
             "description": "체질량지수(BMI)를 계산해 건강 상태를 확인합니다."
         },
-        "random-number": {
-            "name": "난수 생성기",
-            "description": "지정한 범위 내에서 하나 이상의 난수를 생성합니다."
-        },
+
         "unit-converter": {
             "name": "단위 변환기",
             "description": "길이, 무게, 온도, 면적을 변환합니다."
@@ -534,18 +531,7 @@
             },
             "inputWarning": "분석 결과를 보려면 몸무게와 키를 입력해 주세요."
         },
-        "random-number": {
-            "listTitle": "항목 목록",
-            "placeholderInput": "한 줄에 하나의 항목을 입력하세요…\n예:\n항목 1\n항목 2\n항목 3",
-            "itemsCount": "{count}개 항목",
-            "minItemsWarning": "— 휠을 돌리려면 최소 2개가 필요합니다",
-            "resultTitle": "결과",
-            "btnSpin": "돌리기!",
-            "spinningText": "돌아가는 중…",
-            "btnReset": "재설정",
-            "arrowHint": "위의 빨간 화살표가 선택된 항목을 가리킵니다",
-            "emptyWheel": "시작하려면 항목 추가"
-        },
+
         "unit-converter": {
             "categories": {
                 "length": "길이",

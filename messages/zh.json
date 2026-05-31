@@ -117,10 +117,7 @@
             "name": "BMI 计算器",
             "description": "计算身体质量指数 (BMI)，了解健康状况。"
         },
-        "random-number": {
-            "name": "随机数生成器",
-            "description": "在指定范围内生成一个或多个随机数。"
-        },
+
         "unit-converter": {
             "name": "单位换算",
             "description": "换算长度、重量、温度和面积。"
@@ -535,18 +532,7 @@
             },
             "inputWarning": "请输入体重和身高以查看分析结果."
         },
-        "random-number": {
-            "listTitle": "项目列表",
-            "placeholderInput": "每行输入一个项目…\n例如：\n项目 1\n项目 2\n项目 3",
-            "itemsCount": "{count} 个项目",
-            "minItemsWarning": "— 至少需要 2 个才能旋转",
-            "resultTitle": "结果",
-            "btnSpin": "立即旋转！",
-            "spinningText": "旋转中…",
-            "btnReset": "重置",
-            "arrowHint": "上方红色箭头指向选中的项目",
-            "emptyWheel": "添加项目以开始"
-        },
+
         "unit-converter": {
             "categories": {
                 "length": "长度",
