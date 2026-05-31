@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, type ChangeEvent } from "react";
+import { useTranslations } from "next-intl";
 import {
     Upload,
     Trash2,
@@ -19,6 +20,9 @@ import { ToolInfoBox } from "@/components/shared/ToolInfoBox";
 import { cn } from "@/lib/utils";
 
 export function ImageResizerClient() {
+    const t = useTranslations("toolUI.image-resizer");
+    const tc = useTranslations("toolCommon");
+
     const [image, setImage] = useState<HTMLImageElement | null>(null);
     const [originalFile, setOriginalFile] = useState<File | null>(null);
     const [width, setWidth] = useState<number>(0);
@@ -105,9 +109,9 @@ export function ImageResizerClient() {
                             <Upload className="size-10" />
                         </div>
                         <div className="text-center">
-                            <p className="text-xl font-bold">Tải ảnh lên để thay đổi kích thước</p>
+                            <p className="text-xl font-bold">{t("dragAndDropText")}</p>
                             <p className="mt-1 text-sm text-muted-foreground">
-                                Hỗ trợ JPG, PNG, WEBP (Tối đa 10MB)
+                                {t("supportedFormats")}
                             </p>
                         </div>
                     </div>
@@ -116,13 +120,13 @@ export function ImageResizerClient() {
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.5fr_1fr]">
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center justify-between px-2">
-                            <ToolLabel>Xem trước kết quả</ToolLabel>
+                            <ToolLabel>{t("previewResult")}</ToolLabel>
                             <div className="flex items-center gap-4 text-[10px] font-bold text-muted-foreground">
                                 <span id="stat-original" className="flex items-center gap-1">
-                                    <ImageIcon className="size-3" /> Gốc: {image.width}x{image.height}
+                                    <ImageIcon className="size-3" /> {t("originalLabel")}: {image.width}x{image.height}
                                 </span>
                                 <span id="stat-new" className="flex items-center gap-1 text-blue-600">
-                                    <Check className="size-3" /> Mới: {width}x{height}
+                                    <Check className="size-3" /> {t("newLabel")}: {width}x{height}
                                 </span>
                             </div>
                         </div>
@@ -146,18 +150,18 @@ export function ImageResizerClient() {
                             className="w-full gap-2 rounded-2xl hover:bg-destructive/10 hover:text-destructive"
                         >
                             <Trash2 className="size-4" />
-                            Hủy bỏ và chọn ảnh khác
+                            {t("cancelAndSelectOther")}
                         </Button>
                     </div>
 
                     <div className="flex flex-col gap-6">
                         <ToolPanel radius="lg" padding="lg" className="shadow-xl md:p-8">
-                            <ToolLabel className="mb-8">Cấu hình Resize</ToolLabel>
+                            <ToolLabel className="mb-8">{t("resizeConfig")}</ToolLabel>
 
                             <div className="space-y-4">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <ToolLabel htmlFor="input-width">Chiều rộng (px)</ToolLabel>
+                                        <ToolLabel htmlFor="input-width">{t("widthPx")}</ToolLabel>
                                         <input
                                             id="input-width"
                                             type="number"
@@ -167,7 +171,7 @@ export function ImageResizerClient() {
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <ToolLabel htmlFor="input-height">Chiều cao (px)</ToolLabel>
+                                        <ToolLabel htmlFor="input-height">{t("heightPx")}</ToolLabel>
                                         <input
                                             id="input-height"
                                             type="number"
@@ -211,7 +215,7 @@ export function ImageResizerClient() {
                                     </div>
                                     <span className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
                                         {lockAspectRatio ? <Lock className="size-3.5" /> : <Unlock className="size-3.5" />}
-                                        Khóa tỷ lệ ảnh
+                                        {t("lockAspectRatio")}
                                     </span>
                                 </label>
                             </div>
@@ -219,7 +223,7 @@ export function ImageResizerClient() {
                             {originalFile?.type !== "image/png" && (
                                 <div className="mt-8 space-y-4">
                                     <ToolLabel htmlFor="input-quality" icon={<Percent className="size-3.5" />}>
-                                        Chất lượng: {quality}%
+                                        {t("qualityLabel")}: {quality}%
                                     </ToolLabel>
                                     <input
                                         id="input-quality"
@@ -231,7 +235,7 @@ export function ImageResizerClient() {
                                         className="h-1.5 w-full appearance-none rounded-full bg-muted accent-blue-600"
                                     />
                                     <p className="text-[10px] italic text-muted-foreground">
-                                        Giảm chất lượng sẽ làm dung lượng file nhỏ hơn.
+                                        {t("qualityNotice")}
                                     </p>
                                 </div>
                             )}
@@ -243,7 +247,7 @@ export function ImageResizerClient() {
                                     className="h-16 w-full gap-3 rounded-2xl bg-blue-600 text-lg font-bold shadow-xl shadow-blue-500/30 hover:bg-blue-700"
                                 >
                                     <Download className="size-6" />
-                                    Tải ảnh đã Resize
+                                    {t("downloadResized")}
                                 </Button>
                             </div>
                         </ToolPanel>
@@ -251,12 +255,10 @@ export function ImageResizerClient() {
                         <ToolInfoBox
                             tone="accent"
                             icon={<Info className="size-5 text-blue-600" />}
-                            title={<span className="text-blue-600">Mẹo Resizing</span>}
+                            title={<span className="text-blue-600">{t("resizingTips")}</span>}
                         >
                             <p className="leading-relaxed">
-                                Để ảnh không bị biến dạng, hãy luôn bật chế độ{" "}
-                                <strong>Khóa tỷ lệ (Lock)</strong>. Nếu bạn muốn tối ưu tốc độ tải web, hãy
-                                thử giảm chất lượng xuống khoảng 80-90%.
+                                {t("tipsBody")}
                             </p>
                         </ToolInfoBox>
                     </div>

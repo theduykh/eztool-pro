@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { TrendingUp, TrendingDown, Info, ArrowRight } from "lucide-react";
 import { ToolPanel } from "@/components/shared/ToolPanel";
 import { ToolLabel } from "@/components/shared/ToolLabel";
@@ -8,6 +9,8 @@ import { calculateRuleOfThree, type RuleType } from "@/lib/math/rule-of-three";
 import { cn } from "@/lib/utils";
 
 export function RuleOfThreeClient() {
+    const t = useTranslations("toolUI.rule-of-three");
+
     const [type, setType] = useState<RuleType>("direct");
     const [a, setA] = useState<string>("10");
     const [b, setB] = useState<string>("100");
@@ -30,7 +33,7 @@ export function RuleOfThreeClient() {
     return (
         <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-3">
-                <ToolLabel className="px-1">Loại tam suất</ToolLabel>
+                <ToolLabel className="px-1">{t("typeLabel")}</ToolLabel>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <button
                         id="btn-direct"
@@ -51,8 +54,8 @@ export function RuleOfThreeClient() {
                             <TrendingUp className="size-6" />
                         </div>
                         <div className="text-left">
-                            <p className="font-bold">Tỷ lệ thuận</p>
-                            <p className="text-xs opacity-70">A tăng thì B tăng, A giảm thì B giảm.</p>
+                            <p className="font-bold">{t("typeDirect")}</p>
+                            <p className="text-xs opacity-70">{t("typeDirectHint")}</p>
                         </div>
                     </button>
 
@@ -75,8 +78,8 @@ export function RuleOfThreeClient() {
                             <TrendingDown className="size-6" />
                         </div>
                         <div className="text-left">
-                            <p className="font-bold">Tỷ lệ nghịch</p>
-                            <p className="text-xs opacity-70">A tăng thì B giảm, A giảm thì B tăng.</p>
+                            <p className="font-bold">{t("typeInverse")}</p>
+                            <p className="text-xs opacity-70">{t("typeInverseHint")}</p>
                         </div>
                     </button>
                 </div>
@@ -87,7 +90,7 @@ export function RuleOfThreeClient() {
                     <div className="flex flex-col gap-8">
                         <div className="flex flex-col gap-2">
                             <ToolLabel htmlFor="input-a" className="text-[10px]">
-                                Giá trị A
+                                {t("valA")}
                             </ToolLabel>
                             <input
                                 id="input-a"
@@ -100,12 +103,12 @@ export function RuleOfThreeClient() {
                         </div>
                         <div className="relative h-px bg-border/50">
                             <div className="absolute left-0 top-1/2 -translate-y-1/2 bg-card pr-2 text-[10px] font-bold text-muted-foreground">
-                                Tương ứng với
+                                {t("correspondsTo")}
                             </div>
                         </div>
                         <div className="flex flex-col gap-2">
                             <ToolLabel htmlFor="input-c" className="text-[10px]">
-                                Giá trị C
+                                {t("valC")}
                             </ToolLabel>
                             <input
                                 id="input-c"
@@ -126,7 +129,7 @@ export function RuleOfThreeClient() {
                     <div className="flex flex-col gap-8">
                         <div className="flex flex-col gap-2">
                             <ToolLabel htmlFor="input-b" className="text-[10px]">
-                                Giá trị B
+                                {t("valB")}
                             </ToolLabel>
                             <input
                                 id="input-b"
@@ -139,7 +142,7 @@ export function RuleOfThreeClient() {
                         </div>
                         <div className="relative h-px bg-border/50">
                             <div className="absolute left-0 top-1/2 -translate-y-1/2 bg-card pr-2 text-[10px] font-bold text-muted-foreground">
-                                Kết quả (x)
+                                {t("resultLabel")}
                             </div>
                         </div>
                         <div className="flex items-baseline gap-2">
@@ -162,7 +165,7 @@ export function RuleOfThreeClient() {
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 <ToolPanel tone="subtle" radius="lg" padding="lg" className="items-center justify-center">
                     <div className="flex flex-col items-center text-center">
-                        <ToolLabel className="mb-4">Cách tính toán</ToolLabel>
+                        <ToolLabel className="mb-4">{t("calcWay")}</ToolLabel>
                         <div className="flex items-center gap-4 font-mono text-xl">
                             <span>x</span>
                             <span className="text-muted-foreground">=</span>
@@ -188,16 +191,14 @@ export function RuleOfThreeClient() {
                 <div className="rounded-3xl bg-blue-600 p-8 text-white shadow-xl shadow-blue-500/20">
                     <div className="mb-4 flex items-center gap-2">
                         <Info className="size-5" />
-                        <span className="font-bold">Mẹo nhỏ</span>
+                        <span className="font-bold">{t("tipsTitle")}</span>
                     </div>
                     <ul className="space-y-3 text-sm opacity-90">
                         <li>
-                            • <strong>Thuận:</strong> Nhân chéo (B × C) rồi chia ngang (A). Thường dùng cho: Tính giá
-                            tiền, tính khối lượng nguyên liệu...
+                            {t("tipDirect")}
                         </li>
                         <li>
-                            • <strong>Nghịch:</strong> Nhân ngang (A × B) rồi chia dưới (C). Thường dùng cho: Tính
-                            thời gian hoàn thành công việc theo số người...
+                            {t("tipInverse")}
                         </li>
                     </ul>
                 </div>

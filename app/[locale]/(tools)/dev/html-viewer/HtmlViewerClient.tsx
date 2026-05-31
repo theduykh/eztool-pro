@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { useEditor, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
@@ -62,24 +63,7 @@ import {
     ArrowDownToLine,
 } from "lucide-react";
 
-const INITIAL_HTML = `<h1>Chào mừng đến với HTML Viewer</h1>
-<p>Nhập <strong>HTML</strong> ở cột bên trái và chỉnh sửa trực quan (WYSIWYG) ở cột bên phải. Mọi thay đổi được <em>đồng bộ hai chiều</em> ngay lập tức.</p>
-<h2>Định dạng văn bản</h2>
-<p><strong>In đậm</strong>, <em>in nghiêng</em>, <u>gạch chân</u>, <s>gạch ngang</s>, <code>inline code</code>, X<sub>2</sub>, X<sup>2</sup>, <mark>highlight</mark> và <span style="color: #2563eb">màu chữ</span>.</p>
-<h2>Bảng (Table)</h2>
-<table>
-  <tbody>
-    <tr><th>Sản phẩm</th><th>Giá</th></tr>
-    <tr><td>Cà phê</td><td>30.000đ</td></tr>
-    <tr><td>Trà sữa</td><td>45.000đ</td></tr>
-  </tbody>
-</table>
-<h2>Danh sách công việc</h2>
-<ul data-type="taskList">
-  <li data-type="taskItem" data-checked="true">Cài đặt dự án</li>
-  <li data-type="taskItem" data-checked="false">Viết tài liệu</li>
-</ul>
-<blockquote>Đây là một đoạn trích dẫn mẫu.</blockquote>`;
+
 
 const FONT_FAMILIES = [
     { label: "Font mặc định", value: "" },
@@ -201,7 +185,7 @@ function ColorControl({ id, title, icon, onPick, onClear }: ColorControlProps) {
 
 // ─── Toolbar ──────────────────────────────────────────────────────────────────
 
-function EditorToolbar({ editor }: { editor: Editor }) {
+function EditorToolbar({ editor, t, tc }: { editor: Editor; t: any; tc: any }) {
     const blockValue = (() => {
         for (let l = 1; l <= 6; l++) if (editor.isActive("heading", { level: l })) return `h${l}`;
         if (editor.isActive("codeBlock")) return "codeBlock";
@@ -217,7 +201,7 @@ function EditorToolbar({ editor }: { editor: Editor }) {
 
     const setLink = () => {
         const previous = editor.getAttributes("link").href as string | undefined;
-        const url = window.prompt("Nhập URL liên kết:", previous ?? "https://");
+        const url = window.prompt(t("enterLinkUrl"), previous ?? "https://");
         if (url === null) return;
         if (url === "") {
             editor.chain().focus().extendMarkRange("link").unsetLink().run();
@@ -227,7 +211,7 @@ function EditorToolbar({ editor }: { editor: Editor }) {
     };
 
     const insertImage = () => {
-        const url = window.prompt("Nhập URL hình ảnh:", "https://");
+        const url = window.prompt(t("enterImageUrl"), "https://");
         if (url) editor.chain().focus().setImage({ src: url }).run();
     };
 
@@ -245,119 +229,119 @@ function EditorToolbar({ editor }: { editor: Editor }) {
         <div className="shrink-0 border-b border-border bg-muted/30">
             {/* Main row */}
             <div id="editor-toolbar" className="flex flex-wrap items-center gap-0.5 px-2 py-1.5">
-                <ToolbarButton id="btn-undo" title="Hoàn tác (Ctrl+Z)" disabled={!editor.can().undo()} onClick={() => editor.chain().focus().undo().run()}>
+                <ToolbarButton id="btn-undo" title={t("undoTitle")} disabled={!editor.can().undo()} onClick={() => editor.chain().focus().undo().run()}>
                     <Undo className="size-3.5" />
                 </ToolbarButton>
-                <ToolbarButton id="btn-redo" title="Làm lại (Ctrl+Y)" disabled={!editor.can().redo()} onClick={() => editor.chain().focus().redo().run()}>
+                <ToolbarButton id="btn-redo" title={t("redoTitle")} disabled={!editor.can().redo()} onClick={() => editor.chain().focus().redo().run()}>
                     <Redo className="size-3.5" />
                 </ToolbarButton>
 
                 <Divider />
 
-                <select id="select-block" title="Kiểu khối" value={blockValue} onChange={(e) => onBlockChange(e.target.value)} className={selectClass}>
-                    <option value="paragraph">Đoạn văn</option>
-                    <option value="h1">Tiêu đề 1</option>
-                    <option value="h2">Tiêu đề 2</option>
-                    <option value="h3">Tiêu đề 3</option>
-                    <option value="h4">Tiêu đề 4</option>
-                    <option value="h5">Tiêu đề 5</option>
-                    <option value="h6">Tiêu đề 6</option>
-                    <option value="codeBlock">Khối code</option>
+                <select id="select-block" title={t("blockType")} value={blockValue} onChange={(e) => onBlockChange(e.target.value)} className={selectClass}>
+                    <option value="paragraph">{t("paragraph")}</option>
+                    <option value="h1">{t("h1")}</option>
+                    <option value="h2">{t("h2")}</option>
+                    <option value="h3">{t("h3")}</option>
+                    <option value="h4">{t("h4")}</option>
+                    <option value="h5">{t("h5")}</option>
+                    <option value="h6">{t("h6")}</option>
+                    <option value="codeBlock">{t("codeBlock")}</option>
                 </select>
-                <select id="select-font" title="Phông chữ" value={currentFont} onChange={(e) => { const v = e.target.value; const c = editor.chain().focus(); if (v) c.setFontFamily(v).run(); else c.unsetFontFamily().run(); }} className={cn(selectClass, "max-w-[7rem]")}>
+                <select id="select-font" title={t("fontFamily")} value={currentFont} onChange={(e) => { const v = e.target.value; const c = editor.chain().focus(); if (v) c.setFontFamily(v).run(); else c.unsetFontFamily().run(); }} className={cn(selectClass, "max-w-[7rem]")}>
                     {FONT_FAMILIES.map((f) => (
-                        <option key={f.label} value={f.value}>{f.label}</option>
+                        <option key={f.label} value={f.value}>{f.value === "" ? t("defaultFont") : f.label}</option>
                     ))}
                 </select>
-                <select id="select-size" title="Cỡ chữ" value={currentSize} onChange={(e) => { const v = e.target.value; const c = editor.chain().focus(); if (v) c.setFontSize(v).run(); else c.unsetFontSize().run(); }} className={selectClass}>
+                <select id="select-size" title={t("fontSize")} value={currentSize} onChange={(e) => { const v = e.target.value; const c = editor.chain().focus(); if (v) c.setFontSize(v).run(); else c.unsetFontSize().run(); }} className={selectClass}>
                     {FONT_SIZES.map((s) => (
-                        <option key={s || "default"} value={s}>{s || "Cỡ chữ"}</option>
+                        <option key={s || "default"} value={s}>{s || t("fontSize")}</option>
                     ))}
                 </select>
 
                 <Divider />
 
-                <ToolbarButton id="btn-bold" title="In đậm (Ctrl+B)" active={editor.isActive("bold")} onClick={() => editor.chain().focus().toggleBold().run()}>
+                <ToolbarButton id="btn-bold" title={t("boldTitle")} active={editor.isActive("bold")} onClick={() => editor.chain().focus().toggleBold().run()}>
                     <Bold className="size-3.5" />
                 </ToolbarButton>
-                <ToolbarButton id="btn-italic" title="In nghiêng (Ctrl+I)" active={editor.isActive("italic")} onClick={() => editor.chain().focus().toggleItalic().run()}>
+                <ToolbarButton id="btn-italic" title={t("italicTitle")} active={editor.isActive("italic")} onClick={() => editor.chain().focus().toggleItalic().run()}>
                     <Italic className="size-3.5" />
                 </ToolbarButton>
-                <ToolbarButton id="btn-underline" title="Gạch chân (Ctrl+U)" active={editor.isActive("underline")} onClick={() => editor.chain().focus().toggleUnderline().run()}>
+                <ToolbarButton id="btn-underline" title={t("underlineTitle")} active={editor.isActive("underline")} onClick={() => editor.chain().focus().toggleUnderline().run()}>
                     <UnderlineIcon className="size-3.5" />
                 </ToolbarButton>
-                <ToolbarButton id="btn-strike" title="Gạch ngang" active={editor.isActive("strike")} onClick={() => editor.chain().focus().toggleStrike().run()}>
+                <ToolbarButton id="btn-strike" title={t("strikeTitle")} active={editor.isActive("strike")} onClick={() => editor.chain().focus().toggleStrike().run()}>
                     <Strikethrough className="size-3.5" />
                 </ToolbarButton>
-                <ToolbarButton id="btn-code" title="Inline code" active={editor.isActive("code")} onClick={() => editor.chain().focus().toggleCode().run()}>
+                <ToolbarButton id="btn-code" title={t("inlineCodeTitle")} active={editor.isActive("code")} onClick={() => editor.chain().focus().toggleCode().run()}>
                     <Code className="size-3.5" />
                 </ToolbarButton>
-                <ToolbarButton id="btn-sub" title="Chỉ số dưới" active={editor.isActive("subscript")} onClick={() => editor.chain().focus().toggleSubscript().run()}>
+                <ToolbarButton id="btn-sub" title={t("subscriptTitle")} active={editor.isActive("subscript")} onClick={() => editor.chain().focus().toggleSubscript().run()}>
                     <SubIcon className="size-3.5" />
                 </ToolbarButton>
-                <ToolbarButton id="btn-sup" title="Chỉ số trên" active={editor.isActive("superscript")} onClick={() => editor.chain().focus().toggleSuperscript().run()}>
+                <ToolbarButton id="btn-sup" title={t("superscriptTitle")} active={editor.isActive("superscript")} onClick={() => editor.chain().focus().toggleSuperscript().run()}>
                     <SupIcon className="size-3.5" />
                 </ToolbarButton>
 
                 <Divider />
 
-                <ColorControl id="input-text-color" title="Màu chữ" icon={<Baseline className="size-3.5" />} onPick={(c) => editor.chain().focus().setColor(c).run()} onClear={() => editor.chain().focus().unsetColor().run()} />
-                <ColorControl id="input-highlight" title="Màu nền chữ" icon={<Highlighter className="size-3.5" />} onPick={(c) => editor.chain().focus().toggleHighlight({ color: c }).run()} onClear={() => editor.chain().focus().unsetHighlight().run()} />
+                <ColorControl id="input-text-color" title={t("textColor")} icon={<Baseline className="size-3.5" />} onPick={(c) => editor.chain().focus().setColor(c).run()} onClear={() => editor.chain().focus().unsetColor().run()} />
+                <ColorControl id="input-highlight" title={t("textBgColor")} icon={<Highlighter className="size-3.5" />} onPick={(c) => editor.chain().focus().toggleHighlight({ color: c }).run()} onClear={() => editor.chain().focus().unsetHighlight().run()} />
 
                 <Divider />
 
-                <ToolbarButton id="btn-ul" title="Danh sách dấu chấm" active={editor.isActive("bulletList")} onClick={() => editor.chain().focus().toggleBulletList().run()}>
+                <ToolbarButton id="btn-ul" title={t("bulletListTitle")} active={editor.isActive("bulletList")} onClick={() => editor.chain().focus().toggleBulletList().run()}>
                     <List className="size-3.5" />
                 </ToolbarButton>
-                <ToolbarButton id="btn-ol" title="Danh sách đánh số" active={editor.isActive("orderedList")} onClick={() => editor.chain().focus().toggleOrderedList().run()}>
+                <ToolbarButton id="btn-ol" title={t("orderedListTitle")} active={editor.isActive("orderedList")} onClick={() => editor.chain().focus().toggleOrderedList().run()}>
                     <ListOrdered className="size-3.5" />
                 </ToolbarButton>
-                <ToolbarButton id="btn-task" title="Danh sách công việc" active={editor.isActive("taskList")} onClick={() => editor.chain().focus().toggleTaskList().run()}>
+                <ToolbarButton id="btn-task" title={t("taskListTitle")} active={editor.isActive("taskList")} onClick={() => editor.chain().focus().toggleTaskList().run()}>
                     <ListChecks className="size-3.5" />
                 </ToolbarButton>
-                <ToolbarButton id="btn-quote" title="Trích dẫn" active={editor.isActive("blockquote")} onClick={() => editor.chain().focus().toggleBlockquote().run()}>
+                <ToolbarButton id="btn-quote" title={t("quoteTitle")} active={editor.isActive("blockquote")} onClick={() => editor.chain().focus().toggleBlockquote().run()}>
                     <Quote className="size-3.5" />
                 </ToolbarButton>
-                <ToolbarButton id="btn-codeblock" title="Khối code" active={editor.isActive("codeBlock")} onClick={() => editor.chain().focus().toggleCodeBlock().run()}>
+                <ToolbarButton id="btn-codeblock" title={t("codeBlockTitle")} active={editor.isActive("codeBlock")} onClick={() => editor.chain().focus().toggleCodeBlock().run()}>
                     <Code2 className="size-3.5" />
                 </ToolbarButton>
-                <ToolbarButton id="btn-hr" title="Đường kẻ ngang" onClick={() => editor.chain().focus().setHorizontalRule().run()}>
+                <ToolbarButton id="btn-hr" title={t("horizontalRuleTitle")} onClick={() => editor.chain().focus().setHorizontalRule().run()}>
                     <Minus className="size-3.5" />
                 </ToolbarButton>
 
                 <Divider />
 
-                <ToolbarButton id="btn-align-left" title="Căn trái" active={editor.isActive({ textAlign: "left" })} onClick={() => editor.chain().focus().setTextAlign("left").run()}>
+                <ToolbarButton id="btn-align-left" title={t("alignLeftTitle")} active={editor.isActive({ textAlign: "left" })} onClick={() => editor.chain().focus().setTextAlign("left").run()}>
                     <AlignLeft className="size-3.5" />
                 </ToolbarButton>
-                <ToolbarButton id="btn-align-center" title="Căn giữa" active={editor.isActive({ textAlign: "center" })} onClick={() => editor.chain().focus().setTextAlign("center").run()}>
+                <ToolbarButton id="btn-align-center" title={t("alignCenterTitle")} active={editor.isActive({ textAlign: "center" })} onClick={() => editor.chain().focus().setTextAlign("center").run()}>
                     <AlignCenter className="size-3.5" />
                 </ToolbarButton>
-                <ToolbarButton id="btn-align-right" title="Căn phải" active={editor.isActive({ textAlign: "right" })} onClick={() => editor.chain().focus().setTextAlign("right").run()}>
+                <ToolbarButton id="btn-align-right" title={t("alignRightTitle")} active={editor.isActive({ textAlign: "right" })} onClick={() => editor.chain().focus().setTextAlign("right").run()}>
                     <AlignRight className="size-3.5" />
                 </ToolbarButton>
-                <ToolbarButton id="btn-align-justify" title="Căn đều" active={editor.isActive({ textAlign: "justify" })} onClick={() => editor.chain().focus().setTextAlign("justify").run()}>
+                <ToolbarButton id="btn-align-justify" title={t("alignJustifyTitle")} active={editor.isActive({ textAlign: "justify" })} onClick={() => editor.chain().focus().setTextAlign("justify").run()}>
                     <AlignJustify className="size-3.5" />
                 </ToolbarButton>
 
                 <Divider />
 
-                <ToolbarButton id="btn-link" title="Chèn liên kết" active={editor.isActive("link")} onClick={setLink}>
+                <ToolbarButton id="btn-link" title={t("insertLink")} active={editor.isActive("link")} onClick={setLink}>
                     <LinkIcon className="size-3.5" />
                 </ToolbarButton>
-                <ToolbarButton id="btn-unlink" title="Bỏ liên kết" disabled={!editor.isActive("link")} onClick={() => editor.chain().focus().unsetLink().run()}>
+                <ToolbarButton id="btn-unlink" title={t("removeLink")} disabled={!editor.isActive("link")} onClick={() => editor.chain().focus().unsetLink().run()}>
                     <Link2Off className="size-3.5" />
                 </ToolbarButton>
-                <ToolbarButton id="btn-image" title="Chèn hình ảnh" onClick={insertImage}>
+                <ToolbarButton id="btn-image" title={t("insertImage")} onClick={insertImage}>
                     <ImageIcon className="size-3.5" />
                 </ToolbarButton>
-                <ToolbarButton id="btn-table" title="Chèn bảng 3×3" onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}>
+                <ToolbarButton id="btn-table" title={t("insertTable")} onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}>
                     <TableIcon className="size-3.5" />
                 </ToolbarButton>
 
                 <Divider />
 
-                <ToolbarButton id="btn-clear-format" title="Xóa định dạng" onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}>
+                <ToolbarButton id="btn-clear-format" title={t("clearFormatting")} onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}>
                     <RemoveFormatting className="size-3.5" />
                 </ToolbarButton>
             </div>
@@ -365,35 +349,35 @@ function EditorToolbar({ editor }: { editor: Editor }) {
             {/* Contextual table row */}
             {inTable && (
                 <div id="table-toolbar" className="flex flex-wrap items-center gap-0.5 border-t border-border bg-blue-500/5 px-2 py-1.5">
-                    <ToolLabel className="mr-1">Bảng</ToolLabel>
-                    <ToolbarButton id="btn-col-before" title="Thêm cột trái" onClick={() => editor.chain().focus().addColumnBefore().run()}>
+                    <ToolLabel className="mr-1">{t("tableLabel")}</ToolLabel>
+                    <ToolbarButton id="btn-col-before" title={t("addColumnBefore")} onClick={() => editor.chain().focus().addColumnBefore().run()}>
                         <ArrowLeftToLine className="size-3.5" />
                     </ToolbarButton>
-                    <ToolbarButton id="btn-col-after" title="Thêm cột phải" onClick={() => editor.chain().focus().addColumnAfter().run()}>
+                    <ToolbarButton id="btn-col-after" title={t("addColumnAfter")} onClick={() => editor.chain().focus().addColumnAfter().run()}>
                         <ArrowRightToLine className="size-3.5" />
                     </ToolbarButton>
-                    <ToolbarButton id="btn-col-del" title="Xóa cột" onClick={() => editor.chain().focus().deleteColumn().run()}>
+                    <ToolbarButton id="btn-col-del" title={t("deleteColumn")} onClick={() => editor.chain().focus().deleteColumn().run()}>
                         <Trash2 className="size-3.5" />
                     </ToolbarButton>
                     <Divider />
-                    <ToolbarButton id="btn-row-before" title="Thêm hàng trên" onClick={() => editor.chain().focus().addRowBefore().run()}>
+                    <ToolbarButton id="btn-row-before" title={t("addRowBefore")} onClick={() => editor.chain().focus().addRowBefore().run()}>
                         <ArrowUpToLine className="size-3.5" />
                     </ToolbarButton>
-                    <ToolbarButton id="btn-row-after" title="Thêm hàng dưới" onClick={() => editor.chain().focus().addRowAfter().run()}>
+                    <ToolbarButton id="btn-row-after" title={t("addRowAfter")} onClick={() => editor.chain().focus().addRowAfter().run()}>
                         <ArrowDownToLine className="size-3.5" />
                     </ToolbarButton>
-                    <ToolbarButton id="btn-row-del" title="Xóa hàng" onClick={() => editor.chain().focus().deleteRow().run()}>
+                    <ToolbarButton id="btn-row-del" title={t("deleteRow")} onClick={() => editor.chain().focus().deleteRow().run()}>
                         <Trash2 className="size-3.5" />
                     </ToolbarButton>
                     <Divider />
                     <button id="btn-toggle-header" type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => editor.chain().focus().toggleHeaderRow().run()} className="rounded-md px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
-                        Hàng tiêu đề
+                        {t("toggleHeaderRow")}
                     </button>
                     <button id="btn-merge-cells" type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => editor.chain().focus().mergeOrSplit().run()} className="rounded-md px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
-                        Gộp / Tách ô
+                        {t("mergeOrSplitCells")}
                     </button>
                     <button id="btn-table-del" type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => editor.chain().focus().deleteTable().run()} className="rounded-md px-2 py-1 text-xs text-destructive transition-colors hover:bg-destructive/10">
-                        Xóa bảng
+                        {t("deleteTable")}
                     </button>
                 </div>
             )}
@@ -425,16 +409,18 @@ function FrameEditor({
     mountEl,
     onReady,
     onChange,
+    initialContent,
 }: {
     mountEl: HTMLElement;
     onReady: (editor: Editor) => void;
     onChange: (html: string) => void;
+    initialContent: string;
 }) {
     useEditor({
         immediatelyRender: false,
         element: mountEl,
         extensions: EDITOR_EXTENSIONS,
-        content: INITIAL_HTML,
+        content: initialContent,
         editorProps: {
             attributes: {
                 id: "output-html-editor",
@@ -453,7 +439,11 @@ function FrameEditor({
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 export function HtmlViewerClient() {
-    const [html, setHtml] = useState<string>(() => inlineExportStyles(INITIAL_HTML));
+    const t = useTranslations("toolUI.html-viewer");
+    const tc = useTranslations("toolCommon");
+    const initialContent = t.raw("initialHtml") as string;
+
+    const [html, setHtml] = useState<string>(() => inlineExportStyles(initialContent));
     const [copied, setCopied] = useState(false);
     const [editor, setEditor] = useState<Editor | null>(null);
     // Node bên trong iframe để mount ProseMirror vào — có sau khi iframe load xong.
@@ -531,26 +521,26 @@ export function HtmlViewerClient() {
                         bodyClassName="h-full"
                         header={
                             <>
-                                <ToolLabel icon={<FileCode className="size-3.5" />}>HTML Raw</ToolLabel>
+                                <ToolLabel icon={<FileCode className="size-3.5" />}>{t("htmlRaw")}</ToolLabel>
                                 <div className="flex items-center gap-3">
-                                    <button id="btn-prettify" onClick={handlePrettify} className="flex items-center text-xs text-muted-foreground transition-colors hover:text-foreground" title="Format / làm đẹp HTML">
+                                    <button id="btn-prettify" onClick={handlePrettify} className="flex items-center text-xs text-muted-foreground transition-colors hover:text-foreground" title={t("formatTitle")}>
                                         <Sparkles className="mr-1 size-3.5" />
-                                        Format
+                                        {t("format")}
                                     </button>
                                     <button id="btn-copy" onClick={handleCopy} className="flex items-center text-xs text-muted-foreground transition-colors hover:text-foreground">
                                         {copied ? (
                                             <>
                                                 <Check className="mr-1 size-3.5 text-green-500" />
-                                                Đã copy!
+                                                {tc("copied")}
                                             </>
                                         ) : (
                                             <>
                                                 <Copy className="mr-1 size-3.5" />
-                                                Copy
+                                                {tc("copy")}
                                             </>
                                         )}
                                     </button>
-                                    <button id="btn-clear" onClick={handleClear} className="flex items-center text-xs text-muted-foreground transition-colors hover:text-destructive" title="Xóa trắng">
+                                    <button id="btn-clear" onClick={handleClear} className="flex items-center text-xs text-muted-foreground transition-colors hover:text-destructive" title={t("clearTitle")}>
                                         <Trash2 className="size-3.5" />
                                     </button>
                                 </div>
@@ -562,7 +552,7 @@ export function HtmlViewerClient() {
                             value={html}
                             onChange={handleRawChange}
                             className="h-full w-full resize-none bg-transparent p-4 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500/50"
-                            placeholder="<h1>Nhập HTML của bạn ở đây...</h1>"
+                            placeholder={t.raw("placeholderInput") as string}
                             spellCheck={false}
                         />
                     </ToolPanel>
@@ -580,21 +570,21 @@ export function HtmlViewerClient() {
                         padding="none"
                         className="h-full"
                         bodyClassName="flex h-full flex-col"
-                        header={<ToolLabel icon={<Eye className="size-3.5" />}>Trình soạn thảo</ToolLabel>}
+                        header={<ToolLabel icon={<Eye className="size-3.5" />}>{t("editorLabel")}</ToolLabel>}
                     >
                         {/* Wrapper LUÔN hiện diện: giữ iframe ở vị trí cố định để React không
                             remount nó khi toolbar xuất hiện (remount sẽ reset document iframe → mất editor). */}
-                        <div className="contents">{editor ? <EditorToolbar editor={editor} /> : null}</div>
+                        <div className="contents">{editor ? <EditorToolbar editor={editor} t={t} tc={tc} /> : null}</div>
                         {/* Editor sống trong iframe ⇒ cô lập khỏi CSS website, hiển thị giống HTML thô */}
                         <iframe
                             ref={attachFrame}
                             id="editor-frame"
-                            title="Trình soạn thảo"
+                            title={t("editorTitle")}
                             srcDoc={IFRAME_SRCDOC}
                             className="min-h-0 w-full flex-1 border-0 bg-white"
                         />
                         {mountEl ? (
-                            <FrameEditor mountEl={mountEl} onReady={setEditor} onChange={setHtml} />
+                            <FrameEditor mountEl={mountEl} onReady={setEditor} onChange={setHtml} initialContent={initialContent} />
                         ) : null}
                     </ToolPanel>
                 </ResizablePanel>

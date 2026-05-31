@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import {
     Ruler,
     Scale,
@@ -19,15 +20,17 @@ import { ToolLabel } from "@/components/shared/ToolLabel";
 import { convertUnit, getUnitsForCategory, type UnitCategory } from "@/lib/math/converter";
 import { cn } from "@/lib/utils";
 
-const CATEGORIES: { id: UnitCategory; label: string; icon: LucideIcon }[] = [
-    { id: "length", label: "Độ dài", icon: Ruler },
-    { id: "weight", label: "Khối lượng", icon: Scale },
-    { id: "area", label: "Diện tích", icon: Layers },
-    { id: "volume", label: "Thể tích", icon: Box },
-    { id: "temperature", label: "Nhiệt độ", icon: Thermometer },
-];
-
 export function UnitConverterClient() {
+    const t = useTranslations("toolUI.unit-converter");
+
+    const CATEGORIES: { id: UnitCategory; label: string; icon: LucideIcon }[] = useMemo(() => [
+        { id: "length", label: t("categories.length"), icon: Ruler },
+        { id: "weight", label: t("categories.weight"), icon: Scale },
+        { id: "area", label: t("categories.area"), icon: Layers },
+        { id: "volume", label: t("categories.volume"), icon: Box },
+        { id: "temperature", label: t("categories.temperature"), icon: Thermometer },
+    ], [t]);
+
     const [category, setCategory] = useState<UnitCategory>("length");
     const [fromValue, setFromValue] = useState<string>("1");
     const [fromUnit, setFromUnit] = useState<string>("");
@@ -91,7 +94,7 @@ export function UnitConverterClient() {
             <ToolPanel radius="lg" padding="lg" className="shadow-xl md:p-12">
                 <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-[1fr_auto_1fr]">
                     <div className="flex flex-col gap-4">
-                        <ToolLabel>Từ</ToolLabel>
+                        <ToolLabel>{t("fromLabel")}</ToolLabel>
                         <div className="flex flex-col gap-3">
                             <input
                                 id="input-from"
@@ -122,6 +125,7 @@ export function UnitConverterClient() {
                             variant="outline"
                             size="icon"
                             onClick={handleSwap}
+                            title={t("btnSwap")}
                             className="size-14 rounded-full border-2 border-blue-500/20 bg-background transition-all hover:bg-blue-500 hover:text-white active:scale-95"
                         >
                             <ArrowLeftRight className="size-6" />
@@ -130,7 +134,7 @@ export function UnitConverterClient() {
 
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center justify-between">
-                            <ToolLabel>Đến</ToolLabel>
+                            <ToolLabel>{t("toLabel")}</ToolLabel>
                             <Button
                                 id="btn-copy"
                                 variant="ghost"
@@ -175,19 +179,19 @@ export function UnitConverterClient() {
                             <Zap className="size-6" />
                         </div>
                         <div>
-                            <p className="text-sm font-bold">Công thức tính toán</p>
+                            <p className="text-sm font-bold">{t("formulaTitle")}</p>
                             <p className="mt-1 text-xs italic leading-relaxed text-muted-foreground">
-                                1 {units.find((u) => u.id === fromUnit)?.id} x{" "}
-                                {units.find((u) => u.id === fromUnit)?.ratio} ={" "}
-                                {units.find((u) => u.id === fromUnit)?.ratio} hệ thống chuẩn quốc tế
-                                (SI)
+                                {t("formulaBody", {
+                                    fromUnit: units.find((u) => u.id === fromUnit)?.id || "",
+                                    ratio: units.find((u) => u.id === fromUnit)?.ratio || 1
+                                })}
                             </p>
                         </div>
                     </div>
                 </ToolPanel>
                 <div className="flex flex-col justify-center rounded-3xl border border-border bg-blue-600 p-6 text-white shadow-lg shadow-blue-500/20">
                     <p className="mb-1 text-xs font-bold uppercase tracking-widest opacity-80">
-                        Kết quả tóm tắt
+                        {t("summaryTitle")}
                     </p>
                     <p className="text-lg font-bold">
                         {fromValue} {fromUnit} = {result} {toUnit}

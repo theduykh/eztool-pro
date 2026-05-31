@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { ToolPanel } from "@/components/shared/ToolPanel";
 import { countText } from "@/lib/string/word-counter";
@@ -16,6 +17,7 @@ import {
 import { cn } from "@/lib/utils";
 
 export function WordCounterClient() {
+    const t = useTranslations("toolUI.word-counter");
     const [text, setText] = useState("");
 
     // Memoize kết quả tính toán để tối ưu hiệu năng khi text thay đổi
@@ -28,28 +30,28 @@ export function WordCounterClient() {
     // Cấu trúc các thẻ hiển thị chỉ số
     const statCards = [
         {
-            label: "Từ",
+            label: t("words"),
             value: stats.words,
             icon: Type,
             color: "text-blue-500",
             bgColor: "bg-blue-500/10",
         },
         {
-            label: "Ký tự",
+            label: t("characters"),
             value: stats.characters,
             icon: Hash,
             color: "text-purple-500",
             bgColor: "bg-purple-500/10",
         },
         {
-            label: "Câu",
+            label: t("sentences"),
             value: stats.sentences,
             icon: FileText,
             color: "text-green-500",
             bgColor: "bg-green-500/10",
         },
         {
-            label: "Đoạn văn",
+            label: t("paragraphs"),
             value: stats.paragraphs,
             icon: AlignLeft,
             color: "text-orange-500",
@@ -90,15 +92,15 @@ export function WordCounterClient() {
                     <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
                         <div className="flex items-center text-sm font-medium text-muted-foreground">
                             <Clock className="mr-2 size-4 text-blue-500" />
-                            Thời gian đọc: 
+                            {t("readingTime")}{" "}
                             <span className="ml-1 font-bold text-foreground">
-                                {stats.readingTime} {stats.readingTime <= 1 ? "phút" : "phút"}
+                                {t("readingTimeMin", { time: stats.readingTime })}
                             </span>
                         </div>
                         <div className="hidden h-4 w-px bg-border sm:block" />
                         <div className="flex items-center text-sm font-medium text-muted-foreground">
                             <Space className="mr-2 size-4 text-purple-500" />
-                            Ký tự (không cách): 
+                            {t("charactersNoSpaces")}{" "}
                             <span className="ml-1 font-bold text-foreground">
                                 {stats.charactersNoSpaces.toLocaleString()}
                             </span>
@@ -114,7 +116,7 @@ export function WordCounterClient() {
                         className="self-end text-destructive transition-colors hover:bg-destructive/10 hover:text-destructive active:scale-95 sm:self-auto"
                     >
                         <Trash2 className="mr-2 size-4" />
-                        Xóa trắng
+                        {t("btnClear")}
                     </Button>
                 </div>
 
@@ -123,14 +125,14 @@ export function WordCounterClient() {
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                     className="flex-1 w-full resize-none border-none bg-transparent p-6 text-xl leading-relaxed text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-0 sm:p-8"
-                    placeholder="Nhập hoặc dán văn bản của bạn tại đây để bắt đầu đếm tự động..."
+                    placeholder={t("placeholderInput")}
                     spellCheck={false}
                     autoFocus
                 />
 
                 <div className="border-t border-border bg-muted/10 px-6 py-2">
                     <p className="text-[10px] text-muted-foreground/60">
-                        * Dữ liệu được xử lý trực tiếp trên trình duyệt của bạn, đảm bảo tính riêng tư tuyệt đối.
+                        {t("privacyNotice")}
                     </p>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import {
     Maximize,
     Type,
@@ -33,6 +34,9 @@ const DEFAULTS: PlaceholderOptions = {
 };
 
 export function SvgPlaceholderClient() {
+    const t = useTranslations("toolUI.svg-placeholder");
+    const tc = useTranslations("toolCommon");
+
     const [options, setOptions] = useState<PlaceholderOptions>(DEFAULTS);
     const [copied, setCopied] = useState<string | null>(null);
 
@@ -88,7 +92,7 @@ export function SvgPlaceholderClient() {
             <div className="flex flex-col gap-6">
                 <ToolPanel radius="lg" padding="lg" className="md:p-8">
                     <div className="mb-8 flex items-center justify-between">
-                        <ToolLabel>Tùy chỉnh ảnh</ToolLabel>
+                        <ToolLabel>{t("customizeImage")}</ToolLabel>
                         <Button
                             id="btn-reset"
                             variant="ghost"
@@ -97,7 +101,7 @@ export function SvgPlaceholderClient() {
                             className="h-8 gap-2 text-xs"
                         >
                             <RotateCcw className="size-3" />
-                            Đặt lại
+                            {t("reset")}
                         </Button>
                     </div>
 
@@ -105,7 +109,7 @@ export function SvgPlaceholderClient() {
                         <div className="grid grid-cols-2 gap-6">
                             <div className="space-y-2">
                                 <ToolLabel htmlFor="input-width" icon={<Maximize className="size-3.5" />}>
-                                    Chiều rộng (px)
+                                    {t("widthPx")}
                                 </ToolLabel>
                                 <input
                                     id="input-width"
@@ -125,7 +129,7 @@ export function SvgPlaceholderClient() {
                                     htmlFor="input-height"
                                     icon={<Maximize className="size-3.5 rotate-90" />}
                                 >
-                                    Chiều cao (px)
+                                    {t("heightPx")}
                                 </ToolLabel>
                                 <input
                                     id="input-height"
@@ -144,7 +148,7 @@ export function SvgPlaceholderClient() {
 
                         <div className="space-y-2">
                             <ToolLabel htmlFor="input-text" icon={<Type className="size-3.5" />}>
-                                Văn bản hiển thị
+                                {t("displayText")}
                             </ToolLabel>
                             <input
                                 id="input-text"
@@ -161,7 +165,7 @@ export function SvgPlaceholderClient() {
                         <div className="grid grid-cols-2 gap-6">
                             <div className="space-y-2">
                                 <ToolLabel icon={<Palette className="size-3.5 text-blue-500" />}>
-                                    Màu nền
+                                    {t("bgColor")}
                                 </ToolLabel>
                                 <div className="flex gap-2">
                                     <input
@@ -186,7 +190,7 @@ export function SvgPlaceholderClient() {
                             </div>
                             <div className="space-y-2">
                                 <ToolLabel icon={<Palette className="size-3.5 text-slate-500" />}>
-                                    Màu chữ
+                                    {t("textColor")}
                                 </ToolLabel>
                                 <div className="flex gap-2">
                                     <input
@@ -229,7 +233,7 @@ export function SvgPlaceholderClient() {
 
                 <ToolPanel radius="lg" padding="lg" className="md:p-8">
                     <ToolLabel className="mb-6" icon={<Download className="size-4 text-blue-500" />}>
-                        Tải ảnh về
+                        {t("downloadImage")}
                     </ToolLabel>
                     <div className="grid grid-cols-3 gap-3">
                         <Button
@@ -263,7 +267,7 @@ export function SvgPlaceholderClient() {
                 </ToolPanel>
 
                 <div className="space-y-4">
-                    <ToolLabel className="px-4">Xuất mã nguồn</ToolLabel>
+                    <ToolLabel className="px-4">{t("exportSourceCode")}</ToolLabel>
                     <div className="grid grid-cols-2 gap-4">
                         <Button
                             id="btn-copy-code"

@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Dices, RotateCcw, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ToolPanel } from "@/components/shared/ToolPanel";
@@ -31,7 +32,7 @@ const SEGMENT_COLORS = [
     "#27AE60",
 ];
 
-const DEFAULT_ITEMS = "Mục 1\nMục 2\nMục 3\nMục 4\nMục 5\nMục 6";
+const DEFAULT_ITEMS = "1\n2\n3\n4\n5\n6";
 
 // ─── Canvas drawing ────────────────────────────────────────────────────────────
 
@@ -40,6 +41,7 @@ function renderWheel(
     items: WheelItem[],
     angle: number,
     highlightIndex: number | null,
+    emptyText: string,
 ): void {
     const size = CANVAS_SIZE;
     const center = size / 2;
@@ -56,7 +58,7 @@ function renderWheel(
         ctx.font = "15px sans-serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText("Thêm mục để bắt đầu", center, center);
+        ctx.fillText(emptyText, center, center);
         return;
     }
 
@@ -133,6 +135,7 @@ function renderWheel(
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function RandomNumberClient() {
+    const t = useTranslations("toolUI.random-number");
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const animRef = useRef<number>(0);
     const angleRef = useRef(0);
@@ -153,6 +156,8 @@ export function RandomNumberClient() {
         setHighlightIndex(null);
     }, [itemsText]);
 
+    const emptyText = t("emptyWheel");
+
     // Redraw whenever items or highlight changes (and when not animating)
     const redraw = useCallback(
         (hl: number | null = highlightIndex) => {
@@ -160,9 +165,9 @@ export function RandomNumberClient() {
             if (!canvas) return;
             const ctx = canvas.getContext("2d");
             if (!ctx) return;
-            renderWheel(ctx, items, angleRef.current, hl);
+            renderWheel(ctx, items, angleRef.current, hl, emptyText);
         },
-        [items, highlightIndex],
+        [items, highlightIndex, emptyText],
     );
 
     useEffect(() => {
@@ -186,7 +191,7 @@ export function RandomNumberClient() {
             const canvas = canvasRef.current;
             if (canvas) {
                 const ctx = canvas.getContext("2d");
-                if (ctx) renderWheel(ctx, items, angleRef.current, null);
+                if (ctx) renderWheel(ctx, items, angleRef.current, null, emptyText);
             }
 
             if (velocityRef.current > STOP_VELOCITY) {
@@ -205,13 +210,13 @@ export function RandomNumberClient() {
                 const canvas2 = canvasRef.current;
                 if (canvas2) {
                     const ctx = canvas2.getContext("2d");
-                    if (ctx) renderWheel(ctx, items, angleRef.current, idx);
+                    if (ctx) renderWheel(ctx, items, angleRef.current, idx, emptyText);
                 }
             }
         };
 
         animRef.current = requestAnimationFrame(animate);
-    }, [isSpinning, items]);
+    }, [isSpinning, items, emptyText]);
 
     const reset = useCallback(() => {
         if (animRef.current) cancelAnimationFrame(animRef.current);
@@ -236,22 +241,22 @@ export function RandomNumberClient() {
             <div className="flex w-full flex-col gap-4 lg:w-72 lg:flex-shrink-0">
                 <ToolPanel padding="md">
                     <label className="mb-2 block text-sm font-semibold text-foreground">
-                        Danh sách mục
+                        {t("listTitle")}
                     </label>
                     <textarea
                         id="input-items"
                         className="h-52 w-full resize-none rounded-lg border border-border bg-background px-3 py-2 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-60"
                         value={itemsText}
                         onChange={(e) => setItemsText(e.target.value)}
-                        placeholder={"Nhập mỗi mục trên một dòng…\nVí dụ:\nAnh\nEm\nBạn bè"}
+                        placeholder={t("placeholderInput")}
                         disabled={isSpinning}
                         spellCheck={false}
                     />
                     <p className="mt-2 text-xs text-muted-foreground">
-                        {items.length} mục
+                        {t("itemsCount", { count: items.length })}
                         {items.length < 2 && (
                             <span className="ml-1 text-destructive">
-                                — cần ít nhất 2 để quay
+                                {t("minItemsWarning")}
                             </span>
                         )}
                     </p>
@@ -265,7 +270,7 @@ export function RandomNumberClient() {
                         <div className="mb-2 flex items-center justify-center gap-2">
                             <Trophy className="size-4 text-yellow-500" />
                             <span className="text-xs font-bold uppercase tracking-widest text-yellow-600 dark:text-yellow-400">
-                                Kết quả
+                                {t("resultTitle")}
                             </span>
                             <Trophy className="size-4 text-yellow-500" />
                         </div>
@@ -296,7 +301,7 @@ export function RandomNumberClient() {
                         className="gap-2 px-8 text-base font-bold shadow-md"
                     >
                         <Dices className="size-5" />
-                        {isSpinning ? "Đang quay…" : "Quay ngay!"}
+                        {isSpinning ? t("spinningText") : t("btnSpin")}
                     </Button>
 
                     {(winner || highlightIndex !== null) && !isSpinning && (
@@ -308,13 +313,13 @@ export function RandomNumberClient() {
                             className="gap-2"
                         >
                             <RotateCcw className="size-4" />
-                            Đặt lại
+                            {t("btnReset")}
                         </Button>
                     )}
                 </div>
 
                 <p className="text-xs text-muted-foreground">
-                    Mũi tên đỏ ở trên chỉ vào mục được chọn
+                    {t("arrowHint")}
                 </p>
             </div>
         </div>
