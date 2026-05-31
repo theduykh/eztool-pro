@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import {
     Maximize,
     X,
@@ -34,10 +35,6 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 import {
-    WHEEL_TEMPLATES,
-    type WheelTemplate,
-} from "@/lib/constants/wheel-templates";
-import {
     generateWheelSlices,
     shuffleItems,
     getWinnerIndex,
@@ -48,7 +45,7 @@ import {
 
 interface SpeedPreset {
     id: string;
-    label: string;
+    labelKey: string;
     icon: typeof Zap;
     /** Exponential-decay time constant (seconds). Larger = slower to stop. */
     tau: number;
@@ -58,17 +55,15 @@ interface SpeedPreset {
 }
 
 const SPEED_PRESETS: SpeedPreset[] = [
-    { id: "fast", label: "Nhanh", icon: Zap, tau: 0.5, minV: 900, maxV: 1400 },
-    { id: "medium", label: "Trung bình", icon: Timer, tau: 1.2, minV: 1400, maxV: 2000 },
-    { id: "suspense", label: "Hồi hộp", icon: Flame, tau: 2.0, minV: 1800, maxV: 2500 },
+    { id: "fast", labelKey: "speedFast", icon: Zap, tau: 0.5, minV: 900, maxV: 1400 },
+    { id: "medium", labelKey: "speedMedium", icon: Timer, tau: 1.2, minV: 1400, maxV: 2000 },
+    { id: "suspense", labelKey: "speedSuspense", icon: Flame, tau: 2.0, minV: 1800, maxV: 2500 },
 ];
 
 /** Wheel considered stopped when |velocity| drops below this (deg/sec). */
 const STOP_VELOCITY = 12;
 /** Cap flick velocity so a violent swipe doesn't spin for ages. */
 const MAX_FLICK_VELOCITY = 3500;
-
-const DEFAULT_TEXT = WHEEL_TEMPLATES[0].items.join("\n");
 
 // ─── SVG Wheel Sub-Component ──────────────────────────────────────────────────
 
@@ -78,6 +73,7 @@ interface WheelSVGProps {
     isSpinning: boolean;
     isDragging: boolean;
     canInteract: boolean;
+    emptyText: string;
     onPointerDown?: (e: React.PointerEvent<HTMLDivElement>) => void;
     onPointerMove?: (e: React.PointerEvent<HTMLDivElement>) => void;
     onPointerUp?: (e: React.PointerEvent<HTMLDivElement>) => void;
@@ -91,6 +87,7 @@ function WheelSVG({
     isSpinning,
     isDragging,
     canInteract,
+    emptyText,
     onPointerDown,
     onPointerMove,
     onPointerUp,
@@ -272,7 +269,7 @@ function WheelSVG({
                                 dominantBaseline="middle"
                                 className="fill-muted-foreground text-sm"
                             >
-                                Thêm mục để bắt đầu
+                                {emptyText}
                             </text>
                         </>
                     ) : (
@@ -350,14 +347,45 @@ function WheelSVG({
 // ─── Main Client Component ────────────────────────────────────────────────────
 
 export function LuckyWheelClient() {
-    const [itemsText, setItemsText] = useState(DEFAULT_TEXT);
+    const t = useTranslations("toolUI.lucky-wheel");
+
+    const templatesList = useMemo(() => {
+        return [
+            {
+                id: "drinking-penalty",
+                name: t("templates.drinking"),
+                items: Array.from({ length: 8 }).map((_, i) => t(`items.drinking.${i}`))
+            },
+            {
+                id: "beer-picker",
+                name: t("templates.beer"),
+                items: ["Duy", "Nghiệm", "Hiếu", "Tuấn", "Phước", "Hậu", "Hoàng", "Phong"]
+            },
+            {
+                id: "food-picker",
+                name: t("templates.food"),
+                items: Array.from({ length: 8 }).map((_, i) => t(`items.food.${i}`))
+            },
+            {
+                id: "housework",
+                name: t("templates.housework"),
+                items: Array.from({ length: 7 }).map((_, i) => t(`items.housework.${i}`))
+            }
+        ];
+    }, [t]);
+
+    const defaultText = useMemo(() => {
+        return templatesList[0].items.join("\n");
+    }, [templatesList]);
+
+    const [itemsText, setItemsText] = useState(defaultText);
     const [rotation, setRotation] = useState(0);
     const [isSpinning, setIsSpinning] = useState(false);
     const [winner, setWinner] = useState<string | null>(null);
     const [winnerColor, setWinnerColor] = useState<string | null>(null);
     const [showDialog, setShowDialog] = useState(false);
     const [selectedTemplate, setSelectedTemplate] = useState<string>(
-        WHEEL_TEMPLATES[0].id,
+        templatesList[0].id,
     );
     const [speedId, setSpeedId] = useState<string>("medium");
     const [isFullscreen, setIsFullscreen] = useState(false);
@@ -411,14 +439,14 @@ export function LuckyWheelClient() {
     const handleTemplateChange = useCallback(
         (templateId: string) => {
             setSelectedTemplate(templateId);
-            const template = WHEEL_TEMPLATES.find(
-                (t: WheelTemplate) => t.id === templateId,
+            const template = templatesList.find(
+                (tItem) => tItem.id === templateId,
             );
             if (template) {
                 updateItems(template.items.join("\n"));
             }
         },
-        [updateItems],
+        [updateItems, templatesList],
     );
 
     // Handle shuffle
@@ -696,13 +724,15 @@ export function LuckyWheelClient() {
         };
     }, [isFullscreen]);
 
+    const emptyWheelText = t("emptyWheel");
+
     return (
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
             {/* ── Left Panel: Controls ─────────────────────────────── */}
             <div className="flex w-full flex-col gap-4 lg:w-80 lg:shrink-0">
                 <ToolPanel padding="md">
                     <label className="mb-2 block text-sm font-semibold text-foreground">
-                        📋 Chọn mẫu có sẵn
+                        {t("selectTemplate")}
                     </label>
                     <Select
                         value={selectedTemplate}
@@ -715,8 +745,8 @@ export function LuckyWheelClient() {
                             <SelectValue placeholder="Chọn một template…" />
                         </SelectTrigger>
                         <SelectContent>
-                            {WHEEL_TEMPLATES.map(
-                                (template: WheelTemplate) => (
+                            {templatesList.map(
+                                (template) => (
                                     <SelectItem
                                         key={template.id}
                                         value={template.id}
@@ -731,25 +761,23 @@ export function LuckyWheelClient() {
 
                 <ToolPanel padding="md">
                     <label className="mb-2 block text-sm font-semibold text-foreground">
-                        ✏️ Danh sách mục (mỗi dòng = 1 mục)
+                        {t("listTitle")}
                     </label>
                     <Textarea
                         id="items-textarea"
                         value={itemsText}
                         onChange={(e) => updateItems(e.target.value)}
-                        placeholder={
-                            "Nhập mỗi mục trên một dòng…\nVí dụ:\nNam\nHùng\nLinh"
-                        }
+                        placeholder={t("placeholderInput")}
                         className="min-h-[200px] resize-y font-sans"
                         disabled={isSpinning}
                         spellCheck={false}
                     />
                     <div className="mt-2 flex items-center justify-between">
                         <p className="text-xs text-muted-foreground">
-                            {items.length} mục
+                            {t("itemsCount", { count: items.length })}
                             {items.length < 2 && (
                                 <span className="ml-1 text-destructive">
-                                    — cần ít nhất 2
+                                    {t("minItemsWarning")}
                                 </span>
                             )}
                         </p>
@@ -762,7 +790,7 @@ export function LuckyWheelClient() {
                             id="shuffle-btn"
                         >
                             <Shuffle className="size-3.5" />
-                            Trộn đều
+                            {t("btnShuffle")}
                         </Button>
                     </div>
                 </ToolPanel>
@@ -803,6 +831,7 @@ export function LuckyWheelClient() {
                         isSpinning={isSpinning}
                         isDragging={isDragging}
                         canInteract={items.length >= 2}
+                        emptyText={emptyWheelText}
                         onPointerDown={handleWheelPointerDown}
                         onPointerMove={handleWheelPointerMove}
                         onPointerUp={handleWheelPointerUp}
@@ -821,7 +850,7 @@ export function LuckyWheelClient() {
                             size="icon-sm"
                             onClick={toggleFullscreen}
                             className="absolute right-2 top-2 z-30 text-muted-foreground hover:text-foreground"
-                            title="Xem toàn màn hình"
+                            title={t("btnFullscreen")}
                         >
                             <Maximize className="size-4" />
                         </Button>
@@ -842,14 +871,14 @@ export function LuckyWheelClient() {
                     {isSpinning ? (
                         <>
                             <Fan className={cn("animate-spin size-5", isFullscreen && "size-7")} />
-                            Đang quay…
+                            {t("spinningText")}
                         </>
                     ) : (
                         <>
                             <PartyPopper
                                 className={cn("size-5", isFullscreen && "size-7")}
                             />
-                            QUAY
+                            {t("spinNow")}
                         </>
                     )}
                 </Button>
@@ -886,7 +915,7 @@ export function LuckyWheelClient() {
                                         isFullscreen && "size-4",
                                     )}
                                 />
-                                {preset.label}
+                                {t(preset.labelKey)}
                             </button>
                         );
                     })}
@@ -898,7 +927,7 @@ export function LuckyWheelClient() {
                         isFullscreen && "mt-4 text-sm",
                     )}
                 >
-                    Mũi tên đỏ chỉ vào mục được chọn
+                    {t("arrowHint")}
                 </p>
             </div>
 
@@ -909,12 +938,12 @@ export function LuckyWheelClient() {
                         <div className="mb-2 flex items-center justify-center gap-2">
                             <Trophy className="size-6 text-yellow-500" />
                             <DialogTitle className="text-lg">
-                                🎉 Kết quả
+                                {t("winnerDialogTitle")}
                             </DialogTitle>
                             <Trophy className="size-6 text-yellow-500" />
                         </div>
                         <DialogDescription>
-                            Vòng quay may mắn đã chọn ra:
+                            {t("winnerDialogDesc")}
                         </DialogDescription>
                     </DialogHeader>
 
@@ -944,7 +973,7 @@ export function LuckyWheelClient() {
                             className="w-full gap-2"
                         >
                             <PartyPopper className="size-4" />
-                            Quay tiếp
+                            {t("btnRemoveWinner")}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

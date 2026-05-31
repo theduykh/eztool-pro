@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Activity, Weight, Ruler, Heart, Info, ArrowRight, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ToolPanel } from "@/components/shared/ToolPanel";
@@ -10,6 +11,8 @@ import { calculateBMI, getBMICategories, type BMIResult, type BMIStandard } from
 import { cn } from "@/lib/utils";
 
 export function BMICalculatorClient() {
+    const t = useTranslations("toolUI.bmi-calculator");
+
     const [weight, setWeight] = useState<string>("70");
     const [height, setHeight] = useState<string>("170");
     const [standard, setStandard] = useState<BMIStandard>("asian");
@@ -35,7 +38,7 @@ export function BMICalculatorClient() {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
             <div className="flex flex-col gap-6">
                 <ToolPanel padding="md">
-                    <ToolLabel className="mb-3">Chọn tiêu chuẩn</ToolLabel>
+                    <ToolLabel className="mb-3">{t("selectStandard")}</ToolLabel>
                     <div className="flex gap-2">
                         <Button
                             id="btn-standard-global"
@@ -44,7 +47,7 @@ export function BMICalculatorClient() {
                             onClick={() => setStandard("global")}
                             className="flex-1 rounded-xl text-xs"
                         >
-                            Toàn cầu (WHO)
+                            {t("standardGlobal")}
                         </Button>
                         <Button
                             id="btn-standard-asian"
@@ -53,7 +56,7 @@ export function BMICalculatorClient() {
                             onClick={() => setStandard("asian")}
                             className="flex-1 rounded-xl text-xs"
                         >
-                            Châu Á (IDI & WPRO)
+                            {t("standardAsian")}
                         </Button>
                     </div>
                 </ToolPanel>
@@ -61,7 +64,7 @@ export function BMICalculatorClient() {
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div className="flex flex-col gap-2">
                         <ToolLabel htmlFor="input-weight" icon={<Weight className="size-3.5" />}>
-                            Cân nặng (kg)
+                            {t("weightLabel")}
                         </ToolLabel>
                         <input
                             id="input-weight"
@@ -76,7 +79,7 @@ export function BMICalculatorClient() {
 
                     <div className="flex flex-col gap-2">
                         <ToolLabel htmlFor="input-height" icon={<Ruler className="size-3.5" />}>
-                            Chiều cao (cm)
+                            {t("heightLabel")}
                         </ToolLabel>
                         <input
                             id="input-height"
@@ -91,14 +94,14 @@ export function BMICalculatorClient() {
                 </div>
 
                 <ToolPanel padding="lg">
-                    <ToolLabel className="mb-4">Thang đo chỉ số BMI</ToolLabel>
+                    <ToolLabel className="mb-4">{t("scaleLabel")}</ToolLabel>
                     <div className="relative flex h-6 w-full overflow-hidden rounded-full bg-muted">
                         {categories.map((cat) => (
                             <div
-                                key={cat.label}
+                                key={cat.key}
                                 className={cn("h-full transition-all duration-500", cat.color)}
                                 style={{ width: `${((cat.max - cat.min) / TOTAL_SCOPE) * 100}%` }}
-                                title={`${cat.label} (${cat.range})`}
+                                title={`${t("categories." + cat.key)} (${cat.range})`}
                             />
                         ))}
                         {result && (
@@ -115,7 +118,7 @@ export function BMICalculatorClient() {
                         <span
                             className="absolute"
                             style={{
-                                left: `${((18.5 - MIN_BMI) / TOTAL_SCOPE) * 100}%`,
+                                    left: `${((18.5 - MIN_BMI) / TOTAL_SCOPE) * 100}%`,
                                 transform: "translateX(-50%)",
                             }}
                         >
@@ -126,7 +129,7 @@ export function BMICalculatorClient() {
                                 <span
                                     className="absolute"
                                     style={{
-                                        left: `${((25 - MIN_BMI) / TOTAL_SCOPE) * 100}%`,
+                                            left: `${((25 - MIN_BMI) / TOTAL_SCOPE) * 100}%`,
                                         transform: "translateX(-50%)",
                                     }}
                                 >
@@ -135,7 +138,7 @@ export function BMICalculatorClient() {
                                 <span
                                     className="absolute"
                                     style={{
-                                        left: `${((30 - MIN_BMI) / TOTAL_SCOPE) * 100}%`,
+                                            left: `${((30 - MIN_BMI) / TOTAL_SCOPE) * 100}%`,
                                         transform: "translateX(-50%)",
                                     }}
                                 >
@@ -144,7 +147,7 @@ export function BMICalculatorClient() {
                                 <span
                                     className="absolute"
                                     style={{
-                                        left: `${((35 - MIN_BMI) / TOTAL_SCOPE) * 100}%`,
+                                            left: `${((35 - MIN_BMI) / TOTAL_SCOPE) * 100}%`,
                                         transform: "translateX(-50%)",
                                     }}
                                 >
@@ -153,7 +156,7 @@ export function BMICalculatorClient() {
                                 <span
                                     className="absolute"
                                     style={{
-                                        left: `${((40 - MIN_BMI) / TOTAL_SCOPE) * 100}%`,
+                                            left: `${((40 - MIN_BMI) / TOTAL_SCOPE) * 100}%`,
                                         transform: "translateX(-50%)",
                                     }}
                                 >
@@ -165,7 +168,7 @@ export function BMICalculatorClient() {
                                 <span
                                     className="absolute"
                                     style={{
-                                        left: `${((23 - MIN_BMI) / TOTAL_SCOPE) * 100}%`,
+                                            left: `${((23 - MIN_BMI) / TOTAL_SCOPE) * 100}%`,
                                         transform: "translateX(-50%)",
                                     }}
                                 >
@@ -174,7 +177,7 @@ export function BMICalculatorClient() {
                                 <span
                                     className="absolute"
                                     style={{
-                                        left: `${((25 - MIN_BMI) / TOTAL_SCOPE) * 100}%`,
+                                            left: `${((25 - MIN_BMI) / TOTAL_SCOPE) * 100}%`,
                                         transform: "translateX(-50%)",
                                     }}
                                 >
@@ -183,7 +186,7 @@ export function BMICalculatorClient() {
                                 <span
                                     className="absolute"
                                     style={{
-                                        left: `${((30 - MIN_BMI) / TOTAL_SCOPE) * 100}%`,
+                                            left: `${((30 - MIN_BMI) / TOTAL_SCOPE) * 100}%`,
                                         transform: "translateX(-50%)",
                                     }}
                                 >
@@ -197,17 +200,17 @@ export function BMICalculatorClient() {
 
                 <ToolPanel tone="subtle" padding="lg">
                     <ToolLabel className="mb-2">
-                        {standard === "global" ? "Phân loại WHO Toàn cầu" : "Phân loại WHO Châu Á"}
+                        {standard === "global" ? t("globalTitle") : t("asianTitle")}
                     </ToolLabel>
                     <div className="space-y-1">
                         {categories.map((cat) => (
                             <div
-                                key={cat.label}
+                                key={cat.key}
                                 className="flex items-center justify-between border-b border-border/50 py-1 text-sm last:border-0"
                             >
                                 <div className="flex items-center gap-2">
                                     <div className={cn("size-2 rounded-full", cat.color)} />
-                                    <span className="text-muted-foreground">{cat.label}</span>
+                                    <span className="text-muted-foreground">{t("categories." + cat.key)}</span>
                                 </div>
                                 <span className="font-mono text-xs">{cat.range}</span>
                             </div>
@@ -221,7 +224,7 @@ export function BMICalculatorClient() {
                     <div className="relative flex h-full flex-col items-center justify-center overflow-hidden rounded-3xl border border-border bg-card p-8 shadow-xl">
                         <Activity className="absolute -bottom-10 -right-10 size-48 rotate-12 text-muted-foreground/5" />
 
-                        <p className="mb-2 text-sm font-semibold text-muted-foreground">Chỉ số BMI của bạn</p>
+                        <p className="mb-2 text-sm font-semibold text-muted-foreground">{t("resultLabel")}</p>
                         <h2
                             id="bmi-value"
                             className={cn(
@@ -239,12 +242,12 @@ export function BMICalculatorClient() {
                             )}
                         >
                             <Heart className="size-4 animate-pulse fill-white" />
-                            {result.label}
+                            {t("categories." + result.key)}
                         </div>
 
                         <div className="relative z-10 w-full rounded-2xl bg-muted/30 p-6 text-center backdrop-blur-sm">
                             <p className="text-sm font-medium italic leading-relaxed text-foreground">
-                                &quot;{result.advice}&quot;
+                                &quot;{t("advice." + result.key)}&quot;
                             </p>
                         </div>
 
@@ -260,7 +263,7 @@ export function BMICalculatorClient() {
                                 }}
                             >
                                 <RefreshCcw className="mr-2 size-3.5" />
-                                Làm mới
+                                {t("btnReset")}
                             </Button>
                         </div>
                     </div>
@@ -274,9 +277,7 @@ export function BMICalculatorClient() {
                     >
                         <Info className="mb-4 size-12 opacity-20" />
                         <p className="font-medium">
-                            Vui lòng nhập cân nặng và chiều cao
-                            <br />
-                            để xem kết quả phân tích.
+                            {t("inputWarning")}
                         </p>
                     </ToolPanel>
                 )}
@@ -284,15 +285,13 @@ export function BMICalculatorClient() {
                 <ToolInfoBox
                     tone="accent"
                     icon={<Info className="size-5 text-blue-600 dark:text-blue-400" />}
-                    title={<span className="text-blue-600 dark:text-blue-400">Kiến thức cơ bản</span>}
+                    title={<span className="text-blue-600 dark:text-blue-400">{t("infoTitle")}</span>}
                 >
                     <p className="leading-relaxed">
-                        BMI (Body Mass Index) là chỉ số được dùng để xác định một người ở mức cân nặng bình thường, suy
-                        dinh dưỡng hay béo phì. Lưu ý BMI <strong>không áp dụng</strong> cho bà bầu, vận động viên thể
-                        hình hoặc người già có khối lượng cơ thấp.
+                        {t("infoBody")}
                     </p>
                     <a href="#" className="mt-3 flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:underline">
-                        Tìm hiểu thêm về sức khỏe <ArrowRight className="size-3" />
+                        {t("learnMore")} <ArrowRight className="size-3" />
                     </a>
                 </ToolInfoBox>
             </div>

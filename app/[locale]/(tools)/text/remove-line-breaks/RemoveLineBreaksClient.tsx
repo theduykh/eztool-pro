@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Copy, Check, Trash2, Settings, Zap, AlignJustify, GripVertical } from "lucide-react";
 import { ToolPanel } from "@/components/shared/ToolPanel";
 import { ToolLabel } from "@/components/shared/ToolLabel";
@@ -12,14 +13,8 @@ import {
 import { cleanText, type CleaningOptions } from "@/lib/string/cleaner";
 import { cn } from "@/lib/utils";
 
-const OPTION_LABELS: { key: keyof CleaningOptions; label: string }[] = [
-    { key: "removeEmptyLines", label: "Xóa dòng trống" },
-    { key: "collapseSpaces", label: "Thu gọn khoảng trắng" },
-    { key: "trimLines", label: "Xóa khoảng trắng ở đầu/cuối dòng" },
-    { key: "removeAllLineBreaks", label: "Xóa tất cả dấu xuống dòng" },
-];
-
 export function RemoveLineBreaksClient() {
+    const t = useTranslations("toolUI.remove-line-breaks");
     const [input, setInput] = useState("");
     const [output, setOutput] = useState("");
     const [copied, setCopied] = useState(false);
@@ -29,6 +24,13 @@ export function RemoveLineBreaksClient() {
         trimLines: true,
         removeAllLineBreaks: false,
     });
+
+    const OPTION_LABELS: { key: keyof CleaningOptions; label: string }[] = [
+        { key: "removeEmptyLines", label: t("removeEmptyLines") },
+        { key: "collapseSpaces", label: t("collapseSpaces") },
+        { key: "trimLines", label: t("trimLines") },
+        { key: "removeAllLineBreaks", label: t("removeAllLineBreaks") },
+    ];
 
     const handleClean = useCallback((text: string, currentOptions: CleaningOptions) => {
         if (!text) {
@@ -66,7 +68,7 @@ export function RemoveLineBreaksClient() {
         <div className="flex min-h-0 flex-1 flex-col">
             <ToolPanel padding="lg" className="mb-4 shrink-0">
                 <ToolLabel icon={<Settings className="size-3.5" />} className="mb-4">
-                    Tùy chọn dọn dẹp
+                    {t("cleanOptions")}
                 </ToolLabel>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
                     {OPTION_LABELS.map((opt) => {
@@ -106,14 +108,14 @@ export function RemoveLineBreaksClient() {
                     bodyClassName="h-full"
                     header={
                         <>
-                            <ToolLabel>Văn bản gốc</ToolLabel>
+                            <ToolLabel>{t("originalText")}</ToolLabel>
                             <button
                                 id="btn-clear"
                                 onClick={handleClear}
                                 className="flex items-center text-xs text-muted-foreground transition-colors hover:text-destructive"
                             >
                                 <Trash2 className="mr-1 size-3.5" />
-                                Xóa trắng
+                                {t("btnClear")}
                             </button>
                         </>
                     }
@@ -142,7 +144,7 @@ export function RemoveLineBreaksClient() {
                     bodyClassName="h-full"
                     header={
                         <>
-                            <ToolLabel>Kết quả đã dọn dẹp</ToolLabel>
+                            <ToolLabel>{t("cleanedText")}</ToolLabel>
                             <button
                                 id="btn-copy"
                                 onClick={handleCopy}
@@ -157,12 +159,12 @@ export function RemoveLineBreaksClient() {
                                 {copied ? (
                                     <>
                                         <Check className="mr-1 size-3.5" />
-                                        Đã copy!
+                                        {t("btnCopied")}
                                     </>
                                 ) : (
                                     <>
                                         <Copy className="mr-1 size-3.5" />
-                                        Copy
+                                        {t("btnCopy")}
                                     </>
                                 )}
                             </button>
@@ -186,18 +188,16 @@ export function RemoveLineBreaksClient() {
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <Zap className="size-3.5 text-yellow-500" />
                         <span>
-                            Giảm bớt:{" "}
-                            <span className="font-bold text-foreground">
-                                {input.length - output.length}
-                            </span>{" "}
-                            ký tự
+                            {t("reducedText", { count: input.length - output.length })}
                         </span>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <AlignJustify className="size-3.5 text-blue-500" />
                         <span>
-                            Số dòng: {output.split("\n").filter(Boolean).length} (
-                            {input.split("\n").length} trước đó)
+                            {t("linesCount", {
+                                outputCount: output.split("\n").filter(Boolean).length,
+                                inputCount: input.split("\n").length
+                            })}
                         </span>
                     </div>
                 </div>

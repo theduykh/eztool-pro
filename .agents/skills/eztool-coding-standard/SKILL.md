@@ -19,8 +19,18 @@ description: Coding standards and code conventions for eztool.pro. Read this ski
 ## 3. Next.js App Router & Rendering
 - Pages (`page.tsx`) must default to **Server Components** for SEO friendliness.
 - Minimize `"use client"`. Only place this directive on the smallest component that contains user interaction (buttons, form inputs). NEVER put `"use client"` on a root page.
-- Always generate dynamic `<title>` and `<meta>` tags for each tool page by exporting `metadata` from `page.tsx`.
+- Generate dynamic, **localized** `<title>`/`<meta>` per tool via an async `generateMetadata` (not a static `metadata` export) — see §4.2. Include hreflang `alternates`.
 - **IMPORTANT:** This is Next.js 16 — `params` in layouts/pages are Promises. Read the docs at `node_modules/next/dist/docs/` before using new APIs.
+
+## 3.1 Internationalization (READ THE i18n SKILL)
+- The app is **multi-language (5 locales) on a static export** via next-intl. Every route lives under `app/[locale]/`. **No user-visible string may be hardcoded.**
+- Before adding/translating any text, routing, metadata, or SEO, read `.agents/skills/eztool-i18n/SKILL.md`.
+- Quick rules:
+  - Tool **name/description** → `messages/{locale}.json` under `tools.<id>`.
+  - In-tool UI strings → `toolUI.<id>` (tool-specific) or `toolCommon` (shared: copy, paste, clear…).
+  - Client components read with `useTranslations("toolUI.<id>")` + `useTranslations("toolCommon")`.
+  - Strings with literal `{ }` (JSON/HTML/code samples) → use `t.raw()`, not `t()` (ICU parses braces).
+  - Import `Link`/`usePathname`/`useRouter` from `@/i18n/navigation`, never from `next/*`.
 
 ## 4. UI / UX
 - Use **Tailwind CSS** together with **Shadcn UI** (located in `components/ui/`).
@@ -54,25 +64,38 @@ Standard example:
 
 ### 4.2 Unified Page Pattern
 
-Every `page.tsx` follows the same structure — fetch the tool from the registry, export `metadata`, render `PageHeader` + the Client Component:
+Every tool `page.tsx` is an **async Server Component**: it awaits `params` for the
+locale, localizes metadata + hreflang alternates, and calls `setRequestLocale` for
+static rendering. Display strings come from `messages/`, not from `config/tools.ts`.
 
 ```tsx
 import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { TOOLS_DIRECTORY } from "@/config/tools";
+import { buildAlternates } from "@/lib/seo/alternates";
 import { ToolClient } from "./ToolClient";
 
 const tool = TOOLS_DIRECTORY.find((t) => t.id === "tool-id")!;
+type LocaleParams = { params: Promise<{ locale: string }> };
 
-export const metadata: Metadata = {
-    title: `${tool.name} - eztool.pro`,
-    description: tool.description,
-};
+export async function generateMetadata({ params }: LocaleParams): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: "tools" });
+    return {
+        title: t(`${tool.id}.name`),               // "%s | eztool.pro" template added by layout
+        description: t(`${tool.id}.description`),
+        alternates: buildAlternates(locale, tool.path),
+    };
+}
 
-export default function ToolPage() {
+export default async function ToolPage({ params }: LocaleParams) {
+    const { locale } = await params;
+    setRequestLocale(locale);
+    const t = await getTranslations("tools");
     return (
         <div className="flex h-full flex-col">
-            <PageHeader title={tool.name} description={tool.description} />
+            <PageHeader title={t(`${tool.id}.name`)} description={t(`${tool.id}.description`)} />
             <ToolClient />
         </div>
     );
@@ -94,32 +117,34 @@ Each tool in `config/tools.ts` declares a `layout`: `"full"` for tools that fill
 ```
 eztool-pro/
 ├── app/
-│   ├── layout.tsx              # Root layout (Server Component) — Inter + Fira Code font, ThemeProvider, AppShell
+│   ├── layout.tsx              # PASS-THROUGH root (returns children) — globals.css only
 │   ├── globals.css             # Tailwind v4 + Shadcn CSS vars (dark/light)
-│   ├── page.tsx                # Homepage
-│   └── (tools)/                # Route group for all tools
-│       └── [category]/[tool]/  # Routing by category/tool-name
-│           └── page.tsx        # Server Component, exports metadata
+│   ├── page.tsx                # "/" → client redirect to best-match locale
+│   ├── not-found.tsx           # global 404 (out/404.html)
+│   ├── sitemap.ts robots.ts    # per-(path × locale) SEO
+│   └── [locale]/               # ALL routes are locale-prefixed
+│       ├── layout.tsx          # real <html lang>, fonts, providers, AppShell, generateStaticParams
+│       ├── page.tsx            # Homepage (localized)
+│       └── (tools)/[category]/[tool]/page.tsx   # async Server Component (generateMetadata + setRequestLocale)
+├── i18n/                       # next-intl wiring: routing.ts, navigation.ts, request.ts
+├── messages/                   # en/vi/zh/ko/ja.json translation catalogs
 ├── components/
-│   ├── ui/                     # Shadcn UI components (button, input, textarea...)
-│   └── shared/                 # Shared components
-│       ├── AppShell.tsx        # Client — layout shell (sidebar + header + content)
-│       ├── Sidebar.tsx         # Client — sidebar navigation, tool grouping
-│       ├── Header.tsx          # Client — breadcrumb, search, theme toggle
-│       ├── ThemeProvider.tsx   # Client — next-themes wrapper
-│       └── ThemeToggle.tsx     # Client — sun/moon toggle button
-├── lib/                        # Pure logic functions (NO React)
-│   ├── utils.ts                # cn() helper
-│   ├── formatters/             # Formatting logic (json, xml...)
-│   ├── math/                   # Computation functions
-│   └── string/                 # String processing
-├── config/
-│   └── tools.ts                # Registry of all tools + categories
-└── __tests__/                  # Or place .test.ts right next to the logic file in lib/
+│   ├── ui/                     # Shadcn UI components (button, input, textarea, select, dialog...)
+│   └── shared/                 # AppShell, Sidebar, Header, Footer, ThemeProvider, ThemeToggle,
+│                               #   LanguageSwitcher, SearchCommand, PageHeader + ToolPanel/Label/InfoBox/Toggle
+├── lib/                        # Pure logic functions (NO React) — sibling .test.ts each
+│   ├── utils.ts  formatters/  math/  string/
+│   ├── search/                 # tool-search.ts, highlight.ts (command palette)
+│   └── seo/                    # alternates.ts (buildAlternates / localizedHref)
+└── config/
+    ├── tools.ts                # Registry: structure only (id, path, category, flags, layout) — NO strings
+    ├── tool-icons.ts           # icon map per tool/category
+    └── site.ts                 # SITE_URL canonical origin
 ```
 
 ## 7. Routing Convention
-- URL pattern: `/{category}/{tool-id}` — e.g. `/dev/json-formatter`, `/text/word-counter`
-- Folder structure: `app/(tools)/[matching the path in config/tools.ts]/page.tsx`
-- Each page exports a `metadata` object for SEO.
+- URL pattern: `/{locale}/{category}/{tool-id}` — e.g. `/en/dev/json-formatter`, `/vi/text/word-counter`
+- Folder structure: `app/[locale]/(tools)/[matching the path in config/tools.ts]/page.tsx`
+- `config/tools.ts` `path` stays **unprefixed** (`/dev/json-formatter`); the locale wrappers add the prefix.
+- Each page exports an async `generateMetadata` (localized title/description + hreflang alternates) and calls `setRequestLocale(locale)`.
 - The client-interactive component lives in a separate file, with `"use client"` only on that component.

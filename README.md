@@ -14,11 +14,24 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser. The root `/`
+redirects to your best-match locale (e.g. `/en`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Internationalization (multi-language)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The site ships in **5 locales** — English (`en`, default), Vietnamese (`vi`),
+Chinese (`zh`), Korean (`ko`), Japanese (`ja`) — using **next-intl** on a Next.js
+**static export**. Every route is locale-prefixed (`/{locale}/{category}/{tool}`)
+and pre-rendered per language with its own `<html lang>`, localized `<title>`/`<meta>`,
+and reciprocal `hreflang` tags for SEO. Users switch language from the header.
+
+- Translation catalogs: `messages/{locale}.json`
+- Routing/wiring: `i18n/routing.ts`, `i18n/navigation.ts`, `i18n/request.ts`
+- **Full guide:** [`.agents/skills/eztool-i18n/SKILL.md`](.agents/skills/eztool-i18n/SKILL.md)
+
+To add a locale: extend `locales`/`localeNames` in `i18n/routing.ts` and add a
+`messages/<locale>.json`. To add/translate a tool, see the i18n skill above and
+`.agents/workflows/create-tool-workflow.md`.
 
 ## Learn More
 

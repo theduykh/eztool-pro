@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
     Percent,
     TrendingUp,
@@ -74,6 +75,8 @@ const inputClass =
     "w-24 rounded-lg border border-border bg-background px-3 py-1.5 text-center text-lg font-bold outline-none focus:ring-2 focus:ring-blue-500/50 transition-all";
 
 export function PercentageCalculatorClient() {
+    const t = useTranslations("toolUI.percentage-calculator");
+
     const [s1P, setS1P] = useState<string>("20");
     const [s1T, setS1T] = useState<string>("100");
 
@@ -93,69 +96,69 @@ export function PercentageCalculatorClient() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <PercentageCard
                 id="scenario-1"
-                title="Tính giá trị từ phần trăm"
+                title={t("card1Title")}
                 icon={Percent}
                 color="bg-blue-500"
                 result={calculateValueFromPercent(parseFloat(s1P) || 0, parseFloat(s1T) || 0)}
             >
-                <span>Tính</span>
+                <span>{t("card1Calc")}</span>
                 <input id="s1-p" className={inputClass} value={s1P} onChange={(e) => setS1P(e.target.value)} />
-                <span>% của số</span>
+                <span>{t("card1Of")}</span>
                 <input id="s1-t" className={inputClass} value={s1T} onChange={(e) => setS1T(e.target.value)} />
             </PercentageCard>
 
             <PercentageCard
                 id="scenario-2"
-                title="Tính tỷ lệ phần trăm giữa 2 số"
+                title={t("card2Title")}
                 icon={PieChart}
                 color="bg-indigo-500"
                 result={calculatePercentOf(parseFloat(s2V) || 0, parseFloat(s2T) || 0)}
                 suffix="%"
             >
-                <span>Số</span>
+                <span>{t("card2Is")}</span>
                 <input id="s2-v" className={inputClass} value={s2V} onChange={(e) => setS2V(e.target.value)} />
-                <span>là bao nhiêu % của</span>
+                <span>{t("card2Of")}</span>
                 <input id="s2-t" className={inputClass} value={s2T} onChange={(e) => setS2T(e.target.value)} />
             </PercentageCard>
 
             <PercentageCard
                 id="scenario-3"
-                title="Tính % tăng trưởng (Tăng/Giảm)"
+                title={t("card3Title")}
                 icon={TrendingUp}
                 color="bg-emerald-500"
                 result={calculatePercentChange(parseFloat(s3S) || 0, parseFloat(s3E) || 0)}
                 suffix="%"
             >
-                <span>Từ số</span>
+                <span>{t("card3From")}</span>
                 <input id="s3-s" className={inputClass} value={s3S} onChange={(e) => setS3S(e.target.value)} />
-                <span>đến số</span>
+                <span>{t("card3To")}</span>
                 <input id="s3-e" className={inputClass} value={s3E} onChange={(e) => setS3E(e.target.value)} />
             </PercentageCard>
 
             <PercentageCard
                 id="scenario-4"
-                title="Tính thêm phần trăm (Cộng thêm)"
+                title={t("card4Title")}
                 icon={Tag}
                 color="bg-violet-500"
                 result={addPercent(parseFloat(s4V) || 0, parseFloat(s4P) || 0)}
             >
-                <span>Số</span>
+                <span>{t("card4Add")}</span>
                 <input id="s4-v" className={inputClass} value={s4V} onChange={(e) => setS4V(e.target.value)} />
-                <span>cộng thêm</span>
+                <span>{t("card4Plus")}</span>
                 <input id="s4-p" className={inputClass} value={s4P} onChange={(e) => setS4P(e.target.value)} />
                 <span>%</span>
             </PercentageCard>
 
             <PercentageCard
                 id="scenario-5"
-                title="Tính giảm giá / Chiết khấu (Trừ bớt)"
+                title={t("card5Title")}
                 icon={TrendingDown}
                 color="bg-rose-500"
                 result={subtractPercent(parseFloat(s5V) || 0, parseFloat(s5P) || 0)}
             >
-                <span>Số</span>
+                <span>{t("card5Sub")}</span>
                 <input id="s5-v" className={inputClass} value={s5V} onChange={(e) => setS5V(e.target.value)} />
-                <span>giảm đi</span>
+                <span>{t("card5Minus")}</span>
                 <input id="s5-p" className={inputClass} value={s5P} onChange={(e) => setS5P(e.target.value)} />
                 <span>%</span>
             </PercentageCard>
@@ -164,21 +167,20 @@ export function PercentageCalculatorClient() {
                 <div className="flex flex-col gap-4">
                     <div className="flex items-center gap-3 font-bold text-muted-foreground">
                         <Divide className="size-5" />
-                        <span>Lưu ý về phép tính</span>
+                        <span>{t("noteTitle")}</span>
                     </div>
                     <p className="text-sm leading-relaxed text-muted-foreground">
-                        Mọi phép tính được thực hiện ngay lập tức (real-time). Các kết quả được làm tròn tới 3 chữ số
-                        thập phân để đảm bảo độ chính xác trong tài chính và khoa học.
+                        {t("noteBody")}
                     </p>
                     <div className="mt-2 flex flex-wrap gap-2">
                         <span className="rounded-lg border border-border bg-background px-3 py-1 text-[10px] font-bold uppercase">
-                            Thuế VAT
+                            {t("taxVat")}
                         </span>
                         <span className="rounded-lg border border-border bg-background px-3 py-1 text-[10px] font-bold uppercase">
-                            Giảm giá
+                            {t("discount")}
                         </span>
                         <span className="rounded-lg border border-border bg-background px-3 py-1 text-[10px] font-bold uppercase">
-                            Tăng trưởng
+                            {t("growth")}
                         </span>
                     </div>
                 </div>

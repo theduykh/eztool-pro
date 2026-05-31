@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { ToolPanel } from "@/components/shared/ToolPanel";
 import { ToolLabel } from "@/components/shared/ToolLabel";
 import { formatJson, minifyJson, type JsonFormatResult } from "@/lib/formatters/json";
@@ -355,7 +356,7 @@ function buildLinePathMap(formattedJson: string): string[] {
 const DEFAULT_JSON = `{
     "name": "eztool.pro",
     "version": "1.0.0",
-    "description": "Bộ công cụ tiện ích trực tuyến siêu tốc dành cho lập trình viên",
+    "description": "__DESCRIPTION__",
     "active": true,
     "stats": {
         "users": 2500,
@@ -383,8 +384,11 @@ const DEFAULT_JSON = `{
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function JsonFormatterClient() {
-    const [input, setInput] = useState(DEFAULT_JSON);
-    const [output, setOutput] = useState(DEFAULT_JSON);
+    const t = useTranslations("toolUI.json-formatter");
+    const tc = useTranslations("toolCommon");
+    const initialJson = DEFAULT_JSON.replace("__DESCRIPTION__", t("sampleDescription"));
+    const [input, setInput] = useState(initialJson);
+    const [output, setOutput] = useState(initialJson);
     const [hasError, setHasError] = useState(false);
     const [copied, setCopied] = useState(false);
 
@@ -504,7 +508,7 @@ export function JsonFormatterClient() {
                 setOutput(result.data);
                 setHasError(false);
             } else {
-                setOutput("❌ Lỗi định dạng JSON:\n" + result.error);
+                setOutput(`❌ ${t("formatError")}:\n` + result.error);
                 setHasError(true);
             }
             setClickedLine(null);
@@ -531,7 +535,7 @@ export function JsonFormatterClient() {
             setInput(text);
             const result = formatJson(text);
             if (result.success) { setOutput(result.data); setHasError(false); }
-            else { setOutput("❌ Lỗi định dạng JSON:\n" + result.error); setHasError(true); }
+            else { setOutput(`❌ ${t("formatError")}:\n` + result.error); setHasError(true); }
         } catch { /* Clipboard API may be blocked */ }
     }, []);
 
@@ -556,7 +560,7 @@ export function JsonFormatterClient() {
         if (!text.trim()) { setOutput(""); setHasError(false); return; }
         const result = formatJson(text);
         if (result.success) { setOutput(result.data); setHasError(false); }
-        else { setOutput("❌ Lỗi định dạng JSON:\n" + result.error); setHasError(true); }
+        else { setOutput(`❌ ${t("formatError")}:\n` + result.error); setHasError(true); }
     }, []);
 
     const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -640,7 +644,7 @@ export function JsonFormatterClient() {
                         bodyClassName="h-full"
                         header={
                             <>
-                                <ToolLabel>Input</ToolLabel>
+                                <ToolLabel>{t("input")}</ToolLabel>
                                 <div className="flex items-center gap-3">
                                     <button
                                         id="btn-paste"
@@ -648,16 +652,16 @@ export function JsonFormatterClient() {
                                         className="flex items-center text-xs text-muted-foreground transition-colors hover:text-foreground"
                                     >
                                         <ClipboardPaste className="mr-1 size-3.5" />
-                                        Paste
+                                        {tc("paste")}
                                     </button>
                                     <button
                                         id="btn-clear"
                                         onClick={handleClear}
                                         className="flex items-center text-xs text-destructive/85 transition-colors hover:text-destructive"
-                                        title="Xóa trắng nội dung"
+                                        title={t("clearTitle")}
                                     >
                                         <Trash2 className="mr-1 size-3.5" />
-                                        Clear
+                                        {tc("clear")}
                                     </button>
                                 </div>
                             </>
@@ -669,7 +673,7 @@ export function JsonFormatterClient() {
                             onChange={handleInputChange}
                             onPaste={handleInputPaste}
                             className="h-full w-full resize-none bg-transparent p-4 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500/50"
-                            placeholder={'Example: {"name": "eztool", "status": "active"}'}
+                            placeholder={t.raw("inputPlaceholder") as string}
                             spellCheck={false}
                         />
                     </ToolPanel>
@@ -690,7 +694,7 @@ export function JsonFormatterClient() {
                         header={
                             <>
                                 <div className="flex items-center gap-2">
-                                    <ToolLabel>Output</ToolLabel>
+                                    <ToolLabel>{t("output")}</ToolLabel>
                                     {hasError && <AlertCircle className="size-3.5 text-destructive" />}
                                 </div>
                                 <div className="flex items-center gap-3">
@@ -698,19 +702,19 @@ export function JsonFormatterClient() {
                                         id="btn-format"
                                         onClick={() => handleProcess("format")}
                                         className="flex items-center text-xs text-muted-foreground transition-colors hover:text-foreground"
-                                        title="Làm đẹp JSON"
+                                        title={t("formatTitle")}
                                     >
                                         <AlignLeft className="mr-1 size-3.5" />
-                                        Format
+                                        {t("format")}
                                     </button>
                                     <button
                                         id="btn-minify"
                                         onClick={() => handleProcess("minify")}
                                         className="flex items-center text-xs text-muted-foreground transition-colors hover:text-foreground"
-                                        title="Nén JSON"
+                                        title={t("minifyTitle")}
                                     >
                                         <Minimize2 className="mr-1 size-3.5" />
-                                        Minify
+                                        {t("minify")}
                                     </button>
                                     <button
                                         id="btn-search"
@@ -721,10 +725,10 @@ export function JsonFormatterClient() {
                                                 ? "text-blue-500 hover:text-blue-400"
                                                 : "text-muted-foreground hover:text-foreground",
                                         )}
-                                        title="Tìm kiếm trong output"
+                                        title={t("searchTitle")}
                                     >
                                         <Search className="mr-1 size-3.5" />
-                                        Search
+                                        {t("search")}
                                     </button>
                                     <button
                                         id="btn-copy"
@@ -734,12 +738,12 @@ export function JsonFormatterClient() {
                                         {copied ? (
                                             <>
                                                 <Check className="mr-1 size-3.5 text-green-500" />
-                                                Đã copy!
+                                                {tc("copied")}
                                             </>
                                         ) : (
                                             <>
                                                 <Copy className="mr-1 size-3.5" />
-                                                Copy
+                                                {tc("copy")}
                                             </>
                                         )}
                                     </button>
@@ -761,7 +765,7 @@ export function JsonFormatterClient() {
                                                 : "bg-transparent text-muted-foreground hover:text-foreground",
                                         )}
                                     >
-                                        Text
+                                        {t("textMode")}
                                     </button>
                                     <button
                                         id="opt-search-jsonpath"
@@ -785,8 +789,8 @@ export function JsonFormatterClient() {
                                     onKeyDown={handleSearchKeyDown}
                                     placeholder={
                                         searchMode === "text"
-                                            ? "Tìm kiếm... (Enter để next)"
-                                            : "$.key hoặc data.users[0].name"
+                                            ? t("searchTextPlaceholder")
+                                            : t("searchPathPlaceholder")
                                     }
                                     className="min-w-0 flex-1 rounded border border-border bg-background px-2 py-1 font-mono text-xs focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 />
@@ -794,7 +798,7 @@ export function JsonFormatterClient() {
                                     {matches.length > 0
                                         ? `${currentMatchIndex + 1}/${matches.length}`
                                         : searchQuery
-                                            ? "0 kết quả"
+                                            ? t("noResults")
                                             : ""}
                                 </span>
                                 <button
@@ -802,7 +806,7 @@ export function JsonFormatterClient() {
                                     onClick={() => navigateMatch("prev")}
                                     disabled={matches.length === 0}
                                     className="rounded p-0.5 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40"
-                                    title="Kết quả trước (Shift+Enter)"
+                                    title={t("prevMatch")}
                                 >
                                     <ChevronUp className="size-4" />
                                 </button>
@@ -811,7 +815,7 @@ export function JsonFormatterClient() {
                                     onClick={() => navigateMatch("next")}
                                     disabled={matches.length === 0}
                                     className="rounded p-0.5 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40"
-                                    title="Kết quả tiếp (Enter)"
+                                    title={t("nextMatch")}
                                 >
                                     <ChevronDown className="size-4" />
                                 </button>
@@ -819,7 +823,7 @@ export function JsonFormatterClient() {
                                     id="btn-search-close"
                                     onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
                                     className="rounded p-0.5 text-muted-foreground transition-colors hover:text-foreground"
-                                    title="Đóng (Esc)"
+                                    title={t("closeEsc")}
                                 >
                                     <X className="size-3.5" />
                                 </button>
@@ -849,7 +853,7 @@ export function JsonFormatterClient() {
                         {clickedPath !== null && (
                             <div className="flex shrink-0 items-center gap-2 border-t border-border bg-muted/30 px-3 py-1.5">
                                 <span className="shrink-0 text-xs font-medium text-muted-foreground">
-                                    path
+                                    {t("pathLabel")}
                                 </span>
                                 <code
                                     id="output-clicked-path"
@@ -862,7 +866,7 @@ export function JsonFormatterClient() {
                                     id="btn-copy-path"
                                     onClick={handleCopyPath}
                                     className="shrink-0 rounded p-0.5 text-muted-foreground transition-colors hover:text-foreground"
-                                    title="Copy path"
+                                    title={t("copyPath")}
                                 >
                                     {pathCopied ? (
                                         <Check className="size-3 text-green-500" />
@@ -874,7 +878,7 @@ export function JsonFormatterClient() {
                                     id="btn-clear-path"
                                     onClick={() => { setClickedLine(null); setClickedPath(null); }}
                                     className="shrink-0 rounded p-0.5 text-muted-foreground transition-colors hover:text-foreground"
-                                    title="Đóng"
+                                    title={tc("close")}
                                 >
                                     <X className="size-3" />
                                 </button>

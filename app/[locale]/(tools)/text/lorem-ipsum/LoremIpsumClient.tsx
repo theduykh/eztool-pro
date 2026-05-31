@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import {
     Copy,
     Check,
@@ -21,19 +22,20 @@ import { ToolToggle } from "@/components/shared/ToolToggle";
 import { generateLorem, generateLoremByChars, type LoremType } from "@/lib/string/lorem";
 import { cn } from "@/lib/utils";
 
-const TYPES: { id: LoremType | "chars"; label: string; icon: LucideIcon }[] = [
-    { id: "paragraphs", label: "Đoạn văn", icon: Pilcrow },
-    { id: "words", label: "Từ", icon: Type },
-    { id: "sentences", label: "Câu", icon: CaseSensitive },
-    { id: "chars", label: "Ký tự", icon: Hash },
-];
-
 export function LoremIpsumClient() {
+    const t = useTranslations("toolUI.lorem-ipsum");
     const [type, setType] = useState<LoremType | "chars">("paragraphs");
     const [count, setCount] = useState(3);
     const [startWithLorem, setStartWithLorem] = useState(true);
     const [result, setResult] = useState("");
     const [copied, setCopied] = useState(false);
+
+    const TYPES: { id: LoremType | "chars"; label: string; icon: LucideIcon }[] = [
+        { id: "paragraphs", label: t("types.paragraphs"), icon: Pilcrow },
+        { id: "words", label: t("types.words"), icon: Type },
+        { id: "sentences", label: t("types.sentences"), icon: CaseSensitive },
+        { id: "chars", label: t("types.chars"), icon: Hash },
+    ];
 
     const handleGenerate = useCallback(() => {
         let generated = "";
@@ -66,24 +68,24 @@ export function LoremIpsumClient() {
             <ToolPanel padding="lg">
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
                     <div className="lg:col-span-2">
-                        <ToolLabel className="mb-3">Loại văn bản</ToolLabel>
+                        <ToolLabel className="mb-3">{t("textType")}</ToolLabel>
                         <div className="flex flex-wrap gap-2">
-                            {TYPES.map((t) => {
-                                const Icon = t.icon;
+                            {TYPES.map((typeOpt) => {
+                                const Icon = typeOpt.icon;
                                 return (
                                     <button
-                                        id={`btn-type-${t.id}`}
-                                        key={t.id}
-                                        onClick={() => setType(t.id)}
+                                        id={`btn-type-${typeOpt.id}`}
+                                        key={typeOpt.id}
+                                        onClick={() => setType(typeOpt.id)}
                                         className={cn(
                                             "flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all",
-                                            type === t.id
+                                            type === typeOpt.id
                                                 ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
                                                 : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground",
                                         )}
                                     >
                                         <Icon className="size-4" />
-                                        {t.label}
+                                        {typeOpt.label}
                                     </button>
                                 );
                             })}
@@ -91,7 +93,7 @@ export function LoremIpsumClient() {
                     </div>
 
                     <div>
-                        <ToolLabel className="mb-3">Số lượng</ToolLabel>
+                        <ToolLabel className="mb-3">{t("count")}</ToolLabel>
                         <input
                             id="input-count"
                             type="number"
@@ -110,7 +112,7 @@ export function LoremIpsumClient() {
                             className="w-full gap-2 rounded-xl bg-blue-600 py-6 text-sm font-bold shadow-lg shadow-blue-500/20 transition-all hover:bg-blue-700 active:scale-95"
                         >
                             <RefreshCw className="size-4" />
-                            Tạo lại
+                            {t("btnGenerate")}
                         </Button>
                     </div>
                 </div>
@@ -121,14 +123,14 @@ export function LoremIpsumClient() {
                     id="toggle-start-lorem"
                     checked={startWithLorem}
                     onChange={setStartWithLorem}
-                    label={<span>Bắt đầu bằng &quot;Lorem ipsum...&quot;</span>}
+                    label={<span>{t("toggleStartLorem")}</span>}
                 />
             </div>
 
             <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between px-1">
                     <ToolLabel icon={<Zap className="size-3.5 text-yellow-500" />}>
-                        Kết quả ({result.length} ký tự)
+                        {t("resultLabel", { count: result.length })}
                     </ToolLabel>
                     <Button
                         id="btn-copy"
@@ -144,12 +146,12 @@ export function LoremIpsumClient() {
                         {copied ? (
                             <>
                                 <Check className="size-3.5" />
-                                <span>Đã chép</span>
+                                <span>{t("btnCopied")}</span>
                             </>
                         ) : (
                             <>
                                 <Copy className="size-3.5" />
-                                <span>Sao chép</span>
+                                <span>{t("btnCopy")}</span>
                             </>
                         )}
                     </Button>
@@ -165,18 +167,12 @@ export function LoremIpsumClient() {
             <ToolInfoBox
                 tone="neutral"
                 icon={<Settings2 className="size-5 text-blue-500" />}
-                title="Mẹo nhỏ:"
+                title={t("tipsTitle")}
             >
                 <ul className="list-inside list-disc space-y-1">
-                    <li>
-                        Dùng <strong>Đoạn văn</strong> để lấp đầy các khối văn bản lớn.
-                    </li>
-                    <li>
-                        Dùng <strong>Từ</strong> hoặc <strong>Câu</strong> cho các tiêu đề hoặc thẻ mô tả ngắn.
-                    </li>
-                    <li>
-                        Dùng <strong>Ký tự</strong> khi bạn cần độ chính xác tuyệt đối cho giới hạn của giao diện.
-                    </li>
+                    <li>{t("tipParagraphs")}</li>
+                    <li>{t("tipWords")}</li>
+                    <li>{t("tipChars")}</li>
                 </ul>
             </ToolInfoBox>
         </div>

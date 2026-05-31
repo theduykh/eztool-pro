@@ -13,6 +13,7 @@ export type BMICategory =
 export interface BMIResult {
     bmi: number;
     category: BMICategory;
+    key: string;
     label: string;
     advice: string;
     color: string;
@@ -45,6 +46,7 @@ function classifyGlobal(bmi: number): BMIResult {
         return {
             bmi,
             category: "Underweight",
+            key: "underweight",
             label: "Gầy (Thiếu cân)",
             advice: "Bạn nên chú ý bổ sung thêm dinh dưỡng và tập luyện thể thao.",
             color: "text-blue-500",
@@ -53,6 +55,7 @@ function classifyGlobal(bmi: number): BMIResult {
         return {
             bmi,
             category: "Normal",
+            key: "normal",
             label: "Bình thường (Lý tưởng)",
             advice: "Tuyệt vời! Hãy duy trì lối sống lành mạnh và chế độ ăn uống hiện tại.",
             color: "text-green-500",
@@ -61,6 +64,7 @@ function classifyGlobal(bmi: number): BMIResult {
         return {
             bmi,
             category: "Overweight",
+            key: "overweight",
             label: "Thừa cân",
             advice: "Bạn nên kiểm soát lại chế độ ăn uống và tăng cường vận động.",
             color: "text-yellow-500",
@@ -69,6 +73,7 @@ function classifyGlobal(bmi: number): BMIResult {
         return {
             bmi,
             category: "Obesity Class I",
+            key: "obesity1",
             label: "Béo phì độ I",
             advice: "Bạn cần bắt đầu một chương trình giảm cân và tư vấn dinh dưỡng.",
             color: "text-orange-500",
@@ -77,6 +82,7 @@ function classifyGlobal(bmi: number): BMIResult {
         return {
             bmi,
             category: "Obesity Class II",
+            key: "obesity2",
             label: "Béo phì độ II",
             advice: "Nguy cơ bệnh tật cao. Bạn nên tham khảo ý kiến bác sĩ chuyên khoa.",
             color: "text-red-500",
@@ -85,6 +91,7 @@ function classifyGlobal(bmi: number): BMIResult {
         return {
             bmi,
             category: "Obesity Class III",
+            key: "obesity3",
             label: "Béo phì độ III (Cực kỳ nguy hiểm)",
             advice: "Tình trạng sức khỏe báo động. Cần sự can thiệp y tế ngay lập tức.",
             color: "text-red-700",
@@ -97,6 +104,7 @@ function classifyAsian(bmi: number): BMIResult {
         return {
             bmi,
             category: "Underweight",
+            key: "underweight",
             label: "Gầy (Thiếu cân)",
             advice: "Bạn nên chú ý bổ sung thêm dinh dưỡng và tập luyện thể thao.",
             color: "text-blue-500",
@@ -105,6 +113,7 @@ function classifyAsian(bmi: number): BMIResult {
         return {
             bmi,
             category: "Normal",
+            key: "normal",
             label: "Bình thường (Lý tưởng)",
             advice: "Tuyệt vời! Hãy duy trì lối sống lành mạnh và chế độ ăn uống hiện tại.",
             color: "text-green-500",
@@ -113,6 +122,7 @@ function classifyAsian(bmi: number): BMIResult {
         return {
             bmi,
             category: "Overweight",
+            key: "pre_obese",
             label: "Thừa cân (Tiền béo phì)",
             advice: "Cơ thể bắt đầu có dấu hiệu tích mỡ thừa. Nên điều chỉnh chế độ ăn giảm tinh bột.",
             color: "text-yellow-500",
@@ -121,6 +131,7 @@ function classifyAsian(bmi: number): BMIResult {
         return {
             bmi,
             category: "Obesity Class I",
+            key: "obesity1",
             label: "Béo phì độ I",
             advice: "Nguy cơ mắc các bệnh tim mạch và tiểu đường tăng cao. Hãy vận động nhiều hơn.",
             color: "text-orange-500",
@@ -129,6 +140,7 @@ function classifyAsian(bmi: number): BMIResult {
         return {
             bmi,
             category: "Obesity Class II",
+            key: "obesity2",
             label: "Béo phì độ II",
             advice: "Tình trạng béo phì nghiêm trọng. Bạn cần tư vấn từ bác sĩ và chế độ giảm cân gắt gao.",
             color: "text-red-600",
@@ -136,22 +148,31 @@ function classifyAsian(bmi: number): BMIResult {
     }
 }
 
-export function getBMICategories(standard: BMIStandard = "global") {
+export interface BMICategoryInfo {
+    key: string;
+    range: string;
+    label: string;
+    color: string;
+    min: number;
+    max: number;
+}
+
+export function getBMICategories(standard: BMIStandard = "global"): BMICategoryInfo[] {
     if (standard === "asian") {
         return [
-            { range: "< 18.5", label: "Gầy", color: "bg-blue-500", min: 15, max: 18.5 },
-            { range: "18.5 – 22.9", label: "Bình thường", color: "bg-green-500", min: 18.5, max: 23 },
-            { range: "23.0 – 24.9", label: "Tiền béo phì", color: "bg-yellow-500", min: 23, max: 25 },
-            { range: "25.0 – 29.9", label: "Béo phì độ I", color: "bg-orange-500", min: 25, max: 30 },
-            { range: "≥ 30.0", label: "Béo phì độ II", color: "bg-red-600", min: 30, max: 45 },
+            { key: "underweight", range: "< 18.5", label: "Gầy", color: "bg-blue-500", min: 15, max: 18.5 },
+            { key: "normal", range: "18.5 – 22.9", label: "Bình thường", color: "bg-green-500", min: 18.5, max: 23 },
+            { key: "pre_obese", range: "23.0 – 24.9", label: "Tiền béo phì", color: "bg-yellow-500", min: 23, max: 25 },
+            { key: "obesity1", range: "25.0 – 29.9", label: "Béo phì độ I", color: "bg-orange-500", min: 25, max: 30 },
+            { key: "obesity2", range: "≥ 30.0", label: "Béo phì độ II", color: "bg-red-600", min: 30, max: 45 },
         ];
     }
     return [
-        { range: "< 18.5", label: "Gầy", color: "bg-blue-500", min: 15, max: 18.5 },
-        { range: "18.5 – 24.9", label: "Bình thường", color: "bg-green-500", min: 18.5, max: 25 },
-        { range: "25.0 – 29.9", label: "Thừa cân", color: "bg-yellow-500", min: 25, max: 30 },
-        { range: "30.0 – 34.9", label: "Béo phì độ I", color: "bg-orange-500", min: 30, max: 35 },
-        { range: "35.0 – 39.9", label: "Béo phì độ II", color: "bg-red-500", min: 35, max: 40 },
-        { range: "≥ 40.0", label: "Béo phì độ III", color: "bg-red-700", min: 40, max: 45 },
+        { key: "underweight", range: "< 18.5", label: "Gầy", color: "bg-blue-500", min: 15, max: 18.5 },
+        { key: "normal", range: "18.5 – 24.9", label: "Bình thường", color: "bg-green-500", min: 18.5, max: 25 },
+        { key: "overweight", range: "25.0 – 29.9", label: "Thừa cân", color: "bg-yellow-500", min: 25, max: 30 },
+        { key: "obesity1", range: "30.0 – 34.9", label: "Béo phì độ I", color: "bg-orange-500", min: 30, max: 35 },
+        { key: "obesity2", range: "35.0 – 39.9", label: "Béo phì độ II", color: "bg-red-500", min: 35, max: 40 },
+        { key: "obesity3", range: "≥ 40.0", label: "Béo phì độ III", color: "bg-red-700", min: 40, max: 45 },
     ];
 }

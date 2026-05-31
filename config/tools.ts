@@ -149,11 +149,6 @@ export const TOOLS_DIRECTORY: ToolItem[] = [
         layout: "fixed",
     },
     {
-        id: "random-number",
-        path: "/math/random-number",
-        category: "math",
-    },
-    {
         id: "unit-converter",
         path: "/math/unit-converter",
         category: "math",
