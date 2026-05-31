@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ToolPanel } from "@/components/shared/ToolPanel";
@@ -18,35 +19,8 @@ const FONT_SIZE_STEP = 2;
 const FONT_SIZE_DEFAULT = 16;
 
 export function MarkdownViewerClient() {
-    const [markdown, setMarkdown] = useState<string>(`# Chào mừng đến với Markdown Viewer
-
-Bạn có thể viết **Markdown** ở cột bên trái và xem kết quả hiển thị ở cột bên phải.
-
-## Tính năng hỗ trợ
-
-- **In đậm**, *in nghiêng*, ~~gạch ngang~~
-- Danh sách (List)
-- Bảng biểu (Table)
-- Code block
-- Trích dẫn (Blockquote)
-
-### Ví dụ về Bảng
-
-| Cột A | Cột B |
-|-------|-------|
-| Dữ liệu 1 | Dữ liệu 2 |
-| Hàng 2, Cột A | Hàng 2, Cột B |
-
-### Ví dụ về Code
-
-\`\`\`javascript
-function helloWorld() {
-  console.log("Hello, World!");
-}
-\`\`\`
-
-> Đây là một đoạn trích dẫn mẫu để kiểm tra hiển thị.
-`);
+    const t = useTranslations("toolUI.markdown-viewer");
+    const [markdown, setMarkdown] = useState<string>(t.raw("sample") as string);
 
     const [fontSize, setFontSize] = useState(FONT_SIZE_DEFAULT);
     const [isFullscreen, setIsFullscreen] = useState(false);
@@ -88,7 +62,7 @@ function helloWorld() {
                 onClick={increaseFontSize}
                 disabled={fontSize >= FONT_SIZE_MAX}
                 className="flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40 disabled:pointer-events-none"
-                title="Tăng cỡ chữ"
+                title={t("increaseFont")}
             >
                 <Plus className="size-3.5" />
             </button>
@@ -100,7 +74,7 @@ function helloWorld() {
                 onClick={decreaseFontSize}
                 disabled={fontSize <= FONT_SIZE_MIN}
                 className="flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40 disabled:pointer-events-none"
-                title="Giảm cỡ chữ"
+                title={t("decreaseFont")}
             >
                 <Minus className="size-3.5" />
             </button>
@@ -118,7 +92,7 @@ function helloWorld() {
                     header={
                         <>
                             <ToolLabel icon={<FileText className="size-3.5" />}>
-                                Raw Markdown
+                                {t("rawLabel")}
                             </ToolLabel>
                         </>
                     }
@@ -128,7 +102,7 @@ function helloWorld() {
                         value={markdown}
                         onChange={(e) => setMarkdown(e.target.value)}
                         className="h-full w-full resize-none bg-transparent p-4 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500/50"
-                        placeholder="Nhập nội dung markdown của bạn ở đây..."
+                        placeholder={t("placeholder")}
                         spellCheck={false}
                     />
                 </ToolPanel>
@@ -148,7 +122,7 @@ function helloWorld() {
                     header={
                         <>
                             <ToolLabel icon={<Eye className="size-3.5" />}>
-                                Preview
+                                {t("preview")}
                             </ToolLabel>
                             <div className="flex items-center gap-1">
                                 {fontControls}
@@ -157,7 +131,7 @@ function helloWorld() {
                                     id="btn-fullscreen-toggle"
                                     onClick={toggleFullscreen}
                                     className="flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                                    title="Toàn màn hình"
+                                    title={t("fullscreen")}
                                 >
                                     <Maximize2 className="size-3.5" />
                                 </button>
@@ -185,7 +159,7 @@ function helloWorld() {
                     {/* Fullscreen header */}
                     <div className="flex h-12 flex-shrink-0 items-center justify-between gap-2 border-b border-border bg-muted/50 px-4">
                         <ToolLabel icon={<Eye className="size-3.5" />}>
-                            Preview — Full Screen
+                            {t("previewFullscreen")}
                         </ToolLabel>
                         <div className="flex items-center gap-1">
                             {fontControls}
@@ -194,7 +168,7 @@ function helloWorld() {
                                 id="btn-fullscreen-exit"
                                 onClick={toggleFullscreen}
                                 className="flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                                title="Thoát toàn màn hình (Esc)"
+                                title={t("exitFullscreen")}
                             >
                                 <Minimize2 className="size-4" />
                             </button>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Copy, Check, Trash2, Zap, ShieldCheck, Type } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ToolPanel } from "@/components/shared/ToolPanel";
@@ -10,14 +11,16 @@ import { ToolToggle } from "@/components/shared/ToolToggle";
 import { generateHash, type HashAlgorithm } from "@/lib/math/hash";
 import { cn } from "@/lib/utils";
 
-const ALGORITHMS: { id: HashAlgorithm; label: string; desc: string }[] = [
-    { id: "md5", label: "MD5", desc: "Mã băm 128-bit (Dùng phổ biến để kiểm tra tính toàn vẹn file)" },
-    { id: "sha1", label: "SHA-1", desc: "Mã băm 160-bit (Tiêu chuẩn cũ, không khuyến nghị cho bảo mật cao)" },
-    { id: "sha256", label: "SHA-256", desc: "Mã băm 256-bit (Rất an toàn, tiêu chuẩn hiện đại cho SSL/Blockchain)" },
-    { id: "sha512", label: "SHA-512", desc: "Mã băm 512-bit (Cực kỳ an toàn, dùng cho các ứng dụng yêu cầu bảo mật tối đa)" },
+const ALGORITHMS: { id: HashAlgorithm; label: string }[] = [
+    { id: "md5", label: "MD5" },
+    { id: "sha1", label: "SHA-1" },
+    { id: "sha256", label: "SHA-256" },
+    { id: "sha512", label: "SHA-512" },
 ];
 
 export function HashGeneratorClient() {
+    const t = useTranslations("toolUI.hash-generator");
+    const tc = useTranslations("toolCommon");
     const [input, setInput] = useState("");
     const [isUpper, setIsUpper] = useState(false);
     const [hashes, setHashes] = useState<Record<string, string>>({});
@@ -63,7 +66,7 @@ export function HashGeneratorClient() {
         <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between">
-                    <ToolLabel>Dữ liệu đầu vào</ToolLabel>
+                    <ToolLabel>{t("inputLabel")}</ToolLabel>
                     <div className="flex items-center gap-4">
                         <ToolToggle
                             id="toggle-upper"
@@ -72,7 +75,7 @@ export function HashGeneratorClient() {
                             label={
                                 <>
                                     <Type className="size-3.5" />
-                                    Chữ hoa
+                                    {t("uppercase")}
                                 </>
                             }
                         />
@@ -84,7 +87,7 @@ export function HashGeneratorClient() {
                             className="h-8 gap-1.5 text-xs text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                         >
                             <Trash2 className="size-3.5" />
-                            Xóa
+                            {tc("clear")}
                         </Button>
                     </div>
                 </div>
@@ -92,18 +95,18 @@ export function HashGeneratorClient() {
                     <textarea
                         id="input-hash"
                         className="h-32 w-full resize-none rounded-2xl border border-border bg-card p-4 font-mono text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-                        placeholder="Paste text to hash"
+                        placeholder={t("placeholder")}
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                     />
                     <div className="pointer-events-none absolute bottom-4 right-4 text-xs text-muted-foreground">
-                        {input.length} ký tự
+                        {tc("charCount", { count: input.length })}
                     </div>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-                <ToolLabel icon={<ShieldCheck className="size-4" />}>Kết quả mã băm</ToolLabel>
+                <ToolLabel icon={<ShieldCheck className="size-4" />}>{t("resultsLabel")}</ToolLabel>
 
                 <div className="grid grid-cols-1 gap-3">
                     {ALGORITHMS.map((alg) => {
@@ -125,7 +128,7 @@ export function HashGeneratorClient() {
                                                 {alg.label}
                                             </span>
                                             <span className="hidden text-[10px] text-muted-foreground sm:inline-block">
-                                                {alg.desc}
+                                                {t(`${alg.id}Desc`)}
                                             </span>
                                         </div>
                                         <Button
@@ -144,12 +147,12 @@ export function HashGeneratorClient() {
                                             {isCopied ? (
                                                 <>
                                                     <Check className="size-3.5" />
-                                                    <span className="text-xs">Đã chép</span>
+                                                    <span className="text-xs">{tc("copied")}</span>
                                                 </>
                                             ) : (
                                                 <>
                                                     <Copy className="size-3.5" />
-                                                    <span className="text-xs">Sao chép</span>
+                                                    <span className="text-xs">{tc("copy")}</span>
                                                 </>
                                             )}
                                         </Button>
@@ -160,7 +163,7 @@ export function HashGeneratorClient() {
                                             value ? "text-foreground" : "italic text-muted-foreground/30",
                                         )}
                                     >
-                                        {displayValue || `Chưa có dữ liệu ${alg.label}...`}
+                                        {displayValue || t("emptyHash", { alg: alg.label })}
                                     </p>
                                 </div>
                             </ToolPanel>
@@ -172,18 +175,12 @@ export function HashGeneratorClient() {
             <ToolInfoBox
                 tone="accent"
                 icon={<Zap className="size-5 text-blue-500" />}
-                title="Mẹo sử dụng:"
+                title={t("tipTitle")}
             >
                 <ul className="list-inside list-disc space-y-1">
-                    <li>Mã băm là một chiều, không thể &quot;giải băm&quot; (de-hash) để lấy lại văn bản gốc.</li>
-                    <li>
-                        Chúng tôi xử lý mọi dữ liệu 100% trên trình duyệt của bạn (Client-side), dữ liệu không bao giờ được
-                        gửi lên máy chủ.
-                    </li>
-                    <li>
-                        Sử dụng <strong>SHA-256</strong> hoặc <strong>SHA-512</strong> cho các nhu cầu bảo mật dữ liệu nhạy
-                        cảm.
-                    </li>
+                    <li>{t("tip1")}</li>
+                    <li>{t("tip2")}</li>
+                    <li>{t("tip3")}</li>
                 </ul>
             </ToolInfoBox>
         </div>

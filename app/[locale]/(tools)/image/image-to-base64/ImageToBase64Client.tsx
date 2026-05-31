@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ChangeEvent } from "react";
+import { useTranslations } from "next-intl";
 import {
     Upload,
     Image as ImageIcon,
@@ -28,6 +29,9 @@ const TABS: Tab[] = [
 ];
 
 export function ImageToBase64Client() {
+    const t = useTranslations("toolUI.image-to-base64");
+    const tc = useTranslations("toolCommon");
+
     const [image, setImage] = useState<string | null>(null);
     const [fileName, setFileName] = useState<string>("");
     const [fileSize, setFileSize] = useState<number>(0);
@@ -39,7 +43,7 @@ export function ImageToBase64Client() {
         if (!file) return;
 
         if (!file.type.startsWith("image/")) {
-            alert("Vui lòng chọn một tệp hình ảnh!");
+            alert(t("selectImageAlert"));
             return;
         }
 
@@ -101,9 +105,9 @@ export function ImageToBase64Client() {
                             <Upload className="size-10" />
                         </div>
                         <div className="text-center">
-                            <p className="text-xl font-bold">Kéo thả hoặc nhấn để chọn ảnh</p>
+                            <p className="text-xl font-bold">{t("dragAndDropText")}</p>
                             <p className="mt-1 text-sm text-muted-foreground">
-                                Hỗ trợ PNG, JPG, WEBP, GIF, SVG (Tối đa 5MB)
+                                {t("supportedFormats")}
                             </p>
                         </div>
                     </div>
@@ -111,7 +115,7 @@ export function ImageToBase64Client() {
             ) : (
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1.5fr]">
                     <div className="flex flex-col gap-4">
-                        <ToolLabel>Xem trước hình ảnh</ToolLabel>
+                        <ToolLabel>{t("previewImage")}</ToolLabel>
                         <ToolPanel padding="md" className="relative min-h-[300px] shadow-inner" bodyClassName="flex items-center justify-center overflow-hidden">
                             <div className="absolute inset-0 bg-[radial-gradient(#000_1px,transparent_1px)] opacity-[0.03] [background-size:20px_20px]" />
                             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -129,15 +133,15 @@ export function ImageToBase64Client() {
                             className="w-full gap-2 rounded-2xl hover:bg-destructive/10 hover:text-destructive"
                         >
                             <Trash2 className="size-4" />
-                            Xóa ảnh này
+                            {t("deleteImage")}
                         </Button>
 
                         <ToolPanel padding="lg">
-                            <ToolLabel icon={<Info className="size-4" />}>Thông tin tệp</ToolLabel>
+                            <ToolLabel icon={<Info className="size-4" />}>{t("fileInfo")}</ToolLabel>
                             <div className="mt-4 grid grid-cols-2 gap-4">
                                 <div>
                                     <p className="text-[10px] font-bold uppercase text-muted-foreground">
-                                        Kích thước gốc
+                                        {t("originalSize")}
                                     </p>
                                     <p id="stat-original-size" className="font-bold">
                                         {(fileSize / 1024).toFixed(2)} KB
@@ -145,7 +149,7 @@ export function ImageToBase64Client() {
                                 </div>
                                 <div>
                                     <p className="text-[10px] font-bold uppercase text-muted-foreground">
-                                        Kích thước Base64
+                                        {t("base64Size")}
                                     </p>
                                     <p id="stat-base64-size" className="font-bold text-blue-600">
                                         {(getOutput().length / 1024).toFixed(2)} KB
@@ -155,7 +159,7 @@ export function ImageToBase64Client() {
                             <div className="mt-4 flex items-center gap-2 rounded-xl border border-yellow-500/10 bg-yellow-500/5 p-3">
                                 <Zap className="size-4 shrink-0 text-yellow-600" />
                                 <p className="text-[10px] leading-tight text-yellow-700">
-                                    Mã Base64 thường lớn hơn khoảng 33% so với tệp gốc.
+                                    {t("base64IncreaseNotice")}
                                 </p>
                             </div>
                         </ToolPanel>
@@ -192,7 +196,7 @@ export function ImageToBase64Client() {
                                 value={getOutput()}
                                 readOnly
                                 className="h-[400px] w-full resize-none rounded-3xl border border-border bg-card p-6 font-mono text-sm leading-relaxed shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-                                placeholder="Chuỗi Base64 sẽ xuất hiện ở đây..."
+                                placeholder={t("placeholderOutput")}
                             />
                             <div className="absolute right-4 top-4">
                                 <Button
@@ -208,20 +212,19 @@ export function ImageToBase64Client() {
                                     {copied === "main" ? (
                                         <>
                                             <Check className="size-4" />
-                                            <span>Đã sao chép</span>
+                                            <span>{t("copied")}</span>
                                         </>
                                     ) : (
                                         <>
                                             <Copy className="size-4" />
-                                            <span>Sao chép mã</span>
+                                            <span>{t("copyCode")}</span>
                                         </>
                                     )}
                                 </Button>
                             </div>
                         </div>
                         <p className="px-4 text-xs text-muted-foreground">
-                            Sử dụng mã này để nhúng trực tiếp hình ảnh vào code của bạn. Tuyệt vời cho các icon
-                            nhỏ hoặc background trang web.
+                            {t("embedInstruction")}
                         </p>
                     </div>
                 </div>

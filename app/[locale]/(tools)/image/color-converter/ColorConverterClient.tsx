@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Palette, Copy, Check, Pipette, Hash, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ToolPanel } from "@/components/shared/ToolPanel";
@@ -16,6 +17,9 @@ import {
 import { cn } from "@/lib/utils";
 
 export function ColorConverterClient() {
+    const t = useTranslations("toolUI.color-converter");
+    const tc = useTranslations("toolCommon");
+
     const [hex, setHex] = useState("#4169e1");
     const [rgb, setRgb] = useState<RGB>({ r: 65, g: 105, b: 225 });
     const [hsl, setHsl] = useState<HSL>({ h: 225, s: 73, l: 57 });
@@ -76,13 +80,13 @@ export function ColorConverterClient() {
                         </div>
                     </label>
                     <p className="mt-4 text-xs font-bold uppercase tracking-widest text-white/90 drop-shadow-md">
-                        Chọn màu thủ công
+                        {t("selectColorManually")}
                     </p>
                 </div>
 
                 <ToolPanel radius="lg" padding="lg">
                     <ToolLabel className="mb-4" icon={<Palette className="size-4" />}>
-                        Màu phổ biến
+                        {t("popularColors")}
                     </ToolLabel>
                     <div className="grid grid-cols-5 gap-3">
                         {POPULAR_COLORS.map((color) => (
@@ -106,7 +110,7 @@ export function ColorConverterClient() {
             <div className="flex flex-col gap-6">
                 <ToolPanel radius="lg" padding="lg" className="md:p-8">
                     <div className="mb-4 flex items-center justify-between">
-                        <ToolLabel icon={<Hash className="size-4" />}>HEX Format</ToolLabel>
+                        <ToolLabel icon={<Hash className="size-4" />}>{t("hexFormat")}</ToolLabel>
                         <Button
                             id="btn-copy-hex"
                             variant="ghost"
@@ -115,7 +119,7 @@ export function ColorConverterClient() {
                             className={cn("h-8 gap-2", copied === "hex" && "text-green-500")}
                         >
                             {copied === "hex" ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
-                            <span>{copied === "hex" ? "Đã chép" : "Sao chép"}</span>
+                            <span>{copied === "hex" ? tc("copied") : tc("copy")}</span>
                         </Button>
                     </div>
                     <input
@@ -199,7 +203,7 @@ export function ColorConverterClient() {
 
                 <ToolPanel tone="dashed" radius="lg" padding="lg">
                     <ToolLabel className="mb-3" icon={<SlidersHorizontal className="size-4" />}>
-                        CSS Variable
+                        {t("cssVariable")}
                     </ToolLabel>
                     <code id="output-css" className="block rounded-xl bg-muted/50 p-4 font-mono text-sm">
                         <span className="text-blue-500">--color-primary</span>: {hex};<br />

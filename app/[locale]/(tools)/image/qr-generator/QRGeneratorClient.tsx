@@ -20,6 +20,7 @@ import {
     MessageSquare,
     RefreshCw,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { ToolPanel } from "@/components/shared/ToolPanel";
 import { ToolLabel } from "@/components/shared/ToolLabel";
@@ -148,6 +149,44 @@ const selectCls =
 // ─── Main component ────────────────────────────────────────────────────────────
 
 export function QRGeneratorClient() {
+    const t = useTranslations("toolUI.qr-generator");
+    const tc = useTranslations("toolCommon");
+
+    const tabLabels: Record<ContentType, string> = {
+        url: t("tabs.url"),
+        text: t("tabs.text"),
+        wifi: t("tabs.wifi"),
+        email: t("tabs.email"),
+        sms: t("tabs.sms"),
+    };
+
+    const dotStyleLabels: Record<string, string> = {
+        square: t("dotStyleSquare"),
+        dots: t("dotStyleDots"),
+        rounded: t("dotStyleRounded"),
+        "extra-rounded": t("dotStyleExtraRounded"),
+        classy: t("dotStyleClassy"),
+        "classy-rounded": t("dotStyleClassyRounded"),
+    };
+
+    const cornerSquareLabels: Record<string, string> = {
+        square: t("cornerSquareSquare"),
+        dot: t("cornerSquareDot"),
+        "extra-rounded": t("cornerSquareExtraRounded"),
+    };
+
+    const cornerDotLabels: Record<string, string> = {
+        square: t("cornerDotSquare"),
+        dot: t("cornerDotDot"),
+    };
+
+    const downloadFormatHints: Record<string, string> = {
+        png: t("downloadFormatPngHint"),
+        svg: t("downloadFormatSvgHint"),
+        jpeg: t("downloadFormatJpegHint"),
+        webp: t("downloadFormatWebpHint"),
+    };
+
     // ── Content state ──────────────────────────────────────────────────────
     const [contentType, setContentType] = useState<ContentType>("url");
     const [urlValue, setUrlValue] = useState("https://eztool.pro");
@@ -391,11 +430,11 @@ export function QRGeneratorClient() {
     };
 
     const downloadSection = (
-        <Section title="Tải xuống">
+        <Section title={t("downloadLabel")}>
             {/* Format */}
             <div className="mb-3">
                 <p className="mb-1.5 text-xs font-medium text-muted-foreground">
-                    Định dạng
+                    {t("downloadFormatLabel")}
                 </p>
                 <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
                     {DOWNLOAD_FORMATS.map((f) => (
@@ -403,7 +442,7 @@ export function QRGeneratorClient() {
                             key={f.value}
                             id={`download-format-${f.value}`}
                             onClick={() => setDownloadFormat(f.value)}
-                            title={f.hint}
+                            title={downloadFormatHints[f.value]}
                             className={`flex flex-col items-center rounded-lg py-2 text-xs font-semibold transition-colors ${downloadFormat === f.value
                                 ? "bg-primary text-primary-foreground shadow-sm"
                                 : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
@@ -411,7 +450,7 @@ export function QRGeneratorClient() {
                         >
                             <span>{f.label}</span>
                             <span className="mt-0.5 text-[10px] opacity-70">
-                                {f.hint}
+                                {downloadFormatHints[f.value]}
                             </span>
                         </button>
                     ))}
@@ -421,10 +460,10 @@ export function QRGeneratorClient() {
             {/* Size (disabled for SVG) */}
             <div className="mb-4">
                 <p className="mb-1.5 text-xs font-medium text-muted-foreground">
-                    Kích thước
+                    {t("downloadSizeLabel")}
                     {downloadFormat === "svg" && (
                         <span className="ml-1 text-primary">
-                            (SVG không giới hạn kích thước)
+                            {t("downloadSizeSvgHint")}
                         </span>
                     )}
                 </p>
@@ -456,8 +495,8 @@ export function QRGeneratorClient() {
             >
                 <Download className="size-4" />
                 {isDownloading
-                    ? "Đang tạo..."
-                    : `Tải về ${downloadFormat.toUpperCase()}${downloadFormat !== "svg" ? ` (${downloadSize}px)` : ""}`}
+                    ? t("downloadButtonGenerating")
+                    : t("downloadButtonText", { format: downloadFormat.toUpperCase() }) + (downloadFormat !== "svg" ? ` (${downloadSize}px)` : "")}
             </Button>
         </Section>
     );
@@ -468,7 +507,7 @@ export function QRGeneratorClient() {
             <div className="flex flex-1 flex-col items-center gap-4 lg:order-last">
                 <div className="w-full rounded-2xl border border-border bg-card p-6 shadow-sm">
                     <p className="mb-4 text-center text-sm font-bold uppercase tracking-widest text-muted-foreground">
-                        Xem trước
+                        {t("previewLabel")}
                     </p>
 
                     {/* QR preview — qr-code-styling appends a <canvas> here */}
@@ -492,12 +531,12 @@ export function QRGeneratorClient() {
                         {copied ? (
                             <>
                                 <Check className="size-4 text-green-500" />
-                                Đã sao chép!
+                                {tc("copied")}
                             </>
                         ) : (
                             <>
                                 <Copy className="size-4" />
-                                Sao chép ảnh
+                                {t("copyImageButton")}
                             </>
                         )}
                     </Button>
@@ -509,13 +548,12 @@ export function QRGeneratorClient() {
                         className="gap-2"
                     >
                         <RefreshCw className="size-4" />
-                        Đặt lại
+                        {t("resetButton")}
                     </Button>
                 </div>
 
                 <p className="max-w-xs text-center text-xs text-muted-foreground">
-                    Thay đổi cài đặt bên dưới để tạo QR code tùy chỉnh. Kiểm
-                    tra bằng cách quét thử trước khi in.
+                    {t("instructionText")}
                 </p>
                 {/* ── 4. Download (Desktop only) ────────────────────────── */}
                 <div className="hidden w-full lg:block">
@@ -526,7 +564,7 @@ export function QRGeneratorClient() {
             {/* ─── LEFT: Settings panel ──────────────────────────────── */}
             <div className="flex w-full flex-col gap-4 lg:w-[400px] lg:flex-shrink-0">
                 {/* ── 1. Content type ─────────────────────────────────── */}
-                <Section title="Nội dung">
+                <Section title={t("contentLabel")}>
                     {/* Content type tabs */}
                     <div className="mb-3 flex flex-wrap gap-1.5">
                         {CONTENT_TABS.map((tab) => (
@@ -540,7 +578,7 @@ export function QRGeneratorClient() {
                                     }`}
                             >
                                 {CONTENT_ICONS[tab.value]}
-                                {tab.label}
+                                {tabLabels[tab.value]}
                             </button>
                         ))}
                     </div>
@@ -553,7 +591,7 @@ export function QRGeneratorClient() {
                             className={inputCls}
                             value={urlValue}
                             onChange={(e) => setUrlValue(e.target.value)}
-                            placeholder="https://example.com"
+                            placeholder={t("inputUrlPlaceholder")}
                         />
                     )}
 
@@ -563,7 +601,7 @@ export function QRGeneratorClient() {
                             className={`${inputCls} h-28 resize-none font-mono`}
                             value={textValue}
                             onChange={(e) => setTextValue(e.target.value)}
-                            placeholder="Nhập văn bản tùy ý..."
+                            placeholder={t("inputTextPlaceholder")}
                         />
                     )}
 
@@ -579,7 +617,7 @@ export function QRGeneratorClient() {
                                         ssid: e.target.value,
                                     }))
                                 }
-                                placeholder="Tên mạng WiFi (SSID)"
+                                placeholder={t("wifiSsidPlaceholder")}
                             />
                             <input
                                 id="input-wifi-password"
@@ -592,7 +630,7 @@ export function QRGeneratorClient() {
                                         password: e.target.value,
                                     }))
                                 }
-                                placeholder="Mật khẩu"
+                                placeholder={t("wifiPasswordPlaceholder")}
                             />
                             <select
                                 id="select-wifi-encryption"
@@ -610,7 +648,7 @@ export function QRGeneratorClient() {
                             >
                                 <option value="WPA">WPA/WPA2</option>
                                 <option value="WEP">WEP</option>
-                                <option value="nopass">Không mật khẩu</option>
+                                <option value="nopass">{t("wifiEncryptionNoPass")}</option>
                             </select>
                             <label className="flex items-center gap-2 text-sm text-muted-foreground">
                                 <input
@@ -625,7 +663,7 @@ export function QRGeneratorClient() {
                                     }
                                     className="rounded"
                                 />
-                                Mạng ẩn (Hidden SSID)
+                                {t("wifiHiddenCheckbox")}
                             </label>
                         </div>
                     )}
@@ -643,7 +681,7 @@ export function QRGeneratorClient() {
                                         to: e.target.value,
                                     }))
                                 }
-                                placeholder="Địa chỉ email"
+                                placeholder={t("emailToPlaceholder")}
                             />
                             <input
                                 id="input-email-subject"
@@ -655,7 +693,7 @@ export function QRGeneratorClient() {
                                         subject: e.target.value,
                                     }))
                                 }
-                                placeholder="Tiêu đề (không bắt buộc)"
+                                placeholder={t("emailSubjectPlaceholder")}
                             />
                             <textarea
                                 id="input-email-body"
@@ -667,7 +705,7 @@ export function QRGeneratorClient() {
                                         body: e.target.value,
                                     }))
                                 }
-                                placeholder="Nội dung (không bắt buộc)"
+                                placeholder={t("emailBodyPlaceholder")}
                             />
                         </div>
                     )}
@@ -685,7 +723,7 @@ export function QRGeneratorClient() {
                                         phone: e.target.value,
                                     }))
                                 }
-                                placeholder="Số điện thoại (VD: +84912345678)"
+                                placeholder={t("smsPhonePlaceholder")}
                             />
                             <textarea
                                 id="input-sms-message"
@@ -697,7 +735,7 @@ export function QRGeneratorClient() {
                                         message: e.target.value,
                                     }))
                                 }
-                                placeholder="Tin nhắn"
+                                placeholder={t("smsMessagePlaceholder")}
                             />
                         </div>
                     )}
@@ -709,17 +747,17 @@ export function QRGeneratorClient() {
                 </div>
 
                 {/* ── 2. Style & Color ─────────────────────────────────── */}
-                <Section title="Thiết kế">
+                <Section title={t("designLabel")}>
                     {/* QR shape */}
                     <div className="mb-4">
                         <p className="mb-1.5 text-xs font-medium text-muted-foreground">
-                            Hình dạng QR
+                            {t("qrShapeLabel")}
                         </p>
                         <TabStrip
                             idPrefix="qr-shape"
                             options={[
-                                { label: "Vuông", value: "square" as QRShape },
-                                { label: "Tròn", value: "circle" as QRShape },
+                                { label: t("shapeSquare"), value: "square" as QRShape },
+                                { label: t("shapeCircle"), value: "circle" as QRShape },
                             ]}
                             value={qrShape}
                             onChange={setQrShape}
@@ -730,13 +768,13 @@ export function QRGeneratorClient() {
                     <div className="mb-4 flex flex-col gap-2">
                         <ColorInput
                             idPrefix="input-dot-color"
-                            label="Màu chấm"
+                            label={t("dotColorLabel")}
                             value={dotColor}
                             onChange={setDotColor}
                         />
                         <ColorInput
                             idPrefix="input-bg-color"
-                            label="Màu nền"
+                            label={t("bgColorLabel")}
                             value={bgColor}
                             onChange={setBgColor}
                         />
@@ -745,7 +783,7 @@ export function QRGeneratorClient() {
                     {/* Dot style */}
                     <div className="mb-4">
                         <p className="mb-1.5 text-xs font-medium text-muted-foreground">
-                            Kiểu chấm
+                            {t("dotStyleLabel")}
                         </p>
                         <div className="flex flex-wrap gap-1.5">
                             {DOT_STYLES.map((s) => (
@@ -758,7 +796,7 @@ export function QRGeneratorClient() {
                                         : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
                                         }`}
                                 >
-                                    {s.label}
+                                    {dotStyleLabels[s.value]}
                                 </button>
                             ))}
                         </div>
@@ -767,7 +805,7 @@ export function QRGeneratorClient() {
                     {/* Corner square style */}
                     <div className="mb-4">
                         <p className="mb-1.5 text-xs font-medium text-muted-foreground">
-                            Kiểu khung góc
+                            {t("cornerSquareLabel")}
                         </p>
                         <div className="flex flex-wrap gap-1.5">
                             {CORNER_SQUARE_STYLES.map((s) => (
@@ -782,7 +820,7 @@ export function QRGeneratorClient() {
                                         : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
                                         }`}
                                 >
-                                    {s.label}
+                                    {cornerSquareLabels[s.value]}
                                 </button>
                             ))}
                         </div>
@@ -791,7 +829,7 @@ export function QRGeneratorClient() {
                     {/* Corner dot style */}
                     <div className="mb-4">
                         <p className="mb-1.5 text-xs font-medium text-muted-foreground">
-                            Kiểu mắt góc
+                            {t("cornerDotLabel")}
                         </p>
                         <div className="flex flex-wrap gap-1.5">
                             {CORNER_DOT_STYLES.map((s) => (
@@ -804,7 +842,7 @@ export function QRGeneratorClient() {
                                         : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
                                         }`}
                                 >
-                                    {s.label}
+                                    {cornerDotLabels[s.value]}
                                 </button>
                             ))}
                         </div>
@@ -813,10 +851,10 @@ export function QRGeneratorClient() {
                     {/* Error correction */}
                     <div className="mb-4">
                         <p className="mb-1.5 text-xs font-medium text-muted-foreground">
-                            Mức sửa lỗi
+                            {t("errorCorrectionLabel")}
                             {logoDataURL && (
                                 <span className="ml-1 text-amber-500">
-                                    (H bắt buộc khi có logo)
+                                    {t("errorCorrectionLogoWarning")}
                                 </span>
                             )}
                         </p>
@@ -843,10 +881,7 @@ export function QRGeneratorClient() {
                     {/* Margin */}
                     <div>
                         <p className="mb-1.5 text-xs font-medium text-muted-foreground">
-                            Lề xung quanh:{" "}
-                            <span className="font-semibold text-foreground">
-                                {margin}px
-                            </span>
+                            {t("marginLabel", { value: margin })}
                         </p>
                         <input
                             id="input-margin"
@@ -867,10 +902,10 @@ export function QRGeneratorClient() {
                         <label id="logo-upload-label" className="flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed border-border py-6 transition-colors hover:border-primary hover:bg-primary/5">
                             <Upload className="size-6 text-muted-foreground" />
                             <span className="text-sm text-muted-foreground">
-                                Nhấn để chọn ảnh logo
+                                {t("logoUploadClick")}
                             </span>
                             <span className="text-xs text-muted-foreground/60">
-                                PNG, SVG, JPEG — khuyến nghị nền trong suốt
+                                {t("logoUploadHint")}
                             </span>
                             <input
                                 id="input-logo-upload"
@@ -893,17 +928,17 @@ export function QRGeneratorClient() {
                                 />
                                 <div className="flex-1">
                                     <p className="text-sm font-medium text-foreground">
-                                        Logo đã chọn
+                                        {t("logoSelected")}
                                     </p>
                                     <p className="text-xs text-muted-foreground">
-                                        Mức sửa lỗi tự động đặt về H
+                                        {t("logoErrorCorrectionNotice")}
                                     </p>
                                 </div>
                                 <button
                                     id="btn-remove-logo"
                                     onClick={removeLogo}
                                     className="rounded-lg p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-                                    title="Xóa logo"
+                                    title={t("logoRemove")}
                                 >
                                     <X className="size-4" />
                                 </button>
@@ -912,10 +947,7 @@ export function QRGeneratorClient() {
                             {/* Logo size slider */}
                             <div>
                                 <p className="mb-1.5 text-xs font-medium text-muted-foreground">
-                                    Kích thước logo:{" "}
-                                    <span className="font-semibold text-foreground">
-                                        {Math.round(logoSize * 100)}%
-                                    </span>
+                                    {t("logoSizeLabel", { value: Math.round(logoSize * 100) })}
                                 </p>
                                 <input
                                     id="input-logo-size"

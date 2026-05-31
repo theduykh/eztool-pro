@@ -1,10 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Menu, Search, ChevronRight, PanelLeft } from "lucide-react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { LanguageSwitcher } from "@/components/shared/LanguageSwitcher";
+import { SearchCommand } from "@/components/shared/SearchCommand";
 import { TOOLS_DIRECTORY, getCategories } from "@/config/tools";
 import { Button } from "@/components/ui/button";
 
@@ -22,6 +24,7 @@ export function Header({
     const t = useTranslations();
     const pathname = usePathname();
     const breadcrumbs = buildBreadcrumbs(pathname);
+    const [searchOpen, setSearchOpen] = useState(false);
 
     return (
         <header className="flex h-14 flex-shrink-0 items-center justify-between border-b border-border bg-card px-3 lg:px-5">
@@ -90,17 +93,21 @@ export function Header({
             {/* Right: search + language + theme */}
             <div className="flex items-center gap-2">
                 <Button
+                    id="btn-search-mobile"
                     variant="ghost"
                     size="icon"
                     className="text-muted-foreground hover:text-foreground sm:hidden"
                     aria-label={t("common.searchTools")}
+                    onClick={() => setSearchOpen(true)}
                 >
                     <Search className="size-5" />
                 </Button>
 
                 <button
+                    id="btn-search"
                     className="hidden items-center justify-between rounded-md border border-border bg-accent/50 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent sm:flex sm:w-52 lg:w-64"
                     aria-label={t("common.searchTools")}
+                    onClick={() => setSearchOpen(true)}
                 >
                     <span className="flex items-center">
                         <Search className="mr-2 size-4" />
@@ -114,6 +121,8 @@ export function Header({
                 <LanguageSwitcher />
                 <ThemeToggle />
             </div>
+
+            <SearchCommand open={searchOpen} onOpenChange={setSearchOpen} />
         </header>
     );
 }
