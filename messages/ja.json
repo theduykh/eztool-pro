@@ -160,7 +160,9 @@
             "safeUrl": "安全な URL",
             "encodedUrl": "エンコード済みの URL",
             "placeholderEncode": "エンコードするテキストを貼り付け",
-            "placeholderDecode": "デコードする URL を貼り付け"
+            "placeholderDecode": "デコードする URL を貼り付け",
+            "encodeUri": "Encode URI",
+            "encodeComponent": "Encode Component"
         },
         "jwt-decoder": {
             "inputLabel": "JWT トークンを入力",

@@ -160,7 +160,9 @@
             "safeUrl": "安全 URL",
             "encodedUrl": "已编码的 URL",
             "placeholderEncode": "粘贴要编码的文本",
-            "placeholderDecode": "粘贴要解码的 URL"
+            "placeholderDecode": "粘贴要解码的 URL",
+            "encodeUri": "Encode URI",
+            "encodeComponent": "Encode Component"
         },
         "jwt-decoder": {
             "inputLabel": "输入 JWT Token",

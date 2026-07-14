@@ -22,8 +22,10 @@ import {
     ResizablePanel,
     ResizableHandle,
 } from "@/components/ui/resizable";
-import { encodeUrl, decodeUrl } from "@/lib/string/url-codec";
+import { encodeUri, encodeUriComponent, decodeUrl } from "@/lib/string/url-codec";
 import { cn } from "@/lib/utils";
+
+type Mode = "encode-uri" | "encode-component" | "decode";
 
 export function URLEncodeDecodeClient() {
     const t = useTranslations("toolUI.url-encode-decode");
@@ -31,19 +33,26 @@ export function URLEncodeDecodeClient() {
     const [input, setInput] = useState("");
     const [output, setOutput] = useState("");
     const [isAuto, setIsAuto] = useState(true);
-    const [mode, setMode] = useState<"encode" | "decode">("encode");
+    const [mode, setMode] = useState<Mode>("encode-uri");
     const [error, setError] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
 
     const convert = useCallback(
-        (text: string, currentMode: "encode" | "decode") => {
+        (text: string, currentMode: Mode) => {
             if (!text) {
                 setOutput("");
                 setError(null);
                 return;
             }
             try {
-                const result = currentMode === "encode" ? encodeUrl(text) : decodeUrl(text);
+                let result = "";
+                if (currentMode === "encode-uri") {
+                    result = encodeUri(text);
+                } else if (currentMode === "encode-component") {
+                    result = encodeUriComponent(text);
+                } else {
+                    result = decodeUrl(text);
+                }
                 setOutput(result);
                 setError(null);
             } catch (e: unknown) {
@@ -59,7 +68,7 @@ export function URLEncodeDecodeClient() {
     }, [input, mode, isAuto, convert]);
 
     const handleModeClick = useCallback(
-        (newMode: "encode" | "decode") => {
+        (newMode: Mode) => {
             setMode(newMode);
             convert(input, newMode);
         },
@@ -94,7 +103,7 @@ export function URLEncodeDecodeClient() {
     }, [output, error]);
 
     const handleSwap = useCallback(() => {
-        const newMode = mode === "encode" ? "decode" : "encode";
+        const newMode = mode === "decode" ? "encode-uri" : "decode";
         setMode(newMode);
         setInput(output);
         setOutput("");
@@ -113,13 +122,22 @@ export function URLEncodeDecodeClient() {
         <div className="flex min-h-0 flex-1 flex-col">
             <div className="mb-4 flex flex-wrap items-center gap-2">
                 <Button
-                    id="btn-encode"
-                    onClick={() => handleModeClick("encode")}
-                    variant={mode === "encode" ? "default" : "outline"}
+                    id="btn-encode-uri"
+                    onClick={() => handleModeClick("encode-uri")}
+                    variant={mode === "encode-uri" ? "default" : "outline"}
                     size="lg"
                 >
                     <Link2 data-icon="inline-start" />
-                    {tc("encode")}
+                    {t("encodeUri")}
+                </Button>
+                <Button
+                    id="btn-encode-component"
+                    onClick={() => handleModeClick("encode-component")}
+                    variant={mode === "encode-component" ? "default" : "outline"}
+                    size="lg"
+                >
+                    <Link2 data-icon="inline-start" />
+                    {t("encodeComponent")}
                 </Button>
                 <Button
                     id="btn-decode"
@@ -177,7 +195,7 @@ export function URLEncodeDecodeClient() {
                     header={
                         <>
                             <ToolLabel>
-                                {mode === "encode" ? t("plainUrl") : t("encodedUrl")}
+                                {mode !== "decode" ? t("plainUrl") : t("encodedUrl")}
                             </ToolLabel>
                             <button
                                 id="btn-paste"
@@ -196,7 +214,7 @@ export function URLEncodeDecodeClient() {
                         onChange={(e) => setInput(e.target.value)}
                         className="h-full w-full resize-none bg-transparent p-4 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500/50"
                         placeholder={
-                            mode === "encode"
+                            mode !== "decode"
                                 ? t("placeholderEncode")
                                 : t("placeholderDecode")
                         }
@@ -220,7 +238,7 @@ export function URLEncodeDecodeClient() {
                         <>
                             <div className="flex items-center gap-2">
                                 <ToolLabel>
-                                    {mode === "encode" ? t("safeUrl") : t("plainUrl")}
+                                    {mode !== "decode" ? t("safeUrl") : t("plainUrl")}
                                 </ToolLabel>
                                 {error && <AlertCircle className="size-3.5 text-destructive" />}
                             </div>
