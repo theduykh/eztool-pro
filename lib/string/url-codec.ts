@@ -6,12 +6,21 @@
  * Encodes a string to a URL-safe format.
  * Uses encodeURIComponent for maximum safety.
  */
-export function encodeUrl(input: string): string {
+export function encodeUri(input: string): string {
+    if (!input) return "";
+    try {
+        return encodeURI(input);
+    } catch (e) {
+        throw new Error("Không thể mã hóa URL. Vui lòng kiểm tra lại dữ liệu đầu vào.");
+    }
+}
+
+export function encodeUriComponent(input: string): string {
     if (!input) return "";
     try {
         return encodeURIComponent(input);
     } catch (e) {
-        throw new Error("Không thể mã hóa URL. Vui lòng kiểm tra lại dữ liệu đầu vào.");
+        throw new Error("Không thể mã hóa URL Component. Vui lòng kiểm tra lại dữ liệu đầu vào.");
     }
 }
 

@@ -160,7 +160,9 @@
             "safeUrl": "URL an toàn",
             "encodedUrl": "URL đã mã hóa",
             "placeholderEncode": "Dán văn bản cần mã hóa",
-            "placeholderDecode": "Dán URL cần giải mã"
+            "placeholderDecode": "Dán URL cần giải mã",
+            "encodeUri": "Encode URI",
+            "encodeComponent": "Encode Component"
         },
         "jwt-decoder": {
             "inputLabel": "Nhập JWT Token",

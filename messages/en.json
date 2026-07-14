@@ -160,7 +160,9 @@
             "safeUrl": "Safe URL",
             "encodedUrl": "Encoded URL",
             "placeholderEncode": "Paste text to encode",
-            "placeholderDecode": "Paste URL to decode"
+            "placeholderDecode": "Paste URL to decode",
+            "encodeUri": "Encode URI",
+            "encodeComponent": "Encode Component"
         },
         "jwt-decoder": {
             "inputLabel": "Enter JWT token",
